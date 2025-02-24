@@ -1,75 +1,63 @@
 
 
-
-
-
-import BaseSymbol from './Shape.BaseSymbol';
-
-// import Utils2 from "../Helper/Utils2";
-// import Utils3 from "../Helper/Utils3";
-// import GPP from '../Data/Data.GlobalData'
-// import Collab from '../Data/Collab'
-// import FileParser from '../Data/FileParser'
-// import DefaultEvt from "../Event/Event.Default";
-// import Resources from '../Data/Resources'
-// import Element from "../Basic/Basic.Element";
-
-
-
-
-
-
+import BaseSymbol from './Shape.BaseSymbol'
 import Element from '../Basic/Basic.Element';
 import ConstantData from '../Data/ConstantData'
 
-
 class BitmapSymbol extends BaseSymbol {
 
+  constructor(options) {
+    options = options || {};
+    options.ShapeType = ConstantData.ShapeType.BITMAPSYMBOL;
 
-
-
-
-
-  constructor(e) {
-    //'use strict';
-    e = e || {};
-    e.ShapeType = ConstantData.ShapeType.BITMAPSYMBOL;
-    // const t = ListManager.BaseSymbol.apply(this, [e]);
-    // if (t) return t;
-
-    super(e);
+    console.log('S.BitmapSymbol: Constructor input options:', options);
+    super(options);
+    console.log('S.BitmapSymbol: Constructor output instance:', this);
   }
 
+  CreateShape(drawingContext) {
+    console.log('S.BitmapSymbol: CreateShape - Input drawingContext:', drawingContext);
 
-  // ListManager.BitmapSymbol.prototype = new ListManager.BaseSymbol,
-  // ListManager.BitmapSymbol.prototype.constructor = ListManager.BitmapSymbol,
-  CreateShape(e, t) {
-    if (this.flags & ConstantData.ObjFlags.SEDO_NotVisible) return null;
-    var a = e.CreateShape(ConstantData.CreateShapeType.SHAPECONTAINER),
-      r = e.CreateShape(ConstantData.CreateShapeType.IMAGE);
-    r.SetID(ConstantData.SVGElementClass.SHAPE);
-    r.SetURL(this.SymbolURL);
-    var i = (this.extraflags & ConstantData.ExtraFlags.SEDE_FlipHoriz) > 0,
-      n = (this.extraflags & ConstantData.ExtraFlags.SEDE_FlipVert) > 0;
-    i &&
-      r.SetMirror(i),
-      n &&
-      r.SetFlip(n);
-    var o = this.Frame;
-    this.trect,
-      this.StyleRecord;
+    if (this.flags & ConstantData.ObjFlags.SEDO_NotVisible) {
+      console.log('S.BitmapSymbol: CreateShape - Not visible, returning null.');
+      return null;
+    }
+
+    const containerShape = drawingContext.CreateShape(ConstantData.CreateShapeType.SHAPECONTAINER);
+    const imageShape = drawingContext.CreateShape(ConstantData.CreateShapeType.IMAGE);
+
+    imageShape.SetID(ConstantData.SVGElementClass.SHAPE);
+    imageShape.SetURL(this.SymbolURL);
+
+    const isFlippedHorizontally = (this.extraflags & ConstantData.ExtraFlags.SEDE_FlipHoriz) > 0;
+    const isFlippedVertically = (this.extraflags & ConstantData.ExtraFlags.SEDE_FlipVert) > 0;
+
+    if (isFlippedHorizontally) {
+      imageShape.SetMirror(isFlippedHorizontally);
+    }
+    if (isFlippedVertically) {
+      imageShape.SetFlip(isFlippedVertically);
+    }
+
+    const frame = this.Frame;
     this.GetFieldDataStyleOverride();
-    var s = o.width,
-      l = o.height;
-    return a.SetSize(s, l),
-      a.SetPos(o.x, o.y),
-      r.SetSize(s, l),
-      a.AddElement(r),
-      a.isShape = !0,
-      - 1 != this.DataID &&
-      this.LM_AddSVGTextObject(e, a),
-      a
+
+    const width = frame.width;
+    const height = frame.height;
+
+    containerShape.SetSize(width, height);
+    containerShape.SetPos(frame.x, frame.y);
+    imageShape.SetSize(width, height);
+    containerShape.AddElement(imageShape);
+    containerShape.isShape = true;
+
+    if (this.DataID !== -1) {
+      this.LM_AddSVGTextObject(drawingContext, containerShape);
+    }
+
+    console.log('S.BitmapSymbol: CreateShape - Output containerShape:', containerShape);
+    return containerShape;
   }
 }
 
-export default BitmapSymbol;
+export default BitmapSymbol

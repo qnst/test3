@@ -1,31 +1,11 @@
 
 
-
-
-
-// import SDJS from "../../SDJS/SDJS.Index";
-// import SDUI from "../../SDUI/SDUI.Index";
-// import SDGraphics from "./../../SDGraphics/SDGraphics.Index";
-// import GPP from '../../gListManager';
-// import $ from 'jquery';
-// import HvacSVG from '../../Hvac.SVG.t2';
-
-
 import BaseShape from './Shape.BaseShape'
 import Utils1 from '../Helper/Utils1';
 import Utils2 from "../Helper/Utils2";
 import Utils3 from "../Helper/Utils3";
-
-// import Utils3 from "../Helper/Utils3";
 import GlobalData from '../Data/GlobalData'
-// import Collab from '../Data/Collab'
-// import FileParser from '../Data/FileParser'
-// import DefaultEvt from "../Event/Event.Default";
-// import Resources from '../Data/Resources'
-// import Element from "../Basic/Basic.Element";
-
 import Document from '../Basic/Basic.Document'
-
 import Element from '../Basic/Basic.Element';
 import ListManager from '../Data/ListManager'
 import ConstantData from '../Data/ConstantData'
@@ -33,45 +13,38 @@ import $ from 'jquery';
 
 class BaseSymbol extends BaseShape {
 
-  constructor(e) {
-    e = e || {};
-    e.ObjGrow = ConstantData.GrowBehavior.PROPORTIONAL;
-    e.ResizeAspectConstrain = true;
-    // const t = ListManager.BaseShape.apply(this, [e]);
+  constructor(options: any) {
+    // Log input parameters
+    console.log("S.BaseSymbol - Constructor input:", options);
 
-    super(e);
+    // Ensure options is initialized and set readable property names
+    options = options || {};
+    options.ObjGrow = ConstantData.GrowBehavior.PROPORTIONAL;
+    options.ResizeAspectConstrain = true;
 
-    // if (t) {
-    this.nativeDataArrayBuffer = e.nativeDataArrayBuffer || null;
-    this.SymbolData = e.SymbolData || null;
-    // return t;
+    // Call the parent constructor with the modified options
+    super(options);
+
+    // Assign additional properties with defaults
+    this.nativeDataArrayBuffer = options.nativeDataArrayBuffer || null;
+    this.SymbolData = options.SymbolData || null;
+
+    // Log the state after construction
+    console.log("S.BaseSymbol - Constructor output:", this);
   }
 
-
-
-  // ListManager.BaseSymbol = function (e) {
-  //   (e = e || {
-  //   }).ObjGrow = ConstantData.GrowBehavior.PROPORTIONAL,
-  //     e.ResizeAspectConstrain = !0;
-  //   var t = ListManager.BaseShape.apply(this, [
-  //     e
-  //   ]);
-  //   if (t) return t.nativeDataArrayBuffer = e.nativeDataArrayBuffer ||
-  //     null,
-  //     t.SymbolData = e.SymbolData ||
-  //     null,
-  //     t
-  // }
-
-
-  CreateActionTriggers2(e, t, a, r) {
-    return super.CreateActionTriggers(e, t, a, r)
+  CreateActionTriggers2(svgDocument: any, triggerId: any, actionHandler: any, releaseHandler: any) {
+    console.log("S.BaseSymbol - CreateActionTriggers2 input:", { svgDocument, triggerId, actionHandler, releaseHandler });
+    const result = super.CreateActionTriggers(svgDocument, triggerId, actionHandler, releaseHandler);
+    console.log("S.BaseSymbol - CreateActionTriggers2 output:", result);
+    return result;
   }
 
-  // ListManager.BaseSymbol.prototype = new ListManager.BaseShape,
-  // ListManager.BaseSymbol.prototype.constructor = ListManager.BaseSymbol,
-  CreateActionTriggers(e, t, a, r) {
-    var i = [
+  CreateActionTriggers(svgDocument, triggerId, actionHandler, releaseHandler) {
+    console.log("S.BaseSymbol - CreateActionTriggers input:", { svgDocument, triggerId, actionHandler, releaseHandler });
+
+    // List of cursor types for resize handles
+    const resizeCursorTypes = [
       Element.CursorType.RESIZE_LT,
       Element.CursorType.RESIZE_T,
       Element.CursorType.RESIZE_RT,
@@ -80,176 +53,208 @@ class BaseSymbol extends BaseShape {
       Element.CursorType.RESIZE_B,
       Element.CursorType.RESIZE_LB,
       Element.CursorType.RESIZE_L
-    ],
-      n = e.CreateShape(ConstantData.CreateShapeType.GROUP),
-      o = ConstantData.Defines.SED_KnobSize,
-      s = ConstantData.Defines.SED_RKnobSize,
-      l = e.docInfo.docToScreenScale;
-    e.docInfo.docScale <= 0.5 &&
-      (l *= 2);
-    var S = o / l,
-      c = s / l,
-      u = this.Frame,
-      p = u.width,
-      d = u.height;
-    p += S,
-      d += S;
-    var D = $.extend(!0, {
-    }, u);
-    D.x -= S / 2,
-      D.y -= S / 2,
-      D.width += S,
-      D.height += S;
-    var g = a.GetRotation() + 22.5;
-    g >= 360 &&
-      (g = 0);
-    var h = Math.floor(g / 45),
-      m = i.slice(h, i.length).concat(i.slice(0, h)),
-      C = {
-        svgDoc: e,
-        shapeType: ConstantData.CreateShapeType.RECT,
-        x: 0,
-        y: 0,
-        knobSize: S,
-        fillColor: 'black',
-        fillOpacity: 1,
-        strokeSize: 1,
-        strokeColor: '#777777',
-        locked: !1
-      };
-    t != r &&
-      (
-        C.fillColor = 'white',
-        C.strokeSize = 1,
-        C.strokeColor = 'black',
-        C.fillOpacity = 0
-      ),
-      this.flags & ConstantData.ObjFlags.SEDO_Lock ? (C.fillColor = 'gray', C.locked = !0) : this.NoGrow() &&
-        (
-          C.fillColor = 'red',
-          sideknobs = !1,
-          C.strokeColor = 'red',
-          m = [
-            Element.CursorType.DEFAULT,
-            Element.CursorType.DEFAULT,
-            Element.CursorType.DEFAULT,
-            Element.CursorType.DEFAULT,
-            Element.CursorType.DEFAULT,
-            Element.CursorType.DEFAULT,
-            Element.CursorType.DEFAULT,
-            Element.CursorType.DEFAULT
-          ]
-        ),
-      C.knobID = ConstantData.ActionTriggerType.TOPLEFT,
-      C.cursorType = m[0];
-    var y = this.GenericKnob(C);
-    return n.AddElement(y),
-      C.x = p - S,
-      C.y = 0,
-      C.cursorType = m[2],
-      C.knobID = ConstantData.ActionTriggerType.TOPRIGHT,
-      y = this.GenericKnob(C),
-      n.AddElement(y),
-      C.x = p - S,
-      C.y = d - S,
-      C.cursorType = m[4],
-      C.knobID = ConstantData.ActionTriggerType.BOTTOMRIGHT,
-      y = this.GenericKnob(C),
-      n.AddElement(y),
-      C.x = 0,
-      C.y = d - S,
-      C.cursorType = m[6],
-      C.knobID = ConstantData.ActionTriggerType.BOTTOMLEFT,
-      y = this.GenericKnob(C),
-      n.AddElement(y),
-      GlobalData.optManager.bTouchInitiated ||
-      C.locked ||
-      this.NoGrow() ||
-      (
-        C.shapeType = ConstantData.CreateShapeType.OVAL,
-        C.x = p - 3 * c,
-        C.y = d / 2 - c / 2,
-        C.cursorType = Element.CursorType.ROTATE,
-        C.knobID = ConstantData.ActionTriggerType.ROTATE,
-        C.fillColor = 'white',
-        C.fillOpacity = 0.001,
-        C.strokeSize = 1.5,
-        C.strokeColor = '#555555',
-        y = this.GenericKnob(C),
-        n.AddElement(y)
-      ),
-      n.SetSize(p, d),
-      n.SetPos(D.x, D.y),
-      n.isShape = !0,
-      n.SetID(ConstantData.Defines.Action + t),
-      n
+    ];
+
+    // Create a group shape to hold all knob elements
+    const knobGroup = svgDocument.CreateShape(ConstantData.CreateShapeType.GROUP);
+
+    const knobSize = ConstantData.Defines.SED_KnobSize;
+    const rotatedKnobSize = ConstantData.Defines.SED_RKnobSize;
+    let docToScreenScale = svgDocument.docInfo.docToScreenScale;
+    if (svgDocument.docInfo.docScale <= 0.5) {
+      docToScreenScale *= 2;
+    }
+
+    const scaleKnobSize = knobSize / docToScreenScale;
+    const scaleRotatedKnobSize = rotatedKnobSize / docToScreenScale;
+
+    const frame = this.Frame;
+    let frameWidth = frame.width;
+    let frameHeight = frame.height;
+
+    // Increase frame size to account for knob rendering
+    frameWidth += scaleKnobSize;
+    frameHeight += scaleKnobSize;
+
+    // Adjust the frame boundaries
+    const adjustedFrame = $.extend(true, {}, frame);
+    adjustedFrame.x -= scaleKnobSize / 2;
+    adjustedFrame.y -= scaleKnobSize / 2;
+    adjustedFrame.width += scaleKnobSize;
+    adjustedFrame.height += scaleKnobSize;
+
+    // Calculate rotation adjustment for proper knob positioning
+    let rotationAngle = actionHandler.GetRotation() + 22.5;
+    if (rotationAngle >= 360) {
+      rotationAngle = 0;
+    }
+    const quadrantIndex = Math.floor(rotationAngle / 45);
+    const adjustedCursorTypes = resizeCursorTypes.slice(quadrantIndex).concat(resizeCursorTypes.slice(0, quadrantIndex));
+
+    // Default configuration for knob creation
+    const knobConfig = {
+      svgDoc: svgDocument,
+      shapeType: ConstantData.CreateShapeType.RECT,
+      x: 0,
+      y: 0,
+      knobSize: scaleKnobSize,
+      fillColor: 'black',
+      fillOpacity: 1,
+      strokeSize: 1,
+      strokeColor: '#777777',
+      locked: false
+    };
+
+    // Adjust knob configuration based on trigger and release handler comparison
+    if (triggerId !== releaseHandler) {
+      knobConfig.fillColor = 'white';
+      knobConfig.strokeSize = 1;
+      knobConfig.strokeColor = 'black';
+      knobConfig.fillOpacity = 0;
+    }
+
+    // Check if the symbol is locked or not growable
+    if (this.flags & ConstantData.ObjFlags.SEDO_Lock) {
+      knobConfig.fillColor = 'gray';
+      knobConfig.locked = true;
+    } else if (this.NoGrow()) {
+      knobConfig.fillColor = 'red';
+      knobConfig.strokeColor = 'red';
+      // Override all cursor types if shape cannot grow
+      for (let index = 0; index < 8; index++) {
+        adjustedCursorTypes[index] = Element.CursorType.DEFAULT;
+      }
+    }
+
+    // Create top-left knob
+    knobConfig.knobID = ConstantData.ActionTriggerType.TOPLEFT;
+    knobConfig.cursorType = adjustedCursorTypes[0];
+    let knobElement = this.GenericKnob(knobConfig);
+    knobGroup.AddElement(knobElement);
+
+    // Create top-right knob
+    knobConfig.x = frameWidth - scaleKnobSize;
+    knobConfig.y = 0;
+    knobConfig.cursorType = adjustedCursorTypes[2];
+    knobConfig.knobID = ConstantData.ActionTriggerType.TOPRIGHT;
+    knobElement = this.GenericKnob(knobConfig);
+    knobGroup.AddElement(knobElement);
+
+    // Create bottom-right knob
+    knobConfig.x = frameWidth - scaleKnobSize;
+    knobConfig.y = frameHeight - scaleKnobSize;
+    knobConfig.cursorType = adjustedCursorTypes[4];
+    knobConfig.knobID = ConstantData.ActionTriggerType.BOTTOMRIGHT;
+    knobElement = this.GenericKnob(knobConfig);
+    knobGroup.AddElement(knobElement);
+
+    // Create bottom-left knob
+    knobConfig.x = 0;
+    knobConfig.y = frameHeight - scaleKnobSize;
+    knobConfig.cursorType = adjustedCursorTypes[6];
+    knobConfig.knobID = ConstantData.ActionTriggerType.BOTTOMLEFT;
+    knobElement = this.GenericKnob(knobConfig);
+    knobGroup.AddElement(knobElement);
+
+    // Conditionally create the rotate knob if allowed
+    if (!GlobalData.optManager.bTouchInitiated && !knobConfig.locked && !this.NoGrow()) {
+      knobConfig.shapeType = ConstantData.CreateShapeType.OVAL;
+      knobConfig.x = frameWidth - 3 * scaleRotatedKnobSize;
+      knobConfig.y = frameHeight / 2 - scaleRotatedKnobSize / 2;
+      knobConfig.cursorType = Element.CursorType.ROTATE;
+      knobConfig.knobID = ConstantData.ActionTriggerType.ROTATE;
+      knobConfig.fillColor = 'white';
+      knobConfig.fillOpacity = 0.001;
+      knobConfig.strokeSize = 1.5;
+      knobConfig.strokeColor = '#555555';
+      knobElement = this.GenericKnob(knobConfig);
+      knobGroup.AddElement(knobElement);
+    }
+
+    // Finalize the knob group configuration
+    knobGroup.SetSize(frameWidth, frameHeight);
+    knobGroup.SetPos(adjustedFrame.x, adjustedFrame.y);
+    knobGroup.isShape = true;
+    knobGroup.SetID(ConstantData.Defines.Action + triggerId);
+
+    console.log("S.BaseSymbol - CreateActionTriggers output:", knobGroup);
+    return knobGroup;
   }
 
-
-  ChangeShape(e, t, a, r, i) {
-    return !1
+  ChangeShape(event: any, targetElement: any, newProperties: any, previousState: any, additionalData: any): boolean {
+    console.log("S.BaseSymbol - ChangeShape input:", { event, targetElement, newProperties, previousState, additionalData });
+    const result = false;
+    console.log("S.BaseSymbol - ChangeShape output:", result);
+    return result;
   }
 
-  Flip(e) {
+  Flip(flipFlags: number) {
+    console.log("S.BaseSymbol - Flip input:", flipFlags);
+
+    // Retrieve the element by block ID (for potential further operations)
     GlobalData.optManager.svgObjectLayer.GetElementByID(this.BlockID);
-    e & ConstantData.ExtraFlags.SEDE_FlipHoriz &&
-      (
-        this.extraflags = Utils2.SetFlag(
-          this.extraflags,
-          ConstantData.ExtraFlags.SEDE_FlipHoriz,
-          0 == (this.extraflags & ConstantData.ExtraFlags.SEDE_FlipHoriz)
-        )
-      ),
-      e & ConstantData.ExtraFlags.SEDE_FlipVert &&
-      (
-        this.extraflags = Utils2.SetFlag(
-          this.extraflags,
-          ConstantData.ExtraFlags.SEDE_FlipVert,
-          0 == (this.extraflags & ConstantData.ExtraFlags.SEDE_FlipVert)
-        )
-      )
+
+    // Process horizontal flip if the corresponding flag is set in the input parameter
+    if (flipFlags & ConstantData.ExtraFlags.SEDE_FlipHoriz) {
+      const isCurrentlyFlippedHoriz = (this.extraflags & ConstantData.ExtraFlags.SEDE_FlipHoriz) !== 0;
+      this.extraflags = Utils2.SetFlag(
+        this.extraflags,
+        ConstantData.ExtraFlags.SEDE_FlipHoriz,
+        !isCurrentlyFlippedHoriz
+      );
+    }
+
+    // Process vertical flip if the corresponding flag is set in the input parameter
+    if (flipFlags & ConstantData.ExtraFlags.SEDE_FlipVert) {
+      const isCurrentlyFlippedVert = (this.extraflags & ConstantData.ExtraFlags.SEDE_FlipVert) !== 0;
+      this.extraflags = Utils2.SetFlag(
+        this.extraflags,
+        ConstantData.ExtraFlags.SEDE_FlipVert,
+        !isCurrentlyFlippedVert
+      );
+    }
+
+    console.log("S.BaseSymbol - Flip output:", this.extraflags);
   }
 
+  LM_ActionPreTrack(event: any, trigger: any): void {
+    console.log("S.BaseSymbol - LM_ActionPreTrack input:", { event, trigger });
 
-  LM_ActionPreTrack(e, t) {
-    (
-      // SDUI.Commands.MainController.Dropdowns.HideAllDropdowns(),
-      // Double === TODO
-      - 1 != this.DataID
-    ) &&
-      (
-        (
-          this.TextFlags & ConstantData.TextFlags.SED_TF_AttachA ||
-          this.TextFlags & ConstantData.TextFlags.SED_TF_AttachB
-        ) &&
-        GlobalData.optManager.theActionSVGObject.textElem.SetVisible(!1)
-      );
-    this.rflags &&
-      (
-        this.rflags = Utils2.SetFlag(this.rflags, ConstantData.FloatingPointDim.SD_FP_Width, !1),
-        this.rflags = Utils2.SetFlag(
-          this.rflags,
-          ConstantData.FloatingPointDim.SD_FP_Height,
-          !1
-        )
-      )
+    if (this.DataID !== -1) {
+      if (this.TextFlags & ConstantData.TextFlags.SED_TF_AttachA ||
+        this.TextFlags & ConstantData.TextFlags.SED_TF_AttachB) {
+        GlobalData.optManager.theActionSVGObject.textElem.SetVisible(false);
+      }
+    }
+
+    if (this.rflags) {
+      this.rflags = Utils2.SetFlag(this.rflags, ConstantData.FloatingPointDim.SD_FP_Width, false);
+      this.rflags = Utils2.SetFlag(this.rflags, ConstantData.FloatingPointDim.SD_FP_Height, false);
+    }
+
+    console.log("S.BaseSymbol - LM_ActionPreTrack output: completed");
   }
 
+  LM_ActionPostRelease(event: any): void {
+    console.log("S.BaseSymbol - LM_ActionPostRelease input:", event);
 
-  LM_ActionPostRelease(e) {
-    - 1 != this.DataID &&
-      (
-        (
-          this.TextFlags & ConstantData.TextFlags.SED_TF_AttachA ||
-          this.TextFlags & ConstantData.TextFlags.SED_TF_AttachB
-        ) &&
-        GlobalData.optManager.theActionSVGObject.textElem.SetVisible(!0)
-      );
-    GlobalData.optManager.SetEditMode(ConstantData.EditState.DEFAULT),
-      GlobalData.optManager.UpdateLinks(),
-      GlobalData.optManager.LinkParams = null,
-      this.sizedim.width = this.Frame.width,
-      this.sizedim.height = this.Frame.height
+    if (this.DataID !== -1) {
+      if (
+        (this.TextFlags & ConstantData.TextFlags.SED_TF_AttachA) ||
+        (this.TextFlags & ConstantData.TextFlags.SED_TF_AttachB)
+      ) {
+        GlobalData.optManager.theActionSVGObject.textElem.SetVisible(true);
+      }
+    }
+
+    GlobalData.optManager.SetEditMode(ConstantData.EditState.DEFAULT);
+    GlobalData.optManager.UpdateLinks();
+    GlobalData.optManager.LinkParams = null;
+
+    this.sizedim.width = this.Frame.width;
+    this.sizedim.height = this.Frame.height;
+
+    console.log("S.BaseSymbol - LM_ActionPostRelease output: completed");
   }
 
 }

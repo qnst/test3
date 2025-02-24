@@ -491,34 +491,43 @@ class Line extends BaseLine {
     console.log('S.Line - Output:', { shapeElement, slopElement, points });
   }
 
-  AdjustLineEnd(svgContainer, endPointX, endPointY, enforceMinimum, adjustForLineAngleSnap) {
-    console.log('S.Line - Input:', { svgContainer, endPointX, endPointY, enforceMinimum, adjustForLineAngleSnap });
+  AdjustLineEnd(svgContainer, newEndPointX, newEndPointY, unusedParam, forceAngleSnap) {
+    console.log("S.Connector - Input:", { svgContainer, newEndPointX, newEndPointY, unusedParam, forceAngleSnap });
 
     let points = [];
     let shapeElement, slopElement;
-
     if (svgContainer) {
       shapeElement = svgContainer.GetElementByID(ConstantData.SVGElementClass.SHAPE);
       slopElement = svgContainer.GetElementByID(ConstantData.SVGElementClass.SLOP);
     }
 
-    this.EndPoint.x = endPointX;
-    this.EndPoint.y = endPointY;
-    this.EnforceMinimum(enforceMinimum);
+    // Update endpoint and enforce minimum constraints
+    this.EndPoint.x = newEndPointX;
+    this.EndPoint.y = newEndPointY;
+    this.EnforceMinimum(false);
 
-    if (adjustForLineAngleSnap || (GlobalData.optManager.LinkParams && GlobalData.optManager.LinkParams.ConnectIndex >= 0)) {
+    // Determine if line angle snap adjustment is needed
+    const linkParamsExist = GlobalData.optManager.LinkParams && GlobalData.optManager.LinkParams.ConnectIndex >= 0;
+    const adjustForSnap = forceAngleSnap || linkParamsExist;
+
+    if (adjustForSnap) {
       this.AdjustForLineAngleSnap(this.StartPoint, this.EndPoint);
     }
 
+    // Recalculate the bounding frame
     this.CalcFrame();
 
     if (svgContainer) {
+      // Update container sizes and positions.
       svgContainer.SetSize(this.Frame.width, this.Frame.height);
       svgContainer.SetPos(this.Frame.x, this.Frame.y);
       shapeElement.SetSize(this.Frame.width, this.Frame.height);
 
       let polyPoints = [];
-      let isSimpleLine = (this.ShortRef === 0 || this.ShortRef == ConstantData2.LineTypes.SED_LS_MeasuringTape) && this.hoplist.nhops === 0;
+      const isSimpleLine =
+        (this.ShortRef === 0 ||
+          this.ShortRef === ConstantData2.LineTypes.SED_LS_MeasuringTape) &&
+        this.hoplist.nhops === 0;
 
       if (isSimpleLine) {
         shapeElement.SetPoints(
@@ -550,6 +559,7 @@ class Line extends BaseLine {
         this.rflags = Utils2.SetFlag(this.rflags, ConstantData.FloatingPointDim.SD_FP_Height, false);
       }
 
+      // Recalculate frame and update container again
       this.CalcFrame();
       svgContainer.SetSize(this.Frame.width, this.Frame.height);
       svgContainer.SetPos(this.Frame.x, this.Frame.y);
@@ -584,30 +594,35 @@ class Line extends BaseLine {
       this.UpdateCoordinateLines(svgContainer);
 
       new SelectionAttributes();
-      let rect = Utils2.Pt2Rect(this.StartPoint, this.EndPoint);
+      const rect = Utils2.Pt2Rect(this.StartPoint, this.EndPoint);
       points.push(new Point(this.StartPoint.x - rect.x, this.StartPoint.y - rect.y));
       points.push(new Point(this.EndPoint.x - rect.x, this.EndPoint.y - rect.y));
 
-      let deltaX = points[0].x - points[1].x;
-      let deltaY = points[0].y - points[1].y;
-      let distance = Utils2.sqrt(deltaX * deltaX + deltaY * deltaY);
-      let deepCopiedEndPoint = Utils1.DeepCopy(this.EndPoint);
+      const deltaX = points[0].x - points[1].x;
+      const deltaY = points[0].y - points[1].y;
+      const distance = Utils2.sqrt(deltaX * deltaX + deltaY * deltaY);
+      const deepCopiedEndPoint = Utils1.DeepCopy(this.EndPoint);
 
       GlobalData.optManager.UpdateDisplayCoordinates(this.Frame, deepCopiedEndPoint, ConstantData.CursorTypes.Grow, this);
 
-      if (GlobalData.optManager.theContentHeader.flags & ConstantData.ContentHeaderFlags.CT_DA_NoAuto &&
-        (deepCopiedEndPoint.x != this.EndPoint.x || deepCopiedEndPoint.y != this.EndPoint.y)) {
-        let error = new Error(Resources.Strings.Error_Bounds);
-        error.name = '1';
+      if (
+        (GlobalData.optManager.theContentHeader.flags & ConstantData.ContentHeaderFlags.CT_DA_NoAuto) &&
+        (deepCopiedEndPoint.x !== this.EndPoint.x || deepCopiedEndPoint.y !== this.EndPoint.y)
+      ) {
+        const error = new Error(Resources.Strings.Error_Bounds);
+        error.name = "1";
         throw error;
       }
 
-      if (this.DataID !== -1 && svgContainer) {
+      if (this.DataID !== -1) {
         this.LM_ResizeSVGTextObject(svgContainer, this, this.Frame);
       }
     }
 
-    console.log('S.Line - Output:', { shapeElement, slopElement, points });
+    console.log("S.Connector - Output:", {
+      shapeElement: svgContainer ? svgContainer.GetElementByID(ConstantData.SVGElementClass.SHAPE) : null,
+      slopElement: svgContainer ? svgContainer.GetElementByID(ConstantData.SVGElementClass.SLOP) : null
+    });
   }
 
   Flip(flipFlags: number) {
@@ -812,7 +827,6 @@ class Line extends BaseLine {
     console.log('S.Line - Output:', { offsetX, offsetY, newWidth, newHeight, deltaX, deltaY, shouldAdjust });
     return shouldAdjust;
   }
-
 }
 
-export default Line
+export default Line;

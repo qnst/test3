@@ -1,94 +1,31 @@
 
 
-
-
-
-
-// import SDJS from "../../SDJS/SDJS.Index";
-// import SDUI from "../../SDUI/SDUI.Index";
-// import SDGraphics from "./../../SDGraphics/SDGraphics.Index";
-// import GPP from '../../gListManager';
-// import $ from 'jquery';
-// import HvacSVG from '../../Hvac.SVG.t2';
 import HvTimer from '../Helper/HvTimer'
-
-// import {Evt_ActionTrackHandlerFactory,
-
-//   Evt_ActionReleaseHandlerFactory,
-//   Evt_WorkAreaHammerDragStart,
-//   Evt_DrawTrackHandlerFactory,
-//   Evt_DrawReleaseHandlerFactory
-// } from '../../MouseEvent';
-
 import BaseDrawingObject from './Shape.BaseDrawingObject'
 import GlobalData from '../Data/GlobalData'
-// import ShapeContainer from './Shape.ShapeContainer'
 import Utils1 from '../Helper/Utils1';
 import Utils2 from "../Helper/Utils2";
 import Utils3 from "../Helper/Utils3";
 import DefaultEvt from "../Event/DefaultEvt";
-
 import Collab from '../Data/Collab'
 import FileParser from '../Data/FileParser'
-
 import Resources from '../Data/Resources'
 import ListManager from '../Data/ListManager';
-
-// import Element from "../Basic/Basic.Element";
-
 import $ from 'jquery';
 import Point from '../Model/Point';
-
-
 import Document from '../Basic/Basic.Document'
-
-
 import Element from '../Basic/Basic.Element';
-// import Business from '../Opt/Business/Business';
-
 import Business from '../Opt/Business/Business';
 import SDF from '../Data/SDF'
-
 import Commands from '../Opt/Business/Commands'
-
 import Instance from '../Data/Instance/Instance'
 import ConstantData from '../Data/ConstantData'
 import PolyList from '../Model/PolyList'
-
-
-
 import PolySeg from '../Model/PolySeg'
 import RightClickData from '../Model/RightClickData'
 import Rectangle from '../Model/Rectangle'
 
 class BaseShape extends BaseDrawingObject {
-
-  /*
-    ListManager.BaseShape = function (e) {
-      (e = e || {
-      }).DrawingObjectBaseClass = ConstantData.DrawingObjectBaseClass.SHAPE,
-        0 !== e.hookflags &&
-        (
-          e.hookflags = ConstantData.HookFlags.SED_LC_Shape | ConstantData.HookFlags.SED_LC_AttachToLine
-        ),
-        0 !== e.targflags &&
-        (
-          e.targflags = ConstantData.HookFlags.SED_LC_Shape | ConstantData.HookFlags.SED_LC_Line
-        );
-      var t = ListManager.BaseDrawingObject.apply(this, [
-        e
-      ]);
-      if (
-        t.ShapeType = e.ShapeType,
-        t.shapeparam = e.shapeparam ||
-        0,
-        t.SVGDim = e.SVGDim ||
-        {
-        },
-        t
-      ) return t
-    }
-      */
 
   public ShapeType: any;
   public shapeparam: any;
@@ -116,37 +53,6 @@ class BaseShape extends BaseDrawingObject {
 
     console.log("= S.BaseShape - constructor output:", this);
   }
-
-
-
-
-  // ListManager.BaseShape = function (e) {
-  //   (e = e || {
-  //   }).DrawingObjectBaseClass = ConstantData.DrawingObjectBaseClass.SHAPE,
-  //     0 !== e.hookflags &&
-  //     (
-  //       e.hookflags = ConstantData.HookFlags.SED_LC_Shape | ConstantData.HookFlags.SED_LC_AttachToLine
-  //     ),
-  //     0 !== e.targflags &&
-  //     (
-  //       e.targflags = ConstantData.HookFlags.SED_LC_Shape | ConstantData.HookFlags.SED_LC_Line
-  //     );
-  //   var t = ListManager.BaseDrawingObject.apply(this, [
-  //     e
-  //   ]);
-  //   if (
-  //     t.ShapeType = e.ShapeType,
-  //     t.shapeparam = e.shapeparam ||
-  //     0,
-  //     t.SVGDim = e.SVGDim ||
-  //     {
-  //     },
-  //     t
-  //   ) return t
-  // }
-
-  // ListManager.BaseShape.prototype = new ListManager.BaseDrawingObject,
-  //   ListManager.BaseShape.prototype.constructor = ListManager.BaseShape,
 
   CreateActionTriggers(svgDoc, triggerId, rotationProvider, extraParam) {
     console.log("= S.BaseShape - CreateActionTriggers input:", { svgDoc, triggerId, rotationProvider, extraParam });
@@ -1281,7 +1187,6 @@ class BaseShape extends BaseDrawingObject {
     return false;
   }
 
-
   GetPolyList() {
     console.log("= S.BaseShape - GetPolyList input:", {});
     let seg: PolySeg;
@@ -1670,14 +1575,6 @@ class BaseShape extends BaseDrawingObject {
     console.log("= S.BaseShape - GetListOfEnclosedObjects output:", enclosedObjects);
     return enclosedObjects;
   }
-
-  // InsertNewTable(e, t, a) {
-  //   return this.GetTable(!1) ? GlobalData.optManager.Table_SetProperties(this, e, t) : null == this.ImageURL ||
-  //     '' === this.ImageURL ? (
-  //     GlobalData.optManager.Table_Create(this.BlockID, e, t, this.TextGrow, a),
-  //     !0
-  //   ) : void 0
-  // }
 
   PinProportional(actionRect: { x: number; y: number; width: number; height: number }): void {
     console.log("= S.BaseShape PinProportional - Input:", actionRect);
@@ -3182,8 +3079,6 @@ class BaseShape extends BaseDrawingObject {
     return !0
   }
 
-
-
   Connector_LM_ActionClick(e, t) {
     // ListManager.BaseLine.prototype.LM_ActionClick.call(this, e, t)
 
@@ -3219,7 +3114,6 @@ class BaseShape extends BaseDrawingObject {
     }
   }
 
-
   LM_ActionClick_ExceptionCleanup(e) {
     GlobalData.optManager.unbindActionClickHammerEvents(),
       this.ResetAutoScrollTimer(),
@@ -3231,8 +3125,6 @@ class BaseShape extends BaseDrawingObject {
       GlobalData.optManager.theActionSVGObject = null,
       GlobalData.optManager.HideOverlayLayer()
   }
-
-
 
   LM_ActionClick(e, t, a, r, i) {
     Utils2.StopPropagationAndDefaults(e);
@@ -3691,8 +3583,6 @@ class BaseShape extends BaseDrawingObject {
       GlobalData.optManager.WorkAreaHammer.on('dragstart', DefaultEvt.Evt_WorkAreaHammerDragStart)
   }
 
-
-
   LM_DrawClick(event: any, triggerData: any) {
     console.log('= S.BaseShape - LM_DrawClick input:', { event, triggerData });
 
@@ -3711,7 +3601,6 @@ class BaseShape extends BaseDrawingObject {
       throw error;
     }
   }
-
 
   RotateKnobCenterDivisor() {
     console.log("= S.BaseShape - RotateKnobCenterDivisor input");
@@ -4633,7 +4522,6 @@ class BaseShape extends BaseDrawingObject {
     return isCoManager;
   }
 
-
   RRect_GetCornerSize(customSize) {
     console.log("= S.BaseShape - RRect_GetCornerSize input:", { customSize });
 
@@ -4665,7 +4553,6 @@ class BaseShape extends BaseDrawingObject {
     console.log("= S.BaseShape - RRect_GetCornerSize output:", result);
     return result;
   }
-
 
   GetPerimPts(points, targetPoints, hookId, rotate, table, needRotate) {
     console.log("= S.BaseShape - GetPerimPts input:", { points, targetPoints, hookId, rotate, table, needRotate });
@@ -4833,7 +4720,6 @@ class BaseShape extends BaseDrawingObject {
     console.log("= S.BaseShape - RRect_GetPerimPts output:", perimeterPoints);
     return perimeterPoints;
   }
-
 
   ChangeTarget(eventType: number, targetID: number, additionalData: any, flag: number, coordinates: { x: number; y: number }, needChangeTarget: boolean) {
     console.log("= S.BaseShape - ChangeTarget input:", { eventType, targetID, additionalData, flag, coordinates, needChangeTarget });
@@ -5542,9 +5428,6 @@ class BaseShape extends BaseDrawingObject {
     console.log("= S.BaseShape - PolyGetTargets output: null");
     return null;
   }
-
-
-
 
   LM_AddSVGTextObject(e, t) {
     var a,
@@ -6574,8 +6457,6 @@ class BaseShape extends BaseDrawingObject {
     }
   }
 
-
-
   UseEdges(e, t, a, r, i, n) {
     var o,
       s = 0,
@@ -6905,27 +6786,6 @@ class BaseShape extends BaseDrawingObject {
     }
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   Pr_UpdateExtra(e) {
     var t = this.BlockID,
       a = GlobalData.optManager.GetObjectPtr(this.hooks[0].objid, !0);
@@ -6999,7 +6859,6 @@ class BaseShape extends BaseDrawingObject {
         )
     }
   }
-
 
 }
 

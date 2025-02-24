@@ -1,263 +1,325 @@
 
 
-
-
-
-// import SDJS from "../../SDJS/SDJS.Index";
-// import SDUI from "../../SDUI/SDUI.Index";
-// import SDGraphics from "./../../SDGraphics/SDGraphics.Index";
-// import GPP from '../../gListManager';
-// import $ from 'jquery';
-// import HvacSVG from '../../Hvac.SVG.t2';
-
-
 import SegmentedLine from './Shape.SegmentedLine'
 import ListManager from '../Data/ListManager';
-// import Document from '../Basic/Basic.Document';
-// import Utils from '../Helper/Helper.Utils';
 import Utils1 from '../Helper/Utils1';
 import Utils2 from "../Helper/Utils2";
 import Utils3 from "../Helper/Utils3";
-// import Utils2 from "../Helper/Utils2";
-// import Utils3 from "../Helper/Utils3";
 import GlobalData from '../Data/GlobalData'
-// import Collab from '../Data/Collab'
-// import FileParser from '../Data/FileParser'
-// import DefaultEvt from "../Event/Event.Default";
-// import Resources from '../Data/Resources'
-// import Element from "../Basic/Basic.Element";
-
 import Document from '../Basic/Basic.Document'
-
 import Element from '../Basic/Basic.Element';
 import ConstantData from '../Data/ConstantData'
 import PolySeg from '../Model/PolySeg'
 
 class ArcSegmentedLine extends SegmentedLine {
 
-
-
-
-
-  // constructor(e) {
-  //   //'use strict';
-  //   (e = e || {
-  //   }).LineType = e.LineType ||
-  //     ListManager.LineType.ARCSEGLINE;
-  //   var t = ListManager.SegmentedLine.apply(this, [
-  //     e
-  //   ]);
-  //   if (t) return t
-  // }
-
-
-
-  constructor(e) {
-    //'use strict';
-    e = e || {};
-    e.LineType = e.LineType || ConstantData.LineType.ARCSEGLINE;
-    // const t = super(e);
-    super(e);
-    // if (t) return t;
+  constructor(options: any) {
+    console.log("S.ArcSegmentedLine - Constructor input:", options);
+    options = options || {};
+    options.LineType = options.LineType || ConstantData.LineType.ARCSEGLINE;
+    super(options);
+    console.log("S.ArcSegmentedLine - Constructor output initialized with:", options);
   }
 
+  CreateShape(svgContext, isPreviewMode) {
+    console.log("S.ArcSegmentedLine - CreateShape input:", { svgContext, isPreviewMode });
 
-  // ListManager.ArcSegmentedLine.prototype = new ListManager.SegmentedLine,
-  // ListManager.ArcSegmentedLine.prototype.constructor = ListManager.ArcSegmentedLine,
-  CreateShape(e, t) {
-    var a,
-      r,
-      i = [];
-    if (this.flags & ConstantData.ObjFlags.SEDO_NotVisible) return null;
-    var n,
-      o = e.CreateShape(ConstantData.CreateShapeType.SHAPECONTAINER),
-      s = 0 === this.hoplist.nhops;
-    s ? (
-      a = e.CreateShape(ConstantData.CreateShapeType.PATH),
-      r = e.CreateShape(ConstantData.CreateShapeType.PATH)
-    ) : (
-      a = e.CreateShape(ConstantData.CreateShapeType.POLYLINE),
-      r = e.CreateShape(ConstantData.CreateShapeType.POLYLINE)
-    ),
-      a.SetID(ConstantData.SVGElementClass.SHAPE),
-      r.SetID(ConstantData.SVGElementClass.SLOP),
-      r.ExcludeFromExport(!0),
-      this.CalcFrame();
-    var l = Utils2.Pt2Rect(this.StartPoint, this.EndPoint),
-      S = this.StyleRecord,
-      c = (
-        (S = this.SVGTokenizerHook(S)).Fill.Paint.Color,
-        S.Line.Paint.Color
-      ),
-      u = S.Line.Thickness,
-      p = S.Line.Paint.Opacity,
-      d = S.Line.LinePattern;
-    S.Line.Thickness > 0 &&
-      S.Line.Thickness < 1 &&
-      (u = 1);
-    var D = l.width,
-      g = l.height;
-    if (o.SetSize(D, g), o.SetPos(l.x, l.y), a.SetSize(D, g), s) i = ListManager.SegmentedLine.prototype.GetPolyPoints.call(this, ConstantData.Defines.NPOLYPTS, !0, !0, null),
-      n = this.UpdateSVG(a, i);
-    else {
-      if (
-        i = this.GetPolyPoints(ConstantData.Defines.NPOLYPTS, !0),
-        0 !== this.hoplist.nhops
-      ) {
-        var h = GlobalData.optManager.InsertHops(this, i, i.length);
-        i = i.slice(0, h.npts)
+    let shapePath, shapeSlop, pointsArray = [];
+    if (this.flags & ConstantData.ObjFlags.SEDO_NotVisible) {
+      console.log("S.ArcSegmentedLine - CreateShape output:", null);
+      return null;
+    }
+
+    let polyPointsResult;
+    const containerShape = svgContext.CreateShape(ConstantData.CreateShapeType.SHAPECONTAINER);
+    const isSimpleSegment = (this.hoplist.nhops === 0);
+
+    if (isSimpleSegment) {
+      shapePath = svgContext.CreateShape(ConstantData.CreateShapeType.PATH);
+      shapeSlop = svgContext.CreateShape(ConstantData.CreateShapeType.PATH);
+    } else {
+      shapePath = svgContext.CreateShape(ConstantData.CreateShapeType.POLYLINE);
+      shapeSlop = svgContext.CreateShape(ConstantData.CreateShapeType.POLYLINE);
+    }
+
+    shapePath.SetID(ConstantData.SVGElementClass.SHAPE);
+    shapeSlop.SetID(ConstantData.SVGElementClass.SLOP);
+    shapeSlop.ExcludeFromExport(true);
+
+    this.CalcFrame();
+
+    const boundingRect = Utils2.Pt2Rect(this.StartPoint, this.EndPoint);
+    let styleRecord = this.StyleRecord;
+    styleRecord = this.SVGTokenizerHook(styleRecord);
+    // Extract stroke color from style.
+    const strokeColor = styleRecord.Line.Paint.Color;
+    let strokeWidth = styleRecord.Line.Thickness;
+    const strokeOpacity = styleRecord.Line.Paint.Opacity;
+    const linePattern = styleRecord.Line.LinePattern;
+
+    // Ensure minimum stroke width.
+    if (strokeWidth > 0 && strokeWidth < 1) {
+      strokeWidth = 1;
+    }
+
+    const shapeWidth = boundingRect.width;
+    const shapeHeight = boundingRect.height;
+
+    containerShape.SetSize(shapeWidth, shapeHeight);
+    containerShape.SetPos(boundingRect.x, boundingRect.y);
+    shapePath.SetSize(shapeWidth, shapeHeight);
+
+    if (isSimpleSegment) {
+      pointsArray = ListManager.SegmentedLine.prototype.GetPolyPoints.call(this, ConstantData.Defines.NPOLYPTS, true, true, null);
+      polyPointsResult = this.UpdateSVG(shapePath, pointsArray);
+    } else {
+      pointsArray = this.GetPolyPoints(ConstantData.Defines.NPOLYPTS, true);
+      if (this.hoplist.nhops !== 0) {
+        const hopsResult = GlobalData.optManager.InsertHops(this, pointsArray, pointsArray.length);
+        pointsArray = pointsArray.slice(0, hopsResult.npts);
       }
-      a.SetPoints(i)
+      shapePath.SetPoints(pointsArray);
     }
-    return a.SetFillColor('none'),
-      a.SetStrokeColor(c),
-      a.SetStrokeOpacity(p),
-      a.SetStrokeWidth(u),
-      0 !== d &&
-      a.SetStrokePattern(d),
-      r.SetSize(D, g),
-      s ? r.SetPath(n) : r.SetPoints(i),
-      r.SetStrokeColor('white'),
-      r.SetFillColor('none'),
-      r.SetOpacity(0),
-      t ? r.SetEventBehavior(Element.EventBehavior.HIDDEN_OUT) : r.SetEventBehavior(Element.EventBehavior.NONE),
-      r.SetStrokeWidth(u + ConstantData.Defines.SED_Slop),
-      o.AddElement(a),
-      o.AddElement(r),
-      this.ApplyStyles(a, S),
-      this.ApplyEffects(o, !1, !0),
-      o.isShape = !0,
-      this.AddIcons(e, o),
-      o
+
+    shapePath.SetFillColor('none');
+    shapePath.SetStrokeColor(strokeColor);
+    shapePath.SetStrokeOpacity(strokeOpacity);
+    shapePath.SetStrokeWidth(strokeWidth);
+    if (linePattern !== 0) {
+      shapePath.SetStrokePattern(linePattern);
+    }
+
+    shapeSlop.SetSize(shapeWidth, shapeHeight);
+    if (isSimpleSegment) {
+      shapeSlop.SetPath(polyPointsResult);
+    } else {
+      shapeSlop.SetPoints(pointsArray);
+    }
+
+    shapeSlop.SetStrokeColor('white');
+    shapeSlop.SetFillColor('none');
+    shapeSlop.SetOpacity(0);
+    if (isPreviewMode) {
+      shapeSlop.SetEventBehavior(Element.EventBehavior.HIDDEN_OUT);
+    } else {
+      shapeSlop.SetEventBehavior(Element.EventBehavior.NONE);
+    }
+
+    shapeSlop.SetStrokeWidth(strokeWidth + ConstantData.Defines.SED_Slop);
+    containerShape.AddElement(shapePath);
+    containerShape.AddElement(shapeSlop);
+
+    this.ApplyStyles(shapePath, styleRecord);
+    this.ApplyEffects(containerShape, false, true);
+
+    containerShape.isShape = true;
+    this.AddIcons(svgContext, containerShape);
+
+    console.log("S.ArcSegmentedLine - CreateShape output:", containerShape);
+    return containerShape;
   }
 
-  UpdateSVG(e, t) {
-    var a,
-      r,
-      i,
-      n,
-      o,
-      s,
-      l,
-      S,
-      c,
-      u = e.PathCreator();
-    u.BeginPath(),
-      u.MoveTo(t[0].x, t[0].y),
-      a = t[0].x,
-      r = t[0].y;
-    var p = t.length;
-    2 === p &&
-      u.LineTo(t[1].x, t[1].y);
-    for (var d = 2; d < p; d++) S = a,
-      c = r,
-      t[d - 1].x === t[d].x ? (
-        d < p - 1 ? (r = (t[d - 1].y + t[d].y) / 2, n = Math.abs(t[d - 1].y - t[d].y) / 2) : (n = Math.abs(r - t[d].y), r = t[d].y),
-        i = Math.abs(a - t[d].x),
-        l = r - c,
-        o = !((s = (a = t[d].x) - S) >= 0 && l < 0 || s < 0 && l >= 0)
-      ) : (
-        d < p - 1 ? (i = Math.abs(t[d - 1].x - t[d].x) / 2, a = (t[d - 1].x + t[d].x) / 2) : (i = Math.abs(a - t[d].x), a = t[d].x),
-        n = Math.abs(r - t[d].y),
-        l = (r = t[d].y) - c,
-        o = !((s = a - S) < 0 && l < 0 || s >= 0 && l >= 0)
-      ),
-      u.ArcTo(a, r, i, n, 0, o, !1, !1);
-    var D = u.ToString();
-    return e.SetPath(D),
-      D
+  UpdateSVG(svgElement, points) {
+    console.log("S.ArcSegmentedLine - updateSVG input:", { svgElement, points });
+
+    // Create the path creator from the svg element.
+    const arcCreator = svgElement.PathCreator();
+    arcCreator.BeginPath();
+    arcCreator.MoveTo(points[0].x, points[0].y);
+
+    let currentX = points[0].x;
+    let currentY = points[0].y;
+    const pointsCount = points.length;
+
+    // If there are only two points, just draw a line.
+    if (pointsCount === 2) {
+      arcCreator.LineTo(points[1].x, points[1].y);
+    }
+
+    // Process additional points to create arcs.
+    for (let index = 2; index < pointsCount; index++) {
+      // Preserve previous coordinates.
+      const previousX = currentX;
+      const previousY = currentY;
+      let radiusX, radiusY, delta, diff, anticlockwise;
+
+      if (points[index - 1].x === points[index].x) {
+        if (index < pointsCount - 1) {
+          currentY = (points[index - 1].y + points[index].y) / 2;
+          radiusY = Math.abs(points[index - 1].y - points[index].y) / 2;
+        } else {
+          radiusY = Math.abs(currentY - points[index].y);
+          currentY = points[index].y;
+        }
+        radiusX = Math.abs(currentX - points[index].x);
+        delta = currentY - previousY;
+        diff = (currentX = points[index].x) - previousX;
+        anticlockwise = !((diff >= 0 && delta < 0) || (diff < 0 && delta >= 0));
+      } else {
+        if (index < pointsCount - 1) {
+          radiusX = Math.abs(points[index - 1].x - points[index].x) / 2;
+          currentX = (points[index - 1].x + points[index].x) / 2;
+        } else {
+          radiusX = Math.abs(currentX - points[index].x);
+          currentX = points[index].x;
+        }
+        radiusY = Math.abs(currentY - points[index].y);
+        delta = (currentY = points[index].y) - previousY;
+        diff = currentX - previousX;
+        anticlockwise = !((diff < 0 && delta < 0) || (diff >= 0 && delta >= 0));
+      }
+      arcCreator.ArcTo(currentX, currentY, radiusX, radiusY, 0, anticlockwise, false, false);
+    }
+
+    const pathDefinition = arcCreator.ToString();
+    svgElement.SetPath(pathDefinition);
+    console.log("S.ArcSegmentedLine - updateSVG output:", pathDefinition);
+    return pathDefinition;
   }
 
-  GetPolyPoints(e, t, a, r, i) {
-    var n,
-      o,
-      s,
-      l,
-      S,
-      c,
-      u,
-      p,
-      d,
-      D,
-      g,
-      h = [];
+  GetPolyPoints(numPoints: number, useRelativeCoordinates: boolean, includeStartPoint: boolean, unusedFlag: any, unusedParam: any) {
+    console.log("S.ArcSegmentedLine - GetPolyPoints input:", { numPoints, useRelativeCoordinates, includeStartPoint, unusedFlag, unusedParam });
+
+    let basePoints: Point[],
+      index: number,
+      totalPoints: number,
+      currentX: number,
+      currentY: number,
+      boundingRect,
+      prevX: number,
+      prevY: number,
+      diff: number,
+      delta: number,
+      isClockwise: boolean,
+      resultPoints: Point[] = [];
+
+    // Obtain base points from SegmentedLine's implementation.
+    basePoints = ListManager.SegmentedLine.prototype.GetPolyPoints.call(this, ConstantData.Defines.NPOLYPTS, true, true, false, null);
+    boundingRect = Utils2.Pt2Rect(this.StartPoint, this.EndPoint);
+
+    // Check if the starting and ending directions are zero and the bounding rectangle is degenerate.
     if (
-      n = ListManager.SegmentedLine.prototype.GetPolyPoints.call(this, ConstantData.Defines.NPOLYPTS, !0, !0, !1, null),
-      c = Utils2.Pt2Rect(this.StartPoint, this.EndPoint),
-      0 === this.segl.firstdir &&
-      0 === this.segl.lastdir &&
-      (
-        Utils2.IsEqual(c.height, 0) ||
-        Utils2.IsEqual(c.width, 0)
-      )
+      this.segl.firstdir === 0 &&
+      this.segl.lastdir === 0 &&
+      (Utils2.IsEqual(boundingRect.height, 0) || Utils2.IsEqual(boundingRect.width, 0))
     ) {
-      if (h = n, !t) for (s = h.length, o = 0; o < s; o++) h[o].x += c.x,
-        h[o].y += c.y;
-      return h
+      resultPoints = basePoints;
+      if (!useRelativeCoordinates) {
+        for (index = 0, totalPoints = resultPoints.length; index < totalPoints; index++) {
+          resultPoints[index].x += boundingRect.x;
+          resultPoints[index].y += boundingRect.y;
+        }
+      }
+      console.log("S.ArcSegmentedLine - GetPolyPoints output:", resultPoints);
+      return resultPoints;
     }
+
     if (this.segl && this.segl.pts.length) {
-      for (
-        l = n[0].x,
-        S = n[0].y,
-        s = n.length,
-        a &&
-        h.push(new Point(l, S)),
-        o = 2;
-        o < s;
-        o++
-      ) u = l,
-        p = S,
-        n[o - 1].x === n[o].x ? (
-          o < s - 1 ? (S = (n[o - 1].y + n[o].y) / 2, Math.abs(n[o - 1].y - n[o].y) / 2) : (Math.abs(S - n[o].y), S = n[o].y),
-          Math.abs(l - n[o].x),
-          D = S - p,
-          g = !((d = (l = n[o].x) - u) >= 0 && D < 0 || d < 0 && D >= 0)
-        ) : (
-          o < s - 1 ? (Math.abs(n[o - 1].x - n[o].x), l = (n[o - 1].x + n[o].x) / 2) : (Math.abs(l - n[o].x), l = n[o].x),
-          Math.abs(S - n[o].y),
-          D = (S = n[o].y) - p,
-          g = !((d = l - u) < 0 && D < 0 || d >= 0 && D >= 0)
-        ),
-        a ? (
-          h.push(new Point(l, S)),
-          h[h.length - 1].notclockwise = !g
-        ) : GlobalData.optManager.EllipseToPoints(h, e / 2, u, l, p, S, g);
-      if (!t) for (s = h.length, o = 0; o < s; o++) h[o].x += c.x,
-        h[o].y += c.y
-    } else h = ListManager.BaseLine.prototype.GetPolyPoints.call(this, e, t, !0, null);
-    return h
+      // Initialize starting point values.
+      currentX = basePoints[0].x;
+      currentY = basePoints[0].y;
+      totalPoints = basePoints.length;
+      if (includeStartPoint) {
+        resultPoints.push(new Point(currentX, currentY));
+      }
+      // Process remaining points starting from index 2.
+      for (index = 2; index < totalPoints; index++) {
+        prevX = currentX;
+        prevY = currentY;
+        if (basePoints[index - 1].x === basePoints[index].x) {
+          if (index < totalPoints - 1) {
+            currentY = (basePoints[index - 1].y + basePoints[index].y) / 2;
+            // The computed half-difference is not used further.
+            Math.abs(basePoints[index - 1].y - basePoints[index].y) / 2;
+          } else {
+            Math.abs(currentY - basePoints[index].y);
+            currentY = basePoints[index].y;
+          }
+          Math.abs(currentX - basePoints[index].x);
+          delta = currentY - prevY;
+          diff = (currentX = basePoints[index].x) - prevX;
+          isClockwise = !((diff >= 0 && delta < 0) || (diff < 0 && delta >= 0));
+        } else {
+          if (index < totalPoints - 1) {
+            Math.abs(basePoints[index - 1].x - basePoints[index].x);
+            currentX = (basePoints[index - 1].x + basePoints[index].x) / 2;
+          } else {
+            Math.abs(currentX - basePoints[index].x);
+            currentX = basePoints[index].x;
+          }
+          Math.abs(currentY - basePoints[index].y);
+          delta = (currentY = basePoints[index].y) - prevY;
+          diff = currentX - prevX;
+          isClockwise = !((diff < 0 && delta < 0) || (diff >= 0 && delta >= 0));
+        }
+        if (includeStartPoint) {
+          resultPoints.push(new Point(currentX, currentY));
+          resultPoints[resultPoints.length - 1].notclockwise = !isClockwise;
+        } else {
+          GlobalData.optManager.EllipseToPoints(resultPoints, numPoints / 2, prevX, currentX, prevY, currentY, isClockwise);
+        }
+      }
+      if (!useRelativeCoordinates) {
+        for (index = 0, totalPoints = resultPoints.length; index < totalPoints; index++) {
+          resultPoints[index].x += boundingRect.x;
+          resultPoints[index].y += boundingRect.y;
+        }
+      }
+    } else {
+      resultPoints = ListManager.BaseLine.prototype.GetPolyPoints.call(this, numPoints, useRelativeCoordinates, true, null);
+    }
+
+    console.log("S.ArcSegmentedLine - GetPolyPoints output:", resultPoints);
+    return resultPoints;
   }
 
-  GetTextOnLineParams(e) {
-    if (3 !== this.segl.pts.length) return ListManager.SegmentedLine.prototype.GetTextOnLineParams.call(this, e);
+  GetTextOnLineParams(event: any) {
+    console.log("S.ArcSegmentedLine - GetTextOnLineParams input:", event);
+
+    if (this.segl.pts.length !== 3) {
+      const result = ListManager.SegmentedLine.prototype.GetTextOnLineParams.call(this, event);
+      console.log("S.ArcSegmentedLine - GetTextOnLineParams output:", result);
+      return result;
+    }
+
     switch (this.TextAlign) {
       case ConstantData.TextAlign.TOPCENTER:
       case ConstantData.TextAlign.CENTER:
-      case ConstantData.TextAlign.BOTTOMCENTER:
-        var t = this.GetPolyPoints(22, !1, !1, !1, null),
-          a = [],
-          r = {
-            Frame: new ListManager.Rect,
-            StartPoint: new Point,
-            EndPoint: new Point
-          };
-        r.Frame = Utils2.Pt2Rect(t[0], t[9]);
-        var i = GlobalData.optManager.SD_GetClockwiseAngleBetween2PointsInRadians(t[0], t[9]);
-        return a.push(new Point(t[0].x, t[0].y)),
-          a.push(new Point(t[9].x, t[9].y)),
-          a.push(new Point(t[7].x, t[7].y)),
-          Utils3.RotatePointsAboutCenter(r.Frame, i, a),
-          a[0].y = a[2].y,
-          a[1].y = a[2].y,
-          Utils3.RotatePointsAboutCenter(r.Frame, - i, a),
-          r.StartPoint.x = a[0].x,
-          r.StartPoint.y = a[0].y,
-          r.EndPoint.x = a[1].x,
-          r.EndPoint.y = a[1].y,
-          r.CenterProp = 0.3,
-          r;
-      default:
-        return ListManager.SegmentedLine.prototype.GetTextOnLineParams.call(this, e)
+      case ConstantData.TextAlign.BOTTOMCENTER: {
+        const polyPoints = this.GetPolyPoints(22, false, false, false, null);
+        const rotatedPoints: Point[] = [];
+        const textParams = {
+          Frame: new ListManager.Rect(),
+          StartPoint: new Point(),
+          EndPoint: new Point()
+        };
+
+        textParams.Frame = Utils2.Pt2Rect(polyPoints[0], polyPoints[9]);
+        const angle = GlobalData.optManager.SD_GetClockwiseAngleBetween2PointsInRadians(polyPoints[0], polyPoints[9]);
+
+        rotatedPoints.push(new Point(polyPoints[0].x, polyPoints[0].y));
+        rotatedPoints.push(new Point(polyPoints[9].x, polyPoints[9].y));
+        rotatedPoints.push(new Point(polyPoints[7].x, polyPoints[7].y));
+
+        Utils3.RotatePointsAboutCenter(textParams.Frame, angle, rotatedPoints);
+        rotatedPoints[0].y = rotatedPoints[2].y;
+        rotatedPoints[1].y = rotatedPoints[2].y;
+        Utils3.RotatePointsAboutCenter(textParams.Frame, -angle, rotatedPoints);
+
+        textParams.StartPoint.x = rotatedPoints[0].x;
+        textParams.StartPoint.y = rotatedPoints[0].y;
+        textParams.EndPoint.x = rotatedPoints[1].x;
+        textParams.EndPoint.y = rotatedPoints[1].y;
+        textParams.CenterProp = 0.3;
+
+        console.log("S.ArcSegmentedLine - GetTextOnLineParams output:", textParams);
+        return textParams;
+      }
+      default: {
+        const result = ListManager.SegmentedLine.prototype.GetTextOnLineParams.call(this, event);
+        console.log("S.ArcSegmentedLine - GetTextOnLineParams output:", result);
+        return result;
+      }
     }
   }
 

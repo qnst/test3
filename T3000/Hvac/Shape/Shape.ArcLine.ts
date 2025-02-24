@@ -1,7 +1,6 @@
 
 
 import BaseLine from './Shape.BaseLine'
-import ListManager from '../Data/ListManager'
 import Utils1 from '../Helper/Utils1'
 import Utils2 from "../Helper/Utils2"
 import Utils3 from "../Helper/Utils3"
@@ -15,7 +14,6 @@ import ConstantData1 from "../Data/ConstantData1"
 import Point from '../Model/Point'
 import $ from 'jquery'
 import Instance from '../Data/Instance/Instance'
-import { result } from 'lodash'
 
 class ArcLine extends BaseLine {
   public CurveAdjust: any;

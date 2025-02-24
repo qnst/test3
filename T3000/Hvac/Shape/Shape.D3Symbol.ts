@@ -10,58 +10,36 @@ import ConstantData from '../Data/ConstantData'
 
 class D3Symbol extends BaseSymbol {
 
+  constructor(options) {
+    options = options || {};
+    console.log("S.D3Symbol: Input options:", options);
 
-  // constructor(e) {
-  //   //'use strict';
-  //   (e = e || {
-  //   }).ShapeType = ConstantData.ShapeType.D3SYMBOL,
-  //     e.objecttype = ListManager.ObjectTypes.SD_OBJT_D3SYMBOL,
-  //     e.TextFlags = e.TextFlags ||
-  //     ConstantData.TextFlags.SED_TF_AttachB;
-  //   var t = ListManager.BaseShape.apply(this, [
-  //     e
-  //   ]);
-  //   if (this.SetD3Settings(e.d3Settings), t) return t
-  // }
+    options.ShapeType = ConstantData.ShapeType.D3SYMBOL;
+    options.objecttype = ConstantData.ObjectTypes.SD_OBJT_D3SYMBOL;
+    options.TextFlags = options.TextFlags || ConstantData.TextFlags.SED_TF_AttachB;
 
-
-  constructor(e) {
-    //'use strict';
-    e = e || {};
-    e.ShapeType = ConstantData.ShapeType.D3SYMBOL;
-    e.objecttype = ConstantData.ObjectTypes.SD_OBJT_D3SYMBOL;
-    e.TextFlags = e.TextFlags || ConstantData.TextFlags.SED_TF_AttachB;
-
-    // const t = ListManager.BaseShape.apply(this, [e]);
-
-    // Double === TODO
     super();
 
-    // if (this.SetD3Settings(e.d3Settings), t) {
-    //   return t;
-    // }
+    this.SetD3Settings(options.d3Settings);
 
-    this.SetD3Settings(e.d3Settings);
+    console.log("S.D3Symbol: Output options after initialization:", options);
   }
 
+  static DefaultD3Settings(inputSettings) {
+    console.log("S.D3Symbol: Input settings:", inputSettings);
 
-
-
-
-
-
-  // ListManager.D3Symbol.prototype = new ListManager.BaseSymbol,
-  // ListManager.D3Symbol.prototype.constructor = ListManager.D3Symbol,
-  static DefaultD3Settings(e) {
-    var t = {
+    let defaultSettings = {
       moduleID: null,
-      renderSettings: {
-      },
+      renderSettings: {},
       publicAttributes: []
     };
-    return e &&
-      (t = $.extend(!0, t, e)),
-      t
+
+    if (inputSettings) {
+      defaultSettings = $.extend(true, defaultSettings, inputSettings);
+    }
+
+    console.log("S.D3Symbol: Output settings:", defaultSettings);
+    return defaultSettings;
   }
 
   static DefaultStyleParams = [
@@ -71,463 +49,590 @@ class D3Symbol extends BaseSymbol {
     'textColor'
   ]
 
-  CreateShape(e, t) {
-    if (this.flags & ConstantData.ObjFlags.SEDO_NotVisible) return null;
-    var a = e.CreateShape(ConstantData.CreateShapeType.SHAPECONTAINER),
-      r = this.Frame;
-    this.TextFlags = ConstantData.TextFlags.SED_TF_AttachB,
-      a.SetSize(r.width, r.height),
-      a.SetPos(r.x, r.y),
-      a.isShape = !0;
-    var i = e.CreateShape(ConstantData.CreateShapeType.GROUP);
-    i.SetSize(r.width, r.height),
-      i.SetID(ConstantData.SVGElementClass.SHAPE);
-    var n = e.CreateShape(ConstantData.CreateShapeType.RECT);
-    n.SetStrokeColor('white'),
-      n.SetFillColor('none'),
-      n.SetOpacity(0),
-      n.SetStrokeWidth(0),
-      t ? n.SetEventBehavior(Element.EventBehavior.HIDDEN_ALL) : n.SetEventBehavior(Element.EventBehavior.NONE),
-      n.SetID(ConstantData.SVGElementClass.SLOP),
-      n.ExcludeFromExport(!0),
-      n.SetSize(r.width, r.height),
-      a.AddElement(n),
-      a.AddElement(i),
-      this.RenderControl(e, a),
-      - 1 != this.DataID &&
-      this.LM_AddSVGTextObject(e, a);
-    var o = (this.extraflags & ConstantData.ExtraFlags.SEDE_FlipHoriz) > 0,
-      s = (this.extraflags & ConstantData.ExtraFlags.SEDE_FlipVert) > 0;
-    return o &&
-      i.SetMirror(o),
-      s &&
-      i.SetFlip(s),
-      GlobalData.optManager.bDrawEffects &&
-      this.SetEffects(i, !1, !1),
-      a
+  CreateShape(svgDocument, applyHiddenEventBehavior) {
+    console.log("S.D3Symbol: Enter CreateShape with parameters:", { svgDocument, applyHiddenEventBehavior });
+
+    if (this.flags & ConstantData.ObjFlags.SEDO_NotVisible) {
+      console.log("S.D3Symbol: Object not visible, exiting CreateShape.");
+      return null;
+    }
+
+    const shapeContainer = svgDocument.CreateShape(ConstantData.CreateShapeType.SHAPECONTAINER);
+    const frame = this.Frame;
+
+    this.TextFlags = ConstantData.TextFlags.SED_TF_AttachB;
+    shapeContainer.SetSize(frame.width, frame.height);
+    shapeContainer.SetPos(frame.x, frame.y);
+    shapeContainer.isShape = true;
+
+    const groupShape = svgDocument.CreateShape(ConstantData.CreateShapeType.GROUP);
+    groupShape.SetSize(frame.width, frame.height);
+    groupShape.SetID(ConstantData.SVGElementClass.SHAPE);
+
+    const transparentRect = svgDocument.CreateShape(ConstantData.CreateShapeType.RECT);
+    transparentRect.SetStrokeColor('white');
+    transparentRect.SetFillColor('none');
+    transparentRect.SetOpacity(0);
+    transparentRect.SetStrokeWidth(0);
+
+    if (applyHiddenEventBehavior) {
+      transparentRect.SetEventBehavior(Element.EventBehavior.HIDDEN_ALL);
+    } else {
+      transparentRect.SetEventBehavior(Element.EventBehavior.NONE);
+    }
+
+    transparentRect.SetID(ConstantData.SVGElementClass.SLOP);
+    transparentRect.ExcludeFromExport(true);
+    transparentRect.SetSize(frame.width, frame.height);
+
+    shapeContainer.AddElement(transparentRect);
+    shapeContainer.AddElement(groupShape);
+
+    this.RenderControl(svgDocument, shapeContainer);
+
+    if (this.DataID !== -1) {
+      this.LM_AddSVGTextObject(svgDocument, shapeContainer);
+    }
+
+    const flipHorizontally = (this.extraflags & ConstantData.ExtraFlags.SEDE_FlipHoriz) > 0;
+    const flipVertically = (this.extraflags & ConstantData.ExtraFlags.SEDE_FlipVert) > 0;
+
+    if (flipHorizontally) {
+      groupShape.SetMirror(flipHorizontally);
+    }
+
+    if (flipVertically) {
+      groupShape.SetFlip(flipVertically);
+    }
+
+    if (GlobalData.optManager.bDrawEffects) {
+      this.SetEffects(groupShape, false, false);
+    }
+
+    console.log("S.D3Symbol: Exit CreateShape with shapeContainer:", shapeContainer);
+    return shapeContainer;
   }
 
-  RenderControl(e, t) {
-    var a = this.Frame,
-      r = this.GetRenderParams(),
-      i = t.GetElementByID(ConstantData.SVGElementClass.SHAPE),
-      n = t.GetElementByID(ConstantData.SVGElementClass.SLOP),
-      o = this.LoadCodeLibrary();
-    n &&
-      n.SetSize(a.width, a.height),
-      i &&
-      ($(i.DOMElement()).empty(), o && r && o.Render(i.DOMElement(), r))
+  RenderControl(svgDocument, shapeContainer) {
+    console.log("S.D3Symbol: RenderControl start. Input parameters:", { svgDocument, shapeContainer });
+
+    const frame = this.Frame;
+    const renderParams = this.GetRenderParams();
+    const shapeElement = shapeContainer.GetElementByID(ConstantData.SVGElementClass.SHAPE);
+    const slopElement = shapeContainer.GetElementByID(ConstantData.SVGElementClass.SLOP);
+    const codeLibrary = this.LoadCodeLibrary();
+
+    if (slopElement) {
+      slopElement.SetSize(frame.width, frame.height);
+    }
+
+    if (shapeElement) {
+      $(shapeElement.DOMElement()).empty();
+      if (codeLibrary && renderParams) {
+        codeLibrary.Render(shapeElement.DOMElement(), renderParams);
+      }
+    }
+
+    console.log("S.D3Symbol: RenderControl completed.");
   }
 
   LoadCodeLibrary() {
-    var e = this.d3Settings,
-      t = e ? e.moduleID : null,
-      a = t == this.codeLibID ? this.codeLib : null;
-    if (!t) return null;
-    a &&
-      t == this.codeLibID ||
-      (a = SDUI.Utils.GetSymbolCode(t)),
-      this.codeLibID = t,
-      this.codeLib = a;
-    var r = !(!a || !a.AllowFullDataTable) &&
-      a.AllowFullDataTable(),
-      i = !(!a || !a.ProportionalResize) &&
-        a.ProportionalResize();
-    return this.bMultiDataRecsAllowed = r,
-      this.ObjGrow = i ? ConstantData.GrowBehavior.PROPORTIONAL : ConstantData.GrowBehavior.ALL,
-      this.ResizeAspectConstrain = 1 == i,
-      a
+    console.log("S.D3Symbol: LoadCodeLibrary called with d3Settings:", this.d3Settings);
+
+    // Retrieve d3Settings and moduleID
+    const d3Settings = this.d3Settings;
+    const moduleID = d3Settings ? d3Settings.moduleID : null;
+
+    if (!moduleID) {
+      console.log("S.D3Symbol: LoadCodeLibrary output - moduleID is null. Returning null.");
+      return null;
+    }
+
+    // Check if the current code library corresponds to the moduleID
+    let codeLibrary = moduleID === this.codeLibID ? this.codeLib : null;
+
+    // If the library is not loaded or moduleID has changed, load a new one
+    if (!codeLibrary || moduleID !== this.codeLibID) {
+      codeLibrary = SDUI.Utils.GetSymbolCode(moduleID);
+    }
+
+    // Update internal library tracking
+    this.codeLibID = moduleID;
+    this.codeLib = codeLibrary;
+
+    // Determine settings based on the code library features
+    const allowsFullDataTable = codeLibrary && typeof codeLibrary.AllowFullDataTable === "function"
+      ? codeLibrary.AllowFullDataTable()
+      : false;
+    const proportionalResize = codeLibrary && typeof codeLibrary.ProportionalResize === "function"
+      ? codeLibrary.ProportionalResize()
+      : false;
+
+    this.bMultiDataRecsAllowed = allowsFullDataTable;
+    this.ObjGrow = proportionalResize ? ConstantData.GrowBehavior.PROPORTIONAL : ConstantData.GrowBehavior.ALL;
+    this.ResizeAspectConstrain = proportionalResize === true;
+
+    console.log("S.D3Symbol: LoadCodeLibrary output - Loaded codeLibrary:", codeLibrary);
+    return codeLibrary;
   }
 
-  MapData(e) {
-    var t = this.GetPublicParams(),
-      a = e;
-    if (a && t.length && this.HasFieldData()) {
-      var r,
-        i,
-        n,
-        o,
-        s,
-        l,
-        S,
-        c,
-        u,
-        p,
-        d,
-        D,
-        g = ListManager.SDData.FieldedDataGetFieldList(this.fieldDataTableID, !0),
-        h = function (e) {
-          var t,
-            a = {},
-            r = (e = e || '').split(':');
-          for (
-            a.name = r[0].toLowerCase(),
-            a.start = 0,
-            a.flags = null,
-            t = 1;
-            t < r.length;
-            t++
-          ) isNaN(parseInt(r[t], 10)) ? a.flags = r[t].toLowerCase() : a.start = parseInt(r[t], 10);
-          return a
-        },
-        m = function (e, t, a, r) {
-          var i,
-            n,
-            o;
-          if (!e || !a) return null;
-          a = a.toLowerCase();
-          var s = function (t, a) {
-            return 'string' === a ||
-              ('number' == t && ('int' == a || 'float' == a) || ('*' == e || '?' == e || t == a))
-          };
-          for (i = null, n = t = t || 0; n < g.length; n++) if (
-            s(a, (o = g[n]).type) &&
-            ('*' == e || '?' == e || o.name.toLowerCase() == e)
-          ) {
-            if (!r) {
-              i = n;
-              break
-            }
-            if ((i = i || []).push(n), '?' == e) break
-          }
-          return i
-        },
-        C = ListManager.SDData.GetFieldedDataTable(this.fieldDataTableID),
-        y = [];
-      if (C) {
-        for (n = 3; n < C.Rows.length; n++) y.push(C.Rows[n].ID);
-        for (n = 0; n < t.length; n++) if (
-          (i = a[t[n]]) &&
-          i.dataMap &&
-          (r = h(i.dataMap)) &&
-          null !== (c = m(r.name, r.start, i.type, i.isArray))
-        ) {
-          for (
-            D = null,
-            this.fieldDataElemID < 0 ? 'all' == r.flags ? (u = y, D = []) : u = [
-              y[0]
-            ] : u = [
-              this.fieldDataElemID
-            ],
-            d = 0;
-            d < u.length;
-            d++
-          ) {
-            if (p = u[d], l = null, i.isArray) for (l = [], o = 0; o < c.length; o++) S = g[c[o]],
-              void 0 !== (
-                s = 'label' == r.flags ? S.name : ListManager.SDData.FieldedDataGetFieldValue(this.fieldDataTableID, p, S.fieldID)
-              ) &&
-              l.push(s);
-            else S = g[c],
-              void 0 !== (
-                s = 'label' == r.flags ? S.name : ListManager.SDData.FieldedDataGetFieldValue(this.fieldDataTableID, p, S.fieldID)
-              ) &&
-              (l = s);
-            null !== l &&
-              (D ? D.push(l) : D = l)
-          }
-          null !== D &&
-            (i.value = D)
+  MapData(mappedData: any): void {
+    console.log("S.D3Symbol: MapData - Input:", mappedData);
+
+    const publicParams = this.GetPublicParams();
+    if (!mappedData || publicParams.length === 0 || !this.HasFieldData()) {
+      console.log("S.D3Symbol: MapData - No mapping performed (missing data, public params or field data).");
+      return;
+    }
+
+    const fieldList = ListManager.SDData.FieldedDataGetFieldList(this.fieldDataTableID, true);
+
+    // Parse a dataMap string like "fieldName:start:flags" into an object
+    const parseDataMapString = (dataMapString: string): { name: string; start: number; flags: string | null } => {
+      const parts = (dataMapString || '').split(':');
+      const result = {
+        name: parts[0].toLowerCase(),
+        start: 0,
+        flags: null as string | null
+      };
+      for (let idx = 1; idx < parts.length; idx++) {
+        const part = parts[idx];
+        if (isNaN(parseInt(part, 10))) {
+          result.flags = part.toLowerCase();
+        } else {
+          result.start = parseInt(part, 10);
         }
       }
+      return result;
+    };
+
+    // Find field indices in fieldList based on expected criteria.
+    const findFieldIndices = (
+      fieldName: string,
+      startIndex: number,
+      expectedType: string,
+      isArray: boolean
+    ): number | number[] | null => {
+      if (!fieldName || !expectedType) {
+        return null;
+      }
+      expectedType = expectedType.toLowerCase();
+
+      // Check whether a field type matches the expected type.
+      const typeMatches = (fieldType: any, expected: string): boolean => {
+        return (
+          expected === "string" && fieldType === "string" ||
+          fieldType === "number" && (expected === "int" || expected === "float") ||
+          fieldName === "*" || fieldName === "?" || fieldType === expected
+        );
+      };
+
+      let foundIndex: number | number[] | null = null;
+      startIndex = startIndex || 0;
+      for (let idx = startIndex; idx < fieldList.length; idx++) {
+        const field = fieldList[idx];
+        if (typeMatches(field.type, expectedType) && (fieldName === "*" || fieldName === "?" || field.name.toLowerCase() === fieldName)) {
+          if (!isArray) {
+            foundIndex = idx;
+            break;
+          }
+          if (foundIndex === null) {
+            foundIndex = [];
+          }
+          (foundIndex as number[]).push(idx);
+          if (fieldName === "?") {
+            break;
+          }
+        }
+      }
+      return foundIndex;
+    };
+
+    // Retrieve the field data table
+    const fieldDataTable = ListManager.SDData.GetFieldedDataTable(this.fieldDataTableID);
+    if (!fieldDataTable) {
+      console.log("S.D3Symbol: MapData - No field data table found.");
+      return;
     }
+
+    // Collect element IDs from fieldDataTable rows (starting from index 3)
+    const elementIDs: any[] = [];
+    for (let row = 3; row < fieldDataTable.Rows.length; row++) {
+      elementIDs.push(fieldDataTable.Rows[row].ID);
+    }
+
+    // Loop through each public parameter and map data if possible.
+    publicParams.forEach((paramName: string) => {
+      const paramData = mappedData[paramName];
+      if (paramData && paramData.dataMap) {
+        const parsedMap = parseDataMapString(paramData.dataMap);
+        const fieldIndex = findFieldIndices(parsedMap.name, parsedMap.start, paramData.type, paramData.isArray);
+        if (fieldIndex !== null) {
+          let collectedValue: any = null;
+          let targetElementIDs: any[] = [];
+
+          // Determine target elements based on fieldDataElemID and flags.
+          if (this.fieldDataElemID < 0) {
+            if (parsedMap.flags === "all") {
+              targetElementIDs = elementIDs;
+              collectedValue = [];
+            } else {
+              targetElementIDs = [elementIDs[0]];
+            }
+          } else {
+            targetElementIDs = [this.fieldDataElemID];
+          }
+
+          // Loop through target elements and populate value(s)
+          targetElementIDs.forEach((elementID) => {
+            let valueForField = null;
+            if (paramData.isArray) {
+              valueForField = [];
+              // fieldIndex is expected to be an array when isArray equals true.
+              (fieldIndex as number[]).forEach((idx) => {
+                const field = fieldList[idx];
+                const value = parsedMap.flags === "label"
+                  ? field.name
+                  : ListManager.SDData.FieldedDataGetFieldValue(this.fieldDataTableID, elementID, field.fieldID);
+                if (typeof value !== "undefined") {
+                  valueForField.push(value);
+                }
+              });
+            } else {
+              // single value expected
+              const field = fieldList[fieldIndex as number];
+              const value = parsedMap.flags === "label"
+                ? field.name
+                : ListManager.SDData.FieldedDataGetFieldValue(this.fieldDataTableID, elementID, field.fieldID);
+              if (typeof value !== "undefined") {
+                valueForField = value;
+              }
+            }
+
+            if (valueForField !== null) {
+              if (collectedValue) {
+                if (Array.isArray(collectedValue)) {
+                  collectedValue.push(valueForField);
+                } else {
+                  collectedValue = [collectedValue, valueForField];
+                }
+              } else {
+                collectedValue = valueForField;
+              }
+            }
+          });
+
+          // Set the mapped value to paramData if available
+          if (collectedValue !== null) {
+            paramData.value = collectedValue;
+          }
+        }
+      }
+    });
+
+    console.log("S.D3Symbol: MapData - Output (mapped data updated in object).");
   }
 
-  SetParamValue(e, t) {
-    var a = this.d3Settings ? this.d3Settings.renderSettings : null;
-    if (a && a[e]) {
-      GlobalData.optManager.GetObjectPtr(this.BlockID, !0);
-      a[e].value = t,
-        a[e].dataMap = null,
-        this.UpdateSizeFromSettings(),
-        GlobalData.optManager.AddToDirtyList(this.BlockID)
+  SetParamValue(paramName, paramValue) {
+    console.log("S.D3Symbol: SetParamValue - Input:", { paramName, paramValue });
+
+    const renderSettings = this.d3Settings ? this.d3Settings.renderSettings : null;
+    if (renderSettings && renderSettings[paramName]) {
+      GlobalData.optManager.GetObjectPtr(this.BlockID, true);
+      renderSettings[paramName].value = paramValue;
+      renderSettings[paramName].dataMap = null;
+      this.UpdateSizeFromSettings();
+      GlobalData.optManager.AddToDirtyList(this.BlockID);
     }
+
+    console.log("S.D3Symbol: SetParamValue - Updated renderSettings:", renderSettings);
   }
 
   UpdateSizeFromSettings() {
-    var e = this.GetRenderParams(),
-      t = this.LoadCodeLibrary(),
-      a = this.Frame;
-    if (e && t && t.CalcSizeFromSettings) {
-      var r = t.CalcSizeFromSettings(e);
-      r.width == a.width &&
-        r.height == a.height ||
-        (
-          a.width = r.width,
-          a.height = r.height,
-          this.UpdateFrame(a),
-          this.Resize(
-            GlobalData.optManager.svgObjectLayer.GetElementByID(this.BlockID),
-            a,
-            this
-          ),
-          GlobalData.optManager.AddToDirtyList(this.BlockID)
-        )
+    console.log("S.D3Symbol: UpdateSizeFromSettings - Start");
+
+    const renderParams = this.GetRenderParams();
+    const codeLibrary = this.LoadCodeLibrary();
+    const frame = this.Frame;
+
+    if (renderParams && codeLibrary && codeLibrary.CalcSizeFromSettings) {
+      const newSize = codeLibrary.CalcSizeFromSettings(renderParams);
+
+      if (newSize.width !== frame.width || newSize.height !== frame.height) {
+        frame.width = newSize.width;
+        frame.height = newSize.height;
+        this.UpdateFrame(frame);
+        this.Resize(
+          GlobalData.optManager.svgObjectLayer.GetElementByID(this.BlockID),
+          frame,
+          this
+        );
+        GlobalData.optManager.AddToDirtyList(this.BlockID);
+      }
+
+      console.log("S.D3Symbol: UpdateSizeFromSettings - New size:", newSize);
     }
+
+    console.log("S.D3Symbol: UpdateSizeFromSettings - End");
   }
 
   GetRenderParams() {
-    var e = this.Frame,
-      t = this.d3Settings ? this.d3Settings.renderSettings : null,
-      a = this;
-    if (t) {
-      var r = $.extend(!0, {
-      }, t);
-      return r.width = r.width ||
-      {
-      },
-        r.height = r.height ||
-        {
-        },
-        r.width.value = e.width,
-        r.height.value = e.height,
-        function (e) {
-          var r = a.GetFieldDataStyleOverride(),
-            i = r &&
-              r.strokeColor ? r.strokeColor : null,
-            n = r &&
-              r.fillColor ? r.fillColor : null,
-            o = r &&
-              r.textColor ? r.textColor : null,
-            s = a.StyleRecord.Fill.Paint.Color,
-            l = a.StyleRecord.Line.Paint.Color,
-            S = a.StyleRecord.Text.Paint.Color;
-          a.StyleRecord.Fill.Paint.FillType == ConstantData.FillTypes.SDFILL_TRANSPARENT ? s = 'none' : a.StyleRecord.Fill.Paint.FillType != ConstantData.FillTypes.SDFILL_SOLID &&
-            a.StyleRecord.Fill.Paint.FillType != ConstantData.FillTypes.SDFILL_GRADIENT &&
-            (s = null),
-            a.StyleRecord.Line.Paint.FillType == ConstantData.FillTypes.SDFILL_TRANSPARENT &&
-            (s = 'none'),
-            a.StyleRecord.Line.Paint.FillType != ConstantData.FillTypes.SDFILL_SOLID &&
-            a.StyleRecord.Line.Paint.FillType != ConstantData.FillTypes.SDFILL_GRADIENT &&
-            (l = null);
-          var c = n ||
-            s,
-            u = i ||
-              l,
-            p = a.StyleRecord.Line.Thickness,
-            d = o ||
-              S;
-          c &&
-            e.fillColor &&
-            (e.fillColor.value = c),
-            u &&
-            e.strokeColor &&
-            (e.strokeColor.value = u),
-            e.strokeWidth &&
-            (e.strokeWidth.value = p),
-            d &&
-            e.textColor &&
-            (e.textColor.value = d),
-            s &&
-            t.fillColor &&
-            (t.fillColor.value = s),
-            l &&
-            t.strokeColor &&
-            (t.strokeColor.value = l),
-            t.strokeWidth &&
-            (t.strokeWidth.value = p),
-            S &&
-            t.textColor &&
-            (t.textColor.value = S)
-        }(r),
-        this.MapData(r),
-        r
+    console.log("S.D3Symbol: GetRenderParams - Start");
+
+    const frame = this.Frame;
+    const renderSettings = this.d3Settings ? this.d3Settings.renderSettings : null;
+
+    if (renderSettings) {
+      const params = $.extend(true, {}, renderSettings);
+      params.width = params.width || {};
+      params.height = params.height || {};
+      params.width.value = frame.width;
+      params.height.value = frame.height;
+
+      const applyFieldDataStyleOverride = (params) => {
+        const styleOverride = this.GetFieldDataStyleOverride();
+        const strokeColor = styleOverride && styleOverride.strokeColor ? styleOverride.strokeColor : null;
+        const fillColor = styleOverride && styleOverride.fillColor ? styleOverride.fillColor : null;
+        const textColor = styleOverride && styleOverride.textColor ? styleOverride.textColor : null;
+
+        let fillPaintColor = this.StyleRecord.Fill.Paint.Color;
+        let linePaintColor = this.StyleRecord.Line.Paint.Color;
+        let textPaintColor = this.StyleRecord.Text.Paint.Color;
+
+        if (this.StyleRecord.Fill.Paint.FillType === ConstantData.FillTypes.SDFILL_TRANSPARENT) {
+          fillPaintColor = 'none';
+        } else if (this.StyleRecord.Fill.Paint.FillType !== ConstantData.FillTypes.SDFILL_SOLID &&
+          this.StyleRecord.Fill.Paint.FillType !== ConstantData.FillTypes.SDFILL_GRADIENT) {
+          fillPaintColor = null;
+        }
+
+        if (this.StyleRecord.Line.Paint.FillType === ConstantData.FillTypes.SDFILL_TRANSPARENT) {
+          linePaintColor = 'none';
+        } else if (this.StyleRecord.Line.Paint.FillType !== ConstantData.FillTypes.SDFILL_SOLID &&
+          this.StyleRecord.Line.Paint.FillType !== ConstantData.FillTypes.SDFILL_GRADIENT) {
+          linePaintColor = null;
+        }
+
+        const finalFillColor = fillColor || fillPaintColor;
+        const finalStrokeColor = strokeColor || linePaintColor;
+        const finalStrokeWidth = this.StyleRecord.Line.Thickness;
+        const finalTextColor = textColor || textPaintColor;
+
+        if (finalFillColor && params.fillColor) {
+          params.fillColor.value = finalFillColor;
+        }
+        if (finalStrokeColor && params.strokeColor) {
+          params.strokeColor.value = finalStrokeColor;
+        }
+        if (params.strokeWidth) {
+          params.strokeWidth.value = finalStrokeWidth;
+        }
+        if (finalTextColor && params.textColor) {
+          params.textColor.value = finalTextColor;
+        }
+
+        if (fillPaintColor && renderSettings.fillColor) {
+          renderSettings.fillColor.value = fillPaintColor;
+        }
+        if (linePaintColor && renderSettings.strokeColor) {
+          renderSettings.strokeColor.value = linePaintColor;
+        }
+        if (renderSettings.strokeWidth) {
+          renderSettings.strokeWidth.value = finalStrokeWidth;
+        }
+        if (textPaintColor && renderSettings.textColor) {
+          renderSettings.textColor.value = textPaintColor;
+        }
+      };
+
+      applyFieldDataStyleOverride(params);
+      this.MapData(params);
+
+      console.log("S.D3Symbol: GetRenderParams - Output:", params);
+      return params;
     }
+
+    console.log("S.D3Symbol: GetRenderParams - No renderSettings found.");
+    return null;
   }
 
-  SetDataMap(e, t) {
-    var a = this.d3Settings ? this.d3Settings.renderSettings : null;
-    if (a && a[e]) {
-      GlobalData.optManager.GetObjectPtr(this.BlockID, !0);
-      a[e].dataMap = t,
-        this.UpdateSizeFromSettings(),
-        GlobalData.optManager.AddToDirtyList(this.BlockID)
+  SetDataMap(paramName, dataMap) {
+    console.log("S.D3Symbol: SetDataMap - Input:", { paramName, dataMap });
+
+    const renderSettings = this.d3Settings ? this.d3Settings.renderSettings : null;
+    if (renderSettings && renderSettings[paramName]) {
+      GlobalData.optManager.GetObjectPtr(this.BlockID, true);
+      renderSettings[paramName].dataMap = dataMap;
+      this.UpdateSizeFromSettings();
+      GlobalData.optManager.AddToDirtyList(this.BlockID);
     }
+
+    console.log("S.D3Symbol: SetDataMap - Updated renderSettings:", renderSettings);
   }
 
   GetPublicParams() {
-    var e,
-      t,
-      a = this.d3Settings ? this.d3Settings.publicAttributes : null,
-      r = [];
-    if (!a) return r;
-    for (e = 0; e < a.length; e++) t = a[e],
-      ListManager.D3Symbol.DefaultStyleParams.indexOf(t) >= 0 ||
-      r.push(t);
-    return r
+    console.log("S.D3Symbol: GetPublicParams - Start");
+
+    const publicAttributes = this.d3Settings ? this.d3Settings.publicAttributes : null;
+    const result = [];
+
+    if (!publicAttributes) {
+      console.log("S.D3Symbol: GetPublicParams - No public attributes found.");
+      return result;
+    }
+
+    publicAttributes.forEach(attribute => {
+      if (ListManager.D3Symbol.DefaultStyleParams.indexOf(attribute) < 0) {
+        result.push(attribute);
+      }
+    });
+
+    console.log("S.D3Symbol: GetPublicParams - Output:", result);
+    return result;
   }
 
   ExportD3Settings() {
-    var e = '';
-    return this.d3Settings &&
-      (e = JSON.stringify(this.d3Settings)),
-      e
+    console.log("S.D3Symbol: ExportD3Settings - Start");
+
+    let settingsString = '';
+    if (this.d3Settings) {
+      settingsString = JSON.stringify(this.d3Settings);
+    }
+
+    console.log("S.D3Symbol: ExportD3Settings - Output:", settingsString);
+    return settingsString;
   }
 
-  ImportD3Settings(e) {
-    var t = null;
+  ImportD3Settings(settingsString) {
+    console.log("S.D3Symbol: ImportD3Settings - Input:", settingsString);
+
+    let parsedSettings = null;
     try {
-      t = JSON.parse(e)
-    } catch (e) {
-      throw e;
+      parsedSettings = JSON.parse(settingsString);
+    } catch (error) {
+      console.error("S.D3Symbol: ImportD3Settings - Error parsing settings:", error);
+      throw error;
     }
-    t &&
-      this.SetD3Settings(t)
+
+    if (parsedSettings) {
+      this.SetD3Settings(parsedSettings);
+    }
+
+    console.log("S.D3Symbol: ImportD3Settings - Output settings applied.");
   }
 
-  SetD3Settings(e) {
-    this.d3Settings = ListManager.D3Symbol.DefaultD3Settings(e);
-    var t = this.LoadCodeLibrary();
-    if (t) {
-      var a = t.GetRenderParams(!0);
-      this.d3Settings = $.extend(!0, this.d3Settings, a)
+  SetD3Settings(settings) {
+    console.log("S.D3Symbol: SetD3Settings - Input settings:", settings);
+
+    this.d3Settings = D3Symbol.DefaultD3Settings(settings);
+    const codeLibrary = this.LoadCodeLibrary();
+
+    if (codeLibrary) {
+      const renderParams = codeLibrary.GetRenderParams(true);
+      this.d3Settings = $.extend(true, this.d3Settings, renderParams);
     }
+
+    console.log("S.D3Symbol: SetD3Settings - Output d3Settings:", this.d3Settings);
   }
 
-  WriteSDFAttributes(e, t) {
-    if (
-      ListManager.BaseSymbol.prototype.WriteSDFAttributes.call(this, e, t),
-      this.d3Settings
-    ) {
-      var a = this.ExportD3Settings();
-      a &&
-        SDF.WriteString(e, a, FileParser.SDROpCodesByName.SDF_C_D3SETTINGS, t)
-    }
-  }
+  WriteSDFAttributes(file, options) {
+    console.log("S.D3Symbol: WriteSDFAttributes - Input:", { file, options });
 
-  Resize(e, t, a) {
-    if (null == e) return null;
-    var r = this.GetRenderParams(),
-      i = this.LoadCodeLibrary();
-    if (i && i.ResizeSettings) {
-      var n = i.ResizeSettings(r, t.width, t.height, !0);
-      if (n) for (var o = 0; o < n.length; o++) {
-        var s = n[o];
-        this.d3Settings.renderSettings[s] &&
-          r[s] &&
-          (this.d3Settings.renderSettings[s].value = r[s].value)
+    ListManager.BaseSymbol.prototype.WriteSDFAttributes.call(this, file, options);
+
+    if (this.d3Settings) {
+      const d3SettingsString = this.ExportD3Settings();
+      if (d3SettingsString) {
+        SDF.WriteString(file, d3SettingsString, FileParser.SDROpCodesByName.SDF_C_D3SETTINGS, options);
       }
-      r.width &&
-        (t.width = r.width.value),
-        r.height &&
-        (t.height = r.height.value),
-        this.Frame.width == t.width &&
-        this.Frame.height == t.height ||
-        this.UpdateFrame(t)
     }
-    var l = ListManager.BaseShape.prototype.Resize.call(this, e, t, a);
-    return this.RenderControl(GlobalData.optManager.svgDoc, e),
-      l
+
+    console.log("S.D3Symbol: WriteSDFAttributes - Completed");
   }
 
-  ChangeTextAttributes(e, t, a, r, i, n, o, s) {
-    GlobalData.optManager.GetActiveTextEdit() == this.BlockID ? t = null : e = null,
-      ListManager.BaseDrawingObject.prototype.ChangeTextAttributes.call(this, e, t, a, r, i, n, o, s),
-      GlobalData.optManager.AddToDirtyList(this.BlockID)
+  Resize(svgElement, newSize, additionalParams) {
+    console.log("S.D3Symbol: Resize - Input parameters:", { svgElement, newSize, additionalParams });
+
+    if (svgElement == null) {
+      return null;
+    }
+
+    const renderParams = this.GetRenderParams();
+    const codeLibrary = this.LoadCodeLibrary();
+
+    if (codeLibrary && codeLibrary.ResizeSettings) {
+      const resizeSettings = codeLibrary.ResizeSettings(renderParams, newSize.width, newSize.height, true);
+      if (resizeSettings) {
+        for (let i = 0; i < resizeSettings.length; i++) {
+          const setting = resizeSettings[i];
+          if (this.d3Settings.renderSettings[setting] && renderParams[setting]) {
+            this.d3Settings.renderSettings[setting].value = renderParams[setting].value;
+          }
+        }
+      }
+
+      if (renderParams.width) {
+        newSize.width = renderParams.width.value;
+      }
+      if (renderParams.height) {
+        newSize.height = renderParams.height.value;
+      }
+
+      if (this.Frame.width !== newSize.width || this.Frame.height !== newSize.height) {
+        this.UpdateFrame(newSize);
+      }
+    }
+
+    const result = ListManager.BaseShape.prototype.Resize.call(this, svgElement, newSize, additionalParams);
+    this.RenderControl(GlobalData.optManager.svgDoc, svgElement);
+
+    console.log("S.D3Symbol: Resize - Output result:", result);
+    return result;
   }
 
-  CreateActionTriggers(e, t, a, r) {
-    return ListManager.BaseShape.prototype.CreateActionTriggers.apply(this, [
-      e,
-      t,
-      a,
-      r
-    ])
+  ChangeTextAttributes(newText, newFont, newSize, newColor, newAlignment, newWeight, newStyle, newDecoration) {
+    console.log("S.D3Symbol: ChangeTextAttributes - Input:", { newText, newFont, newSize, newColor, newAlignment, newWeight, newStyle, newDecoration });
+
+    if (GlobalData.optManager.GetActiveTextEdit() === this.BlockID) {
+      newFont = null;
+    } else {
+      newText = null;
+    }
+
+    ListManager.BaseDrawingObject.prototype.ChangeTextAttributes.call(this, newText, newFont, newSize, newColor, newAlignment, newWeight, newStyle, newDecoration);
+    GlobalData.optManager.AddToDirtyList(this.BlockID);
+
+    console.log("S.D3Symbol: ChangeTextAttributes - Completed");
   }
 
-  RefreshFromFieldData(e) {
-    return (!e || this.fieldDataTableID == e) &&
-      (
-        ListManager.BaseDrawingObject.prototype.RefreshFromFieldData.call(this, e),
-        this.UpdateSizeFromSettings(),
-        GlobalData.optManager.AddToDirtyList(this.BlockID),
-        !0
-      )
+  CreateActionTriggers(event, triggerType, action, response) {
+    console.log("S.D3Symbol: CreateActionTriggers - Input parameters:", { event, triggerType, action, response });
+
+    const result = ListManager.BaseShape.prototype.CreateActionTriggers.apply(this, [
+      event,
+      triggerType,
+      action,
+      response
+    ]);
+
+    console.log("S.D3Symbol: CreateActionTriggers - Output result:", result);
+    return result;
   }
 
-  RasterizeSVGShapeForVisio(e) {
-    var t = this.BlockID;
-    this.UpdateSizeFromSettings();
-    var a = GlobalData.optManager.svgObjectLayer.GetElementByID(t);
-    if (a || (a = GlobalData.optManager.svgObjectLayer.GetElementByIDInGroup(t))) {
-      var r = a.svgObj.node,
-        i = r.innerHTML;
-      if (i) {
-        var n = r.getBBox();
-        this.r.width = n.width,
-          this.r.height = n.height;
-        var o = n.width,
-          s = n.height;
-        i = (
-          i = (
-            i = (
-              i = '<svg xmlns=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xlink=\'http://www.w3.org/1999/xlink\' width=\'' + o + '\' height=\'' + s + '\' viewBox=\'' + n.x + ' ' + n.y + ' ' + n.width + ' ' + n.height + '\'>' + i + '</svg>'
-            ).replace(/filter="url\(\S*\)"/g, '')
-          ).replace(/&nbsp;/g, ' ')
-        ).replace(/<image.*<\/image>/g, '');
-        var l = new Image;
-        l.onload = function () {
-          var a = document.createElement('canvas'),
-            r = o,
-            i = s;
-          a.width = r,
-            a.height = i;
-          var n = a.getContext('2d');
-          n.fillStyle = '#fff',
-            n.globalAlpha = 0,
-            n.fillRect(0, 0, r, i),
-            n.globalAlpha = 1,
-            n.drawImage(l, 0, 0, r, i);
-          a.toBlob(
-            (
-              function (a) {
-                var r = URL.createObjectURL(a),
-                  i = new FileReader;
-                i.onload = function (a) {
-                  var i = new Uint8Array(a.target.result);
-                  e(t, r, i, null)
-                },
-                  i.readAsArrayBuffer(a)
-              }
-            ),
-            'image/png',
-            0.8
-          )
-        },
-          l.onerror = function (a) {
-            e(t, null, null, null)
-          },
-          l.src = 'data:image/svg+xml,' + encodeURIComponent(i)
-      } else e(t, null, null, null)
-    } else e(t, null, null, null)
-  }
+  RefreshFromFieldData(fieldDataTableID) {
+    console.log("S.D3Symbol: RefreshFromFieldData - Input:", fieldDataTableID);
 
-  ConvertToVisio(e, t) {
-    var a = [
-      this.BlockID
-    ],
-      r = GlobalData.objectStore.PreserveBlock(this.BlockID);
-    if (null == r) return a;
-    if (!t) return a;
-    var i = t[this.BlockID];
-    if (!i) return a;
-    var n = i.imageURL,
-      o = i.blobBytes;
-    n ||
-      (o = null),
-      o ||
-      (n = null);
-    var s = Utils1.DeepCopy(this),
-      l = new ListManager.Rect(s);
-    return l.Frame = Utils1.DeepCopy(this.r),
-      n &&
-      o &&
-      (
-        l.ImageURL = n,
-        l.SetBlobBytes(o, FileParser.Image_Dir.dir_png)
-      ),
-      r.Data = l,
-      a
+    if (!fieldDataTableID || this.fieldDataTableID === fieldDataTableID) {
+      ListManager.BaseDrawingObject.prototype.RefreshFromFieldData.call(this, fieldDataTableID);
+      this.UpdateSizeFromSettings();
+      GlobalData.optManager.AddToDirtyList(this.BlockID);
+
+      console.log("S.D3Symbol: RefreshFromFieldData - Output: true");
+      return true;
+    }
+
+    console.log("S.D3Symbol: RefreshFromFieldData - Output: false");
+    return false;
   }
 
 }

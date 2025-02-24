@@ -19,7 +19,6 @@ import Point from '../Model/Point'
 import BaseShape from './Shape.BaseShape'
 import Utils4 from '../Helper/Utils3'
 import Rect from "./Shape.Rect";
-import Line from "./Shape.Line";
 import Document from '../Basic/Basic.Document'
 import Element from '../Basic/Basic.Element'
 import Business from '../Opt/Business/Business'
