@@ -1,20 +1,12 @@
 
 
-// import Basic from "./Basic.Index";
 import HvacSVG from "../Helper/SVG.t2"
 import $ from "jquery";
-// import SDJS from "../SDJS/SDJS.Index";
-// import SDUI from "../SDUI/SDUI.Index";
-
 import Container from "./Basic.Container";
-
-// import Global from "./Basic.Global";
 import Utils1 from "../Helper/Utils1"
 import Utils2 from "../Helper/Utils2"
 import Utils3 from "../Helper/Utils3"
-
 import ConstantData from "../Data/ConstantData"
-
 
 class Group extends Container {
 
@@ -24,14 +16,6 @@ class Group extends Container {
     super()
   }
 
-
-  // GetInstanceName() {
-  //   return "Group";
-  // }
-  // Basic.Group = function () {
-  // },
-  // Basic.Group.prototype = new Basic.Container,
-  // Basic.Group.prototype.constructor = Basic.Group,
   CreateElement(inputData: any, config: any) {
     console.log("= B.Group CreateElement called with:", inputData, config);
 
@@ -66,39 +50,7 @@ class Group extends Container {
         parentContainer.remove(this.svgObj);
       }
 
-      // Recursively remove unwanted nodes and store for restoration.
-      function removeNodesRecursively(node: any, removedList: Array<any>) {
-        const parentNode = node.parentNode;
-        if (
-          node.hasAttribute &&
-          node.removeAttribute &&
-          node.nodeType === 'ELEMENT_NODE'
-        ) {
-          if (node.hasAttribute('no-export') || node.hasAttribute('sfx')) {
-            removedList.push({
-              node: node,
-              parent: parentNode,
-              sibling: node.nextSibling
-            });
-            parentNode.removeChild(node);
-            return;
-          }
-          if (node.nodeName === 'pattern') {
-            removedList.push({
-              node: node,
-              parent: parentNode,
-              sibling: node.nextSibling
-            });
-            parentNode.removeChild(node);
-            return;
-          }
-          for (let idx = node.childNodes.length - 1; idx >= 0; idx--) {
-            removeNodesRecursively(node.childNodes[idx], removedList);
-          }
-        }
-      }
-
-      removeNodesRecursively(this.svgObj.node, removedNodes);
+      this.RemoveNodesRecursively(this.svgObj.node, removedNodes);
 
       // Add the svgObj to the formatting layer temporarily.
       formattingLayer.svgObj.add(this.svgObj);
@@ -144,6 +96,38 @@ class Group extends Container {
 
     console.log("= B.Group GetGeometryBBox returning:", this.geometryBBox);
     return this.geometryBBox;
+  }
+
+  // Recursively remove unwanted nodes and store for restoration.
+  RemoveNodesRecursively(node: any, removedList: Array<any>) {
+    const parentNode = node.parentNode;
+    if (
+      node.hasAttribute &&
+      node.removeAttribute &&
+      node.nodeType === 'ELEMENT_NODE'
+    ) {
+      if (node.hasAttribute('no-export') || node.hasAttribute('sfx')) {
+        removedList.push({
+          node: node,
+          parent: parentNode,
+          sibling: node.nextSibling
+        });
+        parentNode.removeChild(node);
+        return;
+      }
+      if (node.nodeName === 'pattern') {
+        removedList.push({
+          node: node,
+          parent: parentNode,
+          sibling: node.nextSibling
+        });
+        parentNode.removeChild(node);
+        return;
+      }
+      for (let idx = node.childNodes.length - 1; idx >= 0; idx--) {
+        this.RemoveNodesRecursively(node.childNodes[idx], removedList);
+      }
+    }
   }
 
   SetClipRect(x: number, y: number, width: number, height: number): void {
@@ -192,7 +176,6 @@ class Group extends Container {
     }
   }
 
-  // Double move functions from Basic.Element to Basic.Group
   GetTargetForEvent(event: any): any {
     console.log("= B.Group GetTargetForEvent called with input:", { event });
 
@@ -223,7 +206,6 @@ class Group extends Container {
     return result;
   }
 
-  // Double move functions from Basic.Element to Basic.Group
   RefreshPaint(event: any): void {
     console.log("= B.Group RefreshPaint called with input:", { event });
 
@@ -253,7 +235,4 @@ class Group extends Container {
   }
 }
 
-export default Group;
-
-
-// export default Basic.Group;
+export default Group

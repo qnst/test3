@@ -517,6 +517,7 @@ class Utils1 {
     //     0 == t.indexOf('\\\\') ? null : 0 == t.indexOf('mailto:') ? e : t.indexOf('://') < 0 ? 'http://' + t : null
     // }
     // return t
+    return null;
   }
 
   /*

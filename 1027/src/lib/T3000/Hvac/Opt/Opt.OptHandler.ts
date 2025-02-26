@@ -15031,15 +15031,15 @@ OptHandler.prototype.HandleKeyDown = function (e, t, a) {
     if (!this.bInNoteEdit) {
       var i = this.GetObjectPtr(this.theTEDSessionBlockID, !1);
       if (- 1 != i.theActiveTextEditObjectID) switch (t) {
-        case Resources.Keys.Left_Arrow:
-        case Resources.Keys.Right_Arrow:
-        case Resources.Keys.Up_Arrow:
-        case Resources.Keys.Down_Arrow:
+        case ConstantData2.Keys.Left_Arrow:
+        case ConstantData2.Keys.Right_Arrow:
+        case ConstantData2.Keys.Up_Arrow:
+        case ConstantData2.Keys.Down_Arrow:
           i.theTELastOp != ConstantData.TELastOp.INIT &&
             this.RegisterLastTEOp(ConstantData.TELastOp.SELECT);
           break;
-        case Resources.Keys.Backspace:
-        case Resources.Keys.Delete:
+        case ConstantData2.Keys.Backspace:
+        case ConstantData2.Keys.Delete:
           this.RegisterLastTEOp(ConstantData.TELastOp.CHAR)
       }
     }

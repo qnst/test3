@@ -585,7 +585,7 @@ class GroupSymbol extends BaseSymbol {
     if (!disableRotation && !isNarrow && !hasConnectorHook) {
       const isTextGrowHorizontal = this.TextGrow === ConstantData.TextGrowBehavior.HORIZONTAL &&
         (this.flags & ConstantData.ObjFlags.SEDO_TextOnly) &&
-        SDF.TextAlignToWin(this.TextAlign).just === FileParser.TextJust.TA_LEFT;
+        SDF.TextAlignToWin(this.TextAlign).just === ConstantData2.TextJust.TA_LEFT;
       knobProps.shapeType = ConstantData.CreateShapeType.OVAL;
       knobProps.x = isTextGrowHorizontal ? frameWidth + adjustedSmallKnobSize : frameWidth - 3 * adjustedSmallKnobSize;
       knobProps.y = frameHeight / 2 - adjustedSmallKnobSize / 2;
@@ -753,7 +753,7 @@ class GroupSymbol extends BaseSymbol {
       nativeStorageResult.docDpi = GlobalData.docHandler.svgDoc.docInfo.docDpi;
 
       buffer = SDF.WriteBuffer(nativeStorageResult, true, true, true);
-      codeLength = SDF.Write_CODE(writer, FileParser.SDROpCodesByName.SDF_C_NATIVESTORAGE);
+      codeLength = SDF.Write_CODE(writer, ConstantData2.SDROpCodesByName.SDF_C_NATIVESTORAGE);
       FileParser.write_nativebuffer(writer, buffer);
       SDF.Write_LENGTH(writer, codeLength);
     }

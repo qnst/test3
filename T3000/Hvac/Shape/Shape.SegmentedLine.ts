@@ -20,6 +20,7 @@ import SegLine from '../Model/SegLine';
 import Point from '../Model/Point'
 import $ from 'jquery'
 import SDF from '../Data/SDF'
+import ConstantData2 from '../Data/ConstantData2'
 
 class SegmentedLine extends BaseLine {
 
@@ -3342,7 +3343,7 @@ class SegmentedLine extends BaseLine {
     }
     console.log("= S.SegmentedLine: Padded segmentation rectangles", { lsegr: sdfData.lsegr });
 
-    const code = SDF.Write_CODE(writer, FileParser.SDROpCodesByName.SDF_C_DRAWSEGL);
+    const code = SDF.Write_CODE(writer, ConstantData2.SDROpCodesByName.SDF_C_DRAWSEGL);
     if (options.WriteVisio || options.WriteWin32) {
       writer.writeStruct(FileParser.SDF_SegLine_Struct, sdfData);
     } else {

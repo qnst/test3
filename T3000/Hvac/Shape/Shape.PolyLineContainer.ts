@@ -19,6 +19,7 @@ import Instance from '../Data/Instance/Instance';
 import ConstantData from '../Data/ConstantData'
 import PolySeg from '../Model/PolySeg'
 import HitResult from '../Model/HitResult'
+import ConstantData2 from '../Data/ConstantData2'
 
 class PolyLineContainer extends PolyLine {
 
@@ -862,8 +863,8 @@ class PolyLineContainer extends PolyLine {
     const element = GlobalData.optManager.svgObjectLayer.GetElementByID(this.BlockID);
     const currentOperation = GlobalData.optManager.currentModalOperation;
 
-    if ((currentOperation === ListManager.ModalOperations.SPLITWALL && this.polylist && this.polylist.segs.length >= 3) ||
-      currentOperation === ListManager.ModalOperations.ADDCORNER) {
+    if ((currentOperation === ConstantData2.ModalOperations.SPLITWALL && this.polylist && this.polylist.segs.length >= 3) ||
+      currentOperation === ConstantData2.ModalOperations.ADDCORNER) {
       const slopElement = element.GetElementByID(ConstantData.SVGElementClass.SLOP);
       if (slopElement) {
         slopElement.SetCursor(SDGraphics.Element.CursorType.CROSSHAIR);

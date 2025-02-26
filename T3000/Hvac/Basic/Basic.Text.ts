@@ -1,27 +1,14 @@
 
 
-// import Basic from "./Basic.Index";
-// import "./Basic.Text.Index";
 import HvacSVG from "../Helper/SVG.t2"
 import $ from "jquery";
-// import SDJS from "../SDJS/SDJS.Index";
-// import SDUI from "../SDUI/SDUI.Index";
-// import './Basic.Text.Formatter';
-// import BasicTextFormatter from './Basic.Text.Formatter';
-// import './Basic.Element';
-
 import Element from "./Basic.Element"
 import Formatter from "./Basic.Text.Formatter";
 import Edit from "./Basic.Text.Edit";
-
-// import Global from "./Basic.Global";
 import Utils1 from "../Helper/Utils1"
 import Utils2 from "../Helper/Utils2"
 import Utils3 from "../Helper/Utils3"
-
 import ConstantData from "../Data/ConstantData"
-
-
 
 class Text extends Element {
 
@@ -52,901 +39,1257 @@ class Text extends Element {
     super()
   }
 
-  // GetInstanceName(){
-  //   return "Text";
-  // }
+  CreateElement(container: any, options: any) {
+    console.log("B.Text: createElement called with container:", container, "and options:", options);
 
-  // Basic.Text = function () { }
+    // Initialize formatter and editor
+    this.formatter = new Formatter(this);
+    this.editor = new Edit(this);
 
-  // Basic.Text.Formatter = function (e) { }
+    // Create main SVG container element
+    this.svgObj = new HvacSVG.Container(HvacSVG.create('g'));
 
-  // Basic.Text.prototype = new Basic.Element
-  // Basic.Text.prototype.constructor = Basic.Text
+    // Initialize the element with container and options
+    this.InitElement(container, options);
 
-  CreateElement(e, t) {
-    // debugger
-    //'use strict';
-    return this.formatter = new Formatter(this),/*new Basic.Text.Formatter(this),*/
-      this.editor = new Edit(this),
-      this.svgObj = new HvacSVG.Container(HvacSVG.create('g')),
-      this.InitElement(e, t),
-      this.textElem = new HvacSVG.Container(HvacSVG.create('text')),
-      this.selectElem = new HvacSVG.Path,
-      this.cursorElem = new HvacSVG.Line,
-      this.clickAreaElem = new HvacSVG.Rect,
-      this.decorationAreaElem = new HvacSVG.Container(HvacSVG.create('g')),
-      this.cursorTimer = void 0,
-      this.cursorPos = void 0,
-      this.cursorState = ConstantData.CursorState.LINKONLY,
-      this.clickAreaElem.attr('stroke-width', 0),
-      this.clickAreaElem.attr('fill', 'none'),
-      this.clickAreaElem.attr('visibility', 'hidden'),
-      this.clickAreaElem.node.setAttribute('no-export', '1'),
-      this.selectElem.node.setAttribute('no-export', '1'),
-      this.cursorElem.node.setAttribute('no-export', '1'),
-      this.svgObj.add(this.clickAreaElem),
-      this.svgObj.add(this.textElem),
-      this.svgObj.add(this.decorationAreaElem),
-      this.minHeight = 0,
-      this.vAlign = 'top',
-      this.textElemOffset = 0,
-      this.activeEditStyle = - 1,
-      this.selectHidden = !1,
-      this.linksDisabled = !1,
-      this.editCallback = null,
-      this.editCallbackData = null,
-      this.dataTableID = - 1,
-      this.dataRecordID = - 1,
-      this.dataStyleOverride = null,
-      this.lastFmtSize = {
-        width: 0,
-        height: 0
-      },
-      this.SetText(''),
-      this.svgObj
+    // Create SVG sub-elements
+    this.textElem = new HvacSVG.Container(HvacSVG.create('text'));
+    this.selectElem = new HvacSVG.Path();
+    this.cursorElem = new HvacSVG.Line();
+    this.clickAreaElem = new HvacSVG.Rect();
+    this.decorationAreaElem = new HvacSVG.Container(HvacSVG.create('g'));
+
+    // Initialize cursor settings
+    this.cursorTimer = undefined;
+    this.cursorPos = undefined;
+    this.cursorState = ConstantData.CursorState.LINKONLY;
+
+    // Configure click area element
+    this.clickAreaElem.attr('stroke-width', 0);
+    this.clickAreaElem.attr('fill', 'none');
+    this.clickAreaElem.attr('visibility', 'hidden');
+    this.clickAreaElem.node.setAttribute('no-export', '1');
+
+    // Set no-export attribute for select and cursor elements
+    this.selectElem.node.setAttribute('no-export', '1');
+    this.cursorElem.node.setAttribute('no-export', '1');
+
+    // Add elements to the main SVG container
+    this.svgObj.add(this.clickAreaElem);
+    this.svgObj.add(this.textElem);
+    this.svgObj.add(this.decorationAreaElem);
+
+    // Set initial properties
+    this.minHeight = 0;
+    this.vAlign = 'top';
+    this.textElemOffset = 0;
+    this.activeEditStyle = -1;
+    this.selectHidden = false;
+    this.linksDisabled = false;
+    this.editCallback = null;
+    this.editCallbackData = null;
+    this.dataTableID = -1;
+    this.dataRecordID = -1;
+    this.dataStyleOverride = null;
+    this.lastFmtSize = {
+      width: 0,
+      height: 0
+    };
+
+    // Initialize text content
+    this.SetText('');
+
+    console.log("B.Text: createElement returning svgObj", this.svgObj);
+    return this.svgObj;
   }
 
-  SetText(e, t, a, r, i) {
-    //'use strict';
-    var n = a ||
-      0,
-      o = e.length;
-    this.editor.IsActive() &&
-      this.editor.ClearSelection(),
-      !t &&
-      this.activeEditStyle >= 0 &&
-      (t = this.activeEditStyle),
-      this.activeEditStyle = - 1,
-      this.formatter.SetText(e, t, a, r),
-      this.UpdateTextObject(),
-      this.editor.IsActive() &&
-      (
-        i ||
-        this.editor.UpdateTextEntryField(!1),
-        this.editor.SetInsertPos(n + o, null, i)
-      )
-  }
+  SetText(newText, formatStyle?, startPos?, preserveFormatting?, updateTextEntry?) {
+    console.log("B.Text: SetText input:", { newText, formatStyle, startPos, preserveFormatting, updateTextEntry });
 
-  GetText(e, t) {
-    //'use strict';
-    return this.formatter.GetText(e, t)
-  }
+    const insertPosition = startPos || 0;
+    const textLength = newText.length;
 
-  GetTextLength() {
-    //'use strict';
-    return this.formatter.GetTextLength()
-  }
-
-  SetRuntimeText(e, t, a, r, i) {
-    //'use strict';
-    var n = t ||
-      0,
-      o = e.text.length;
-    this.editor.IsActive() &&
-      this.editor.ClearSelection(),
-      this.activeEditStyle = - 1,
-      this.formatter.SetRuntimeText(e, t, a, r),
-      this.UpdateTextObject(),
-      this.editor.IsActive() &&
-      (
-        i ||
-        this.editor.UpdateTextEntryField(!1),
-        this.editor.SetInsertPos(n + o, null, i)
-      )
-  }
-
-  GetRuntimeText(e, t) {
-    //'use strict';
-    return this.formatter.GetRuntimeText(e, t)
-  }
-
-  DeleteText(e, t, a) {
-    //'use strict';
-    e = e ||
-      0;
-    this.editor.IsActive() &&
-      this.editor.ClearSelection();
-    var r = this.formatter.GetDataField(e);
-    if (r && (e = r.startPos), t) {
-      var i = e + t;
-      (r = this.formatter.GetDataField(i)) &&
-        r.startPos != i &&
-        (i = r.endPos),
-        t = i - e
-    }
-    this.activeEditStyle = - 1,
-      this.formatter.DeleteText(e, t),
-      this.UpdateTextObject(),
-      this.editor.IsActive() &&
-      (
-        a ||
-        this.editor.UpdateTextEntryField(!1),
-        this.editor.SetInsertPos(e, null, a)
-      )
-  }
-
-  Copy(e) {
-    //'use strict';
-    var t,
-      a,
-      r;
     if (this.editor.IsActive()) {
-      if ((r = this.editor.GetSelection()).start === r.end) return null;
-      r.start >= 0 &&
-        r.end > r.start &&
-        (t = r.start, a = r.end - r.start)
+      this.editor.ClearSelection();
     }
-    return e ? this.GetRuntimeText(t, a) : this.GetText(t, a)
+
+    if (!formatStyle && this.activeEditStyle >= 0) {
+      formatStyle = this.activeEditStyle;
+    }
+
+    this.activeEditStyle = -1;
+    this.formatter.SetText(newText, formatStyle, startPos, preserveFormatting);
+    this.UpdateTextObject();
+
+    if (this.editor.IsActive()) {
+      if (!updateTextEntry) {
+        this.editor.UpdateTextEntryField(false);
+      }
+      this.editor.SetInsertPos(insertPosition + textLength, null, updateTextEntry);
+    }
+
+    console.log("B.Text: SetText output: text updated successfully");
   }
 
-  Paste(e, t, a) {
-    //'use strict';
-    var r,
-      i,
-      n;
-    if (
-      this.editor.IsActive() &&
-      (n = this.editor.GetSelection()).start >= 0 &&
-      (r = n.start, i = n.end - n.start),
-      t
-    ) if (
-        this.SetRuntimeText(e, r, i, !0, a),
-        this.dataTableID > 0 &&
-        this.dataRecordID > 0
+  GetText(startIndex, textLength) {
+    console.log("B.Text: GetText input:", { startIndex, textLength });
+    const result = this.formatter.GetText(startIndex, textLength);
+    console.log("B.Text: GetText output:", result);
+    return result;
+  }
+
+  GetTextLength(): number {
+    console.log("B.Text: GetTextLength input: none");
+    const textLength = this.formatter.GetTextLength();
+    console.log("B.Text: GetTextLength output:", textLength);
+    return textLength;
+  }
+
+  SetRuntimeText(textData, startPos, textLength, preserveFormatting, updateTextEntry) {
+    console.log("B.Text: SetRuntimeText input:", { textData, startPos, textLength, preserveFormatting, updateTextEntry });
+
+    const effectiveStartPos = startPos || 0;
+    const newTextLength = textData.text.length;
+
+    if (this.editor.IsActive()) {
+      this.editor.ClearSelection();
+    }
+
+    this.activeEditStyle = -1;
+    this.formatter.SetRuntimeText(textData, startPos, textLength, preserveFormatting);
+    this.UpdateTextObject();
+
+    if (this.editor.IsActive()) {
+      if (!updateTextEntry) {
+        this.editor.UpdateTextEntryField(false);
+      }
+      this.editor.SetInsertPos(effectiveStartPos + newTextLength, null, updateTextEntry);
+    }
+
+    console.log("B.Text: SetRuntimeText output: text updated successfully");
+  }
+
+  GetRuntimeText(startIndex, textLength) {
+    console.log("B.Text: GetRuntimeText input:", { startIndex, textLength });
+    const runtimeText = this.formatter.GetRuntimeText(startIndex, textLength);
+    console.log("B.Text: GetRuntimeText output:", runtimeText);
+    return runtimeText;
+  }
+
+  DeleteText(startPosition, deleteLength, updateTextEntry) {
+    console.log("B.Text: DeleteText input:", { startPosition, deleteLength, updateTextEntry });
+
+    startPosition = startPosition || 0;
+
+    if (this.editor.IsActive()) {
+      this.editor.ClearSelection();
+    }
+
+    let dataField = this.formatter.GetDataField(startPosition);
+    if (dataField) {
+      startPosition = dataField.startPos;
+    }
+
+    if (deleteLength) {
+      let calculatedEnd = startPosition + deleteLength;
+      dataField = this.formatter.GetDataField(calculatedEnd);
+      if (dataField && dataField.startPos !== calculatedEnd) {
+        calculatedEnd = dataField.endPos;
+      }
+      deleteLength = calculatedEnd - startPosition;
+    }
+
+    this.activeEditStyle = -1;
+    this.formatter.DeleteText(startPosition, deleteLength);
+    this.UpdateTextObject();
+
+    if (this.editor.IsActive()) {
+      if (!updateTextEntry) {
+        this.editor.UpdateTextEntryField(false);
+      }
+      this.editor.SetInsertPos(startPosition, null, updateTextEntry);
+    }
+
+    console.log("B.Text: DeleteText output:", { deletedCharacters: deleteLength, startPosition });
+  }
+
+  Copy(useRuntime: boolean): any {
+    console.log("B.Text: Copy input:", { useRuntime });
+
+    let selectionStart: number = 0;
+    let selectionLength: number = 0;
+
+    if (this.editor.IsActive()) {
+      const selection = this.editor.GetSelection();
+      if (selection.start === selection.end) {
+        console.log("B.Text: Copy output: null (empty selection)");
+        return null;
+      }
+      if (selection.start >= 0 && selection.end > selection.start) {
+        selectionStart = selection.start;
+        selectionLength = selection.end - selection.start;
+      }
+    }
+
+    const result = useRuntime
+      ? this.GetRuntimeText(selectionStart, selectionLength)
+      : this.GetText(selectionStart, selectionLength);
+
+    console.log("B.Text: Copy output:", result);
+    return result;
+  }
+
+  Paste(inputText, useRuntime, updateTextEntry) {
+    console.log("B.Text: Paste input:", { inputText, useRuntime, updateTextEntry });
+    let selectionStart = 0;
+    let selectionLength = 0;
+    let selection;
+
+    if (this.editor.IsActive() && (selection = this.editor.GetSelection()).start >= 0) {
+      selectionStart = selection.start;
+      selectionLength = selection.end - selection.start;
+    }
+
+    if (useRuntime) {
+      if (
+        this.SetRuntimeText(inputText, selectionStart, selectionLength, true, updateTextEntry),
+        this.dataTableID > 0 && this.dataRecordID > 0
       ) {
-        var o = this.formatter.GetTextLength();
+        let oldTextLength = this.formatter.GetTextLength();
         this.UpdateFromData();
-        var s = this.formatter.GetTextLength();
-        if (
-          this.editor.IsActive() &&
-          (this.editor.UpdateTextEntryField(!1), o != s)
-        ) {
-          var l = this.editor.selStart + (s - o);
-          this.editor.SetInsertPos(l)
+        let newTextLength = this.formatter.GetTextLength();
+        if (this.editor.IsActive()) {
+          this.editor.UpdateTextEntryField(false);
+          if (oldTextLength !== newTextLength) {
+            const newInsertPos = this.editor.selStart + (newTextLength - oldTextLength);
+            this.editor.SetInsertPos(newInsertPos);
+          }
         }
-      } else this.formatter.ClearDataFieldRun(),
+      } else {
+        this.formatter.ClearDataFieldRun();
         this.UpdateTextObject();
-    else this.SetText(e, null, r, i, a);
-    this.CallEditCallback('edit')
+      }
+    } else {
+      this.SetText(inputText, null, selectionStart, selectionLength, updateTextEntry);
+    }
+
+    this.CallEditCallback("edit");
+    console.log("B.Text: Paste output: finished pasting");
   }
 
-  Delete(e) {
-    //'use strict';
-    var t,
-      a,
-      r;
-    this.editor.IsActive() &&
-      (r = this.editor.GetSelection()).start >= 0 &&
-      (t = r.start, a = r.end - r.start),
-      this.DeleteText(t, a, e),
-      this.CallEditCallback('edit')
+  Delete(updateTextEntry: any) {
+    console.log("B.Text: Delete input:", { updateTextEntry });
+    let selectionStart: number;
+    let selectionLength: number;
+    let selection: any;
+
+    if (this.editor.IsActive()) {
+      selection = this.editor.GetSelection();
+      if (selection.start >= 0) {
+        selectionStart = selection.start;
+        selectionLength = selection.end - selection.start;
+      }
+    }
+
+    this.DeleteText(selectionStart, selectionLength, updateTextEntry);
+    this.CallEditCallback('edit');
+    console.log("B.Text: Delete output:", { deletedCharacters: selectionLength, startPosition: selectionStart });
   }
 
-  SetSelectedFormat(e) {
-    //'use strict';
-    var t,
-      a,
-      r;
-    this.editor.IsActive() &&
-      (r = this.editor.GetSelection()).start >= 0 &&
-      (t = r.start, a = r.end - r.start),
-      this.SetFormat(e, t, a),
-      this.CallEditCallback('edit')
+  SetSelectedFormat(formatStyle) {
+    console.log("B.Text: SetSelectedFormat input:", { formatStyle });
+    let selectionStart;
+    let selectionLength;
+
+    if (this.editor.IsActive()) {
+      const selection = this.editor.GetSelection();
+      if (selection.start >= 0) {
+        selectionStart = selection.start;
+        selectionLength = selection.end - selection.start;
+      }
+    }
+
+    this.SetFormat(formatStyle, selectionStart, selectionLength);
+    this.CallEditCallback('edit');
+    console.log("B.Text: SetSelectedFormat output: completed");
   }
 
   GetSelectedFormat() {
-    //'use strict';
-    var e,
-      t,
-      a;
-    return this.editor.IsActive() &&
-      (a = this.editor.GetSelection()).start >= 0 &&
-      (e = a.start, t = a.end - a.start),
-      this.GetFormat(e, t)
+    console.log("B.Text: GetSelectedFormat input: none");
+    let selection, selectionStart, selectionLength;
+    if (this.editor.IsActive()) {
+      selection = this.editor.GetSelection();
+      if (selection.start >= 0) {
+        selectionStart = selection.start;
+        selectionLength = selection.end - selection.start;
+      }
+    }
+    const formatResult = this.GetFormat(selectionStart, selectionLength);
+    console.log("B.Text: GetSelectedFormat output:", formatResult);
+    return formatResult;
   }
 
-  SetSelectedAlignment(e) {
-    //'use strict';
-    var t,
-      a,
-      r;
-    this.editor.IsActive() &&
-      (r = this.editor.GetSelection()).start >= 0 &&
-      (t = r.start, a = r.end - r.start),
-      this.SetParagraphAlignment(e, t, a),
-      this.CallEditCallback('edit')
+  SetSelectedAlignment(alignment: string) {
+    console.log("B.Text: SetSelectedAlignment input:", { alignment });
+    let selectionStart = 0;
+    let selectionLength = 0;
+    if (this.editor.IsActive()) {
+      const selection = this.editor.GetSelection();
+      if (selection.start >= 0) {
+        selectionStart = selection.start;
+        selectionLength = selection.end - selection.start;
+      }
+    }
+    this.SetParagraphAlignment(alignment, selectionStart, selectionLength);
+    this.CallEditCallback('edit');
+    console.log("B.Text: SetSelectedAlignment output:", { alignment, selectionStart, selectionLength });
   }
 
   GetSelectedAlignment() {
-    //'use strict';
-    var e,
-      t = 0;
-    return this.editor.IsActive() &&
-      (e = this.editor.GetSelection()).start >= 0 &&
-      (t = e.start),
-      this.GetParagraphAlignment(t)
+    console.log("B.Text: GetSelectedAlignment called");
+    let selection, startIndex = 0;
+
+    if (this.editor.IsActive()) {
+      selection = this.editor.GetSelection();
+      if (selection.start >= 0) {
+        startIndex = selection.start;
+      }
+    }
+
+    const alignment = this.GetParagraphAlignment(startIndex);
+    console.log("B.Text: GetSelectedAlignment output:", alignment);
+    return alignment;
   }
 
-  SetSelectedParagraphStyle(e) {
-    //'use strict';
-    var t,
-      a,
-      r;
-    this.editor.IsActive() &&
-      (r = this.editor.GetSelection()).start >= 0 &&
-      (t = r.start, a = r.end - r.start),
-      this.SetParagraphStyle(e, t, a),
-      this.CallEditCallback('edit')
+  SetSelectedParagraphStyle(paragraphStyle) {
+    console.log("B.Text: SetSelectedParagraphStyle input:", { paragraphStyle });
+
+    let selectionStart;
+    let selectionLength;
+
+    if (this.editor.IsActive()) {
+      const selection = this.editor.GetSelection();
+      if (selection.start >= 0) {
+        selectionStart = selection.start;
+        selectionLength = selection.end - selection.start;
+      }
+    }
+
+    this.SetParagraphStyle(paragraphStyle, selectionStart, selectionLength);
+    this.CallEditCallback('edit');
+
+    console.log("B.Text: SetSelectedParagraphStyle output:", { paragraphStyle, selectionStart, selectionLength });
   }
 
   GetSelectedParagraphStyle() {
-    //'use strict';
-    var e,
-      t = 0;
-    return this.editor.IsActive() &&
-      (e = this.editor.GetSelection()).start >= 0 &&
-      (t = e.start),
-      this.GetParagraphStyle(t)
+    console.log("B.Text: GetSelectedParagraphStyle input: none");
+    let selection;
+    let startIndex = 0;
+
+    if (this.editor.IsActive()) {
+      selection = this.editor.GetSelection();
+      if (selection.start >= 0) {
+        startIndex = selection.start;
+      }
+    }
+
+    const paragraphStyle = this.GetParagraphStyle(startIndex);
+    console.log("B.Text: GetSelectedParagraphStyle output:", paragraphStyle);
+    return paragraphStyle;
   }
 
-  SetSelectedHyperlink(e) {
-    //'use strict';
-    var t,
-      a = 0,
-      r = this.GetTextLength();
-    this.editor.IsActive() &&
-      (t = this.editor.GetSelection()).start >= 0 &&
-      (a = t.start, r = t.end - t.start),
-      this.SetHyperlink(e, a, r),
-      this.CallEditCallback('edit')
+  SetSelectedHyperlink(hyperlink) {
+    console.log("B.Text: SetSelectedHyperlink input:", { hyperlink });
+
+    let selection;
+    let startPosition = 0;
+    let selectionLength = this.GetTextLength();
+
+    if (this.editor.IsActive()) {
+      selection = this.editor.GetSelection();
+      if (selection.start >= 0) {
+        startPosition = selection.start;
+        selectionLength = selection.end - selection.start;
+      }
+    }
+
+    this.SetHyperlink(hyperlink, startPosition, selectionLength);
+    this.CallEditCallback('edit');
+
+    console.log("B.Text: SetSelectedHyperlink output:", { hyperlink, startPosition, selectionLength });
   }
 
   GetSelectedHyperlink() {
-    //'use strict';
-    var e,
-      t = 0;
-    return this.editor.IsActive() &&
-      (e = this.editor.GetSelection()).start >= 0 &&
-      (t = e.start),
-      this.GetHyperlink(t)
+    console.log("B.Text: GetSelectedHyperlink input: none");
+    let selection = undefined;
+    let startPosition = 0;
+
+    if (this.editor.IsActive()) {
+      selection = this.editor.GetSelection();
+      if (selection.start >= 0) {
+        startPosition = selection.start;
+      }
+    }
+
+    const hyperlink = this.GetHyperlink(startPosition);
+    console.log("B.Text: GetSelectedHyperlink output:", hyperlink);
+    return hyperlink;
   }
 
   DeleteSelectedHyperlink() {
-    //'use strict';
-    var e,
-      t = 0;
-    this.editor.IsActive() &&
-      (e = this.editor.GetSelection()).start >= 0 &&
-      (t = e.start),
-      this.DeleteHyperlink(t),
-      this.CallEditCallback('edit')
+    console.log("B.Text: DeleteSelectedHyperlink input: no parameters; checking editor state");
+    let selection, selectionStart = 0;
+    if (this.editor.IsActive()) {
+      selection = this.editor.GetSelection();
+      if (selection.start >= 0) {
+        selectionStart = selection.start;
+      }
+    }
+    this.DeleteHyperlink(selectionStart);
+    this.CallEditCallback("edit");
+    console.log("B.Text: DeleteSelectedHyperlink output: Deleted hyperlink at position", selectionStart);
   }
 
-  SetFormat(e, t, a) {
-    //'use strict';
-    this.activeEditStyle = this.formatter.SetFormat(e, t, a),
-      this.UpdateTextObject()
+  SetFormat(newFormat: any, selectionStart: any, selectionLength: any) {
+    console.log("B.Text: SetFormat input:", { newFormat, selectionStart, selectionLength });
+    const updatedActiveEditStyle = this.formatter.SetFormat(newFormat, selectionStart, selectionLength);
+    this.activeEditStyle = updatedActiveEditStyle;
+    this.UpdateTextObject();
+    console.log("B.Text: SetFormat output:", { activeEditStyle: this.activeEditStyle });
   }
 
-  GetFormat(e, t) {
-    //'use strict';
-    var a;
-    return a = this.activeEditStyle,
-      0 === t &&
-        a >= 0 ? this.formatter.GetFormatByID(a) : this.formatter.GetCommonFormatForRange(e, t)
+  GetFormat(startIndex, rangeLength) {
+    console.log("B.Text: GetFormat input:", { startIndex, rangeLength });
+    let activeStyle = this.activeEditStyle;
+    let result;
+    if (rangeLength === 0 && activeStyle >= 0) {
+      result = this.formatter.GetFormatByID(activeStyle);
+    } else {
+      result = this.formatter.GetCommonFormatForRange(startIndex, rangeLength);
+    }
+    console.log("B.Text: GetFormat output:", result);
+    return result;
   }
 
-  SetVerticalAlignment(e) {
-    //'use strict';
-    this.vAlign = e,
-      this.UpdateTextObject()
+  SetVerticalAlignment(newAlignment) {
+    console.log("B.Text: SetVerticalAlignment input:", newAlignment);
+    this.vAlign = newAlignment;
+    this.UpdateTextObject();
+    console.log("B.Text: SetVerticalAlignment output: vAlign updated to", this.vAlign);
   }
 
-  GetVerticalAlignment() {
-    //'use strict';
-    return this.vAlign
+  GetVerticalAlignment(): string {
+    console.log("B.Text: GetVerticalAlignment input: none");
+    const verticalAlignment = this.vAlign;
+    console.log("B.Text: GetVerticalAlignment output:", verticalAlignment);
+    return verticalAlignment;
   }
 
-  SetParagraphAlignment(e, t, a) {
-    //'use strict';
-    this.SetParagraphStyle({
-      just: e
-    }, t, a)
+  SetParagraphAlignment(alignment: string, selectionStart: number, selectionLength: number) {
+    console.log("B.Text: SetParagraphAlignment input:", { alignment, selectionStart, selectionLength });
+    this.SetParagraphStyle({ just: alignment }, selectionStart, selectionLength);
+    console.log("B.Text: SetParagraphAlignment output: completed", { alignment, selectionStart, selectionLength });
   }
 
-  GetParagraphAlignment(e) {
-    //'use strict';
-    return this.GetParagraphStyle(e).just
+  GetParagraphAlignment(paragraphIndex: number): string {
+    console.log("B.Text: GetParagraphAlignment input:", { paragraphIndex });
+    const paragraphStyle = this.GetParagraphStyle(paragraphIndex);
+    const alignment = paragraphStyle.just;
+    console.log("B.Text: GetParagraphAlignment output:", alignment);
+    return alignment;
   }
 
-  SetParagraphStyle(e, t, a) {
-    //'use strict';
-    this.formatter.SetParagraphStyle(e, t, a),
-      this.UpdateTextObject()
+  SetParagraphStyle(paragraphStyle, startPosition, selectionLength) {
+    console.log("B.Text: SetParagraphStyle input:", { paragraphStyle, startPosition, selectionLength });
+    this.formatter.SetParagraphStyle(paragraphStyle, startPosition, selectionLength);
+    this.UpdateTextObject();
+    console.log("B.Text: SetParagraphStyle output: completed");
   }
 
-  GetParagraphStyle(e) {
-    //'use strict';
-    return this.formatter.GetParagraphStyle(e)
+  GetParagraphStyle(paragraphIndex: number) {
+    console.log("B.Text: GetParagraphStyle input:", { paragraphIndex });
+    const paragraphStyle = this.formatter.GetParagraphStyle(paragraphIndex);
+    console.log("B.Text: GetParagraphStyle output:", paragraphStyle);
+    return paragraphStyle;
   }
 
-  GetParagraphCount() {
-    //'use strict';
-    return this.formatter.GetParagraphCount()
+  GetParagraphCount(): number {
+    console.log("B.Text: GetParagraphCount input: none");
+    const paragraphCount = this.formatter.GetParagraphCount();
+    console.log("B.Text: GetParagraphCount output:", paragraphCount);
+    return paragraphCount;
   }
 
-  GetParagraphPosition(e) {
-    //'use strict';
-    return this.formatter.GetParagraphPosition(e)
+  GetParagraphPosition(paragraphIndex: number) {
+    console.log("B.Text: GetParagraphPosition input:", { paragraphIndex });
+    const position = this.formatter.GetParagraphPosition(paragraphIndex);
+    console.log("B.Text: GetParagraphPosition output:", position);
+    return position;
   }
 
-  SetHyperlink(e, t, a) {
-    //'use strict';
-    e &&
-      e.length ? (this.formatter.SetHyperlink(e, t, a), this.UpdateTextObject()) : this.DeleteHyperlink(t)
+  SetHyperlink(url: string, startPos: number, selectionLength: number) {
+    console.log("B.Text: SetHyperlink input:", { url, startPos, selectionLength });
+    if (url && url.length) {
+      this.formatter.SetHyperlink(url, startPos, selectionLength);
+      this.UpdateTextObject();
+      console.log("B.Text: SetHyperlink output: hyperlink set successfully");
+    } else {
+      this.DeleteHyperlink(startPos);
+      console.log("B.Text: SetHyperlink output: hyperlink deleted");
+    }
   }
 
-  GetHyperlink(e) {
-    //'use strict';
-    var t = this.formatter.GetHyperlinkAtOffset(e);
-    return t ? t.url : null
+  GetHyperlink(offset) {
+    console.log("B.Text: GetHyperlink input:", offset);
+    const hyperlink = this.formatter.GetHyperlinkAtOffset(offset);
+    const result = hyperlink ? hyperlink.url : null;
+    console.log("B.Text: GetHyperlink output:", result);
+    return result;
   }
 
-  DeleteHyperlink(e) {
-    //'use strict';
-    this.formatter.ClearHyperlink(e),
-      this.UpdateTextObject()
+  DeleteHyperlink(hyperlinkStart: number) {
+    console.log("B.Text: DeleteHyperlink input:", { hyperlinkStart });
+    this.formatter.ClearHyperlink(hyperlinkStart);
+    this.UpdateTextObject();
+    console.log("B.Text: DeleteHyperlink output: Hyperlink removed at", hyperlinkStart);
   }
 
-  GetHyperlinkAtLocation(e) {
-    //'use strict';
-    var t,
-      a,
-      r = e.gesture.center.clientX,
-      i = e.gesture.center.clientY + $(window).scrollTop();
-    return a = this.doc.ConvertWindowToElemCoords(r, i, this.textElem.node),
-      (t = this.formatter.GetHyperlinkAtPoint(a)) ? t.url : null
+  GetHyperlinkAtLocation(gestureEvent: any) {
+    console.log("B.Text: GetHyperlinkAtLocation input:", gestureEvent);
+    const clientX = gestureEvent.gesture.center.clientX;
+    const clientY = gestureEvent.gesture.center.clientY + $(window).scrollTop();
+    const convertedCoords = this.doc.ConvertWindowToElemCoords(clientX, clientY, this.textElem.node);
+    const hyperlink = this.formatter.GetHyperlinkAtPoint(convertedCoords);
+    const result = hyperlink ? hyperlink.url : null;
+    console.log("B.Text: GetHyperlinkAtLocation output:", result);
+    return result;
   }
 
-  SetConstraints(e, t, a) {
-    //'use strict';
-    void 0 === e &&
-      void 0 === t ||
+  SetConstraints(maxWidth: number, minWidth: number, minHeight: number) {
+    console.log("B.Text: SetConstraints input:", { maxWidth, minWidth, minHeight });
+
+    if (maxWidth !== undefined || minWidth !== undefined) {
       this.formatter.SetLimits({
-        maxWidth: e,
-        minWidth: t
-      }),
-      void 0 !== a &&
-      (this.minHeight = a),
-      this.UpdateTextObject()
+        maxWidth: maxWidth,
+        minWidth: minWidth
+      });
+    }
+
+    if (minHeight !== undefined) {
+      this.minHeight = minHeight;
+    }
+
+    this.UpdateTextObject();
+    console.log("B.Text: SetConstraints output: Constraints updated");
   }
 
-  SetEditCallback(e, t) {
-    //'use strict';
-    this.editCallback = e,
-      this.editCallbackData = t
+  SetEditCallback(callback, callbackData) {
+    console.log("B.Text: SetEditCallback input:", { callback, callbackData });
+    this.editCallback = callback;
+    this.editCallbackData = callbackData;
+    console.log("B.Text: SetEditCallback output: Callback set successfully");
   }
 
-  CallEditCallback(e, t) {
-    //'use strict';
-    if (this.editCallback) return this.editCallback(e, t, this, this.editCallbackData)
+  CallEditCallback(actionType, callbackData?) {
+    console.log("B.Text: CallEditCallback input:", { actionType, callbackData });
+    if (this.editCallback) {
+      const result = this.editCallback(actionType, callbackData, this, this.editCallbackData);
+      console.log("B.Text: CallEditCallback output:", result);
+      return result;
+    }
+    console.log("B.Text: CallEditCallback output:", "No editCallback defined");
   }
 
   GetTextSize() {
-    //'use strict';
-    var e = this.formatter.GetTextFormatSize();
-    return e.height = Math.max(e.height, this.minHeight),
-      e
+    console.log("B.Text: GetTextSize input: no parameters");
+    let textSize = this.formatter.GetTextFormatSize();
+    textSize.height = Math.max(textSize.height, this.minHeight);
+    console.log("B.Text: GetTextSize output:", textSize);
+    return textSize;
   }
 
-  GetTextMinDimensions() {
-    // //'use strict';
-    return this.formatter.GetFormatTextMinDimensions()
+  GetTextMinDimensions(): any {
+    console.log("B.Text: GetTextMinDimensions input: none");
+    const dimensions = this.formatter.GetFormatTextMinDimensions();
+    console.log("B.Text: GetTextMinDimensions output:", dimensions);
+    return dimensions;
   }
 
-  SetSize(e, t) {
-    //'use strict';
-    this.SetConstraints(e, e, t)
+  SetSize(width: number, minHeight: number) {
+    console.log("B.Text: SetSize input:", { width, minHeight });
+    this.SetConstraints(width, width, minHeight);
+    console.log("B.Text: SetSize output: constraints set with", { maxWidth: width, minWidth: width, minHeight });
   }
 
-  CalcTextFit(e) {
-    //'use strict';
-    return this.formatter.CalcTextFit(e)
+  CalcTextFit(inputDimensions: any): any {
+    console.log("B.Text: CalcTextFit input:", inputDimensions);
+    const result = this.formatter.CalcTextFit(inputDimensions);
+    console.log("B.Text: CalcTextFit output:", result);
+    return result;
   }
 
-  CalcTextWrap(e) {
-    //'use strict';
-    return this.formatter.CalcTextWrap(e)
+  CalcTextWrap(inputDimensions) {
+    console.log("B.Text: CalcTextWrap input:", inputDimensions);
+    const result = this.formatter.CalcTextWrap(inputDimensions);
+    console.log("B.Text: CalcTextWrap output:", result);
+    return result;
   }
 
-  CalcFormatChange(e) {
-    //'use strict';
-    return this.formatter.CalcFormatChange(e)
+  CalcFormatChange(changeData: any): any {
+    console.log("B.Text: CalcFormatChange input:", changeData);
+    const result = this.formatter.CalcFormatChange(changeData);
+    console.log("B.Text: CalcFormatChange output:", result);
+    return result;
   }
 
-  SetRenderingEnabled(e) {
-    //'use strict';
-    var t = this.formatter.deferredRenderNeeded;
-    void 0 === e &&
-      (e = !0),
-      this.formatter.renderingEnabled !== e &&
-      (
-        this.formatter.SetRenderingEnabled(e),
-        e &&
-        t &&
-        this.UpdateTextObject()
-      )
+  SetRenderingEnabled(isEnabled: boolean) {
+    console.log("B.Text: SetRenderingEnabled input:", { isEnabled });
+    const deferredRenderWasNeeded = this.formatter.deferredRenderNeeded;
+
+    if (isEnabled === undefined) {
+      isEnabled = true;
+    }
+
+    if (this.formatter.renderingEnabled !== isEnabled) {
+      this.formatter.SetRenderingEnabled(isEnabled);
+      if (isEnabled && deferredRenderWasNeeded) {
+        this.UpdateTextObject();
+      }
+    }
+
+    console.log("B.Text: SetRenderingEnabled output: rendering enabled set to", isEnabled);
   }
 
-  IsRenderingEnabled(e) {
-    //'use strict';
-    return this.formatter.renderingEnabled
+  IsRenderingEnabled(renderingFlag?: any): boolean {
+    console.log("B.Text: IsRenderingEnabled input:", { renderingFlag });
+    const isEnabled = this.formatter.renderingEnabled;
+    console.log("B.Text: IsRenderingEnabled output:", isEnabled);
+    return isEnabled;
   }
 
-  GetContentVersion() {
-    //'use strict';
-    return this.formatter.GetContentVersion()
+  GetContentVersion(): number {
+    console.log("B.Text: GetContentVersion input: none");
+    const contentVersion = this.formatter.GetContentVersion();
+    console.log("B.Text: GetContentVersion output:", contentVersion);
+    return contentVersion;
   }
 
-  GetSpellCheck() {
-    //'use strict';
-    return this.formatter.GetSpellCheck()
+  GetSpellCheck(): any {
+    console.log("B.Text: GetSpellCheck input: none");
+    const spellCheckStatus = this.formatter.GetSpellCheck();
+    console.log("B.Text: GetSpellCheck output:", spellCheckStatus);
+    return spellCheckStatus;
   }
 
-  SetSpellCheck(e, t) {
-    //'use strict';
-    this.formatter.SetSpellCheck(e),
-      t &&
-      (
-        e ? this.doc.spellChecker &&
-          this.doc.spellChecker.CheckSpellingForTextObj(this) : this.UpdateTextObject()
-      )
+  SetSpellCheck(isSpellCheckEnabled, updateImmediately) {
+    console.log("B.Text: SetSpellCheck input:", { isSpellCheckEnabled, updateImmediately });
+
+    // Set the spell check state in the formatter
+    this.formatter.SetSpellCheck(isSpellCheckEnabled);
+
+    // If an immediate update is requested, perform the appropriate action based on the spell check state
+    if (updateImmediately) {
+      if (isSpellCheckEnabled) {
+        if (this.doc.spellChecker) {
+          this.doc.spellChecker.CheckSpellingForTextObj(this);
+        }
+      } else {
+        this.UpdateTextObject();
+      }
+    }
+
+    console.log("B.Text: SetSpellCheck output: completed");
   }
 
-  UpdateSpellCheck(e) {
-    //'use strict';
-    this.formatter.UpdateSpellCheck(e),
-      this.UpdateTextObject()
+  UpdateSpellCheck(isSpellCheckEnabled: boolean): void {
+    console.log("B.Text: UpdateSpellCheck input:", isSpellCheckEnabled);
+    this.formatter.UpdateSpellCheck(isSpellCheckEnabled);
+    this.UpdateTextObject();
+    console.log("B.Text: UpdateSpellCheck output: Spell check updated and text object refreshed");
   }
 
   GetSpellCheckList() {
-    //'use strict';
-    return this.formatter.GetWordList()
+    console.log("B.Text: GetSpellCheckList input: no parameters");
+    const wordList = this.formatter.GetWordList();
+    console.log("B.Text: GetSpellCheckList output:", wordList);
+    return wordList;
   }
 
-  DoSpellCheck() {
-    //'use strict';
-    this.formatter.SpellCheckValid() ? this.doc.spellChecker.CheckSpellingForTextObj(this) : this.formatter.UpdateSpellCheckFormatting()
+  DoSpellCheck(): void {
+    console.log("B.Text: DoSpellCheck input: none");
+
+    if (this.formatter.SpellCheckValid()) {
+      this.doc.spellChecker.CheckSpellingForTextObj(this);
+    } else {
+      this.formatter.UpdateSpellCheckFormatting();
+    }
+
+    console.log("B.Text: DoSpellCheck output: completed");
   }
 
-  GetSpellAtLocation(e, t) {
-    //'use strict';
-    var a;
-    return t += $(window).scrollTop(),
-      a = this.doc.ConvertWindowToElemCoords(e, t, this.textElem.node),
-      this.formatter.GetSpellAtPoint(a)
+  GetSpellAtLocation(clientX: number, clientY: number) {
+    console.log("B.Text: GetSpellAtLocation input:", { clientX, clientY });
+    clientY += $(window).scrollTop();
+    const elementCoordinates = this.doc.ConvertWindowToElemCoords(clientX, clientY, this.textElem.node);
+    const spellResult = this.formatter.GetSpellAtPoint(elementCoordinates);
+    console.log("B.Text: GetSpellAtLocation output:", spellResult);
+    return spellResult;
   }
 
   UpdateTextObject() {
-    //'use strict';
-    var e,
-      t,
-      a = this.formatter.GetTextFormatSize(),
-      r = !1,
-      i = 0;
+    console.log("B.Text: UpdateTextObject input:");
+
+    const formatSize = this.formatter.GetTextFormatSize();
+    let isResized = false;
+    let verticalOffset = 0;
+
     if (this.formatter.renderingEnabled) {
-      switch (t = Math.max(a.height, this.minHeight), this.vAlign) {
+      const textHeight = formatSize.height;
+      const minHeight = this.minHeight;
+      const newHeight = Math.max(textHeight, minHeight);
+
+      switch (this.vAlign) {
         case 'top':
-          i = 0;
+          verticalOffset = 0;
           break;
         case 'middle':
-          i = (t - a.height) / 2;
+          verticalOffset = (newHeight - textHeight) / 2;
           break;
         case 'bottom':
-          i = t - a.height
-      }(e = {
-        width: a.width,
-        height: t
-      }).width == this.lastFmtSize.width &&
-        e.height == this.lastFmtSize.height ||
-        (this.CallEditCallback('willresize', e), r = !0),
-        this.svgObj.size(a.width, t),
-        this.clickAreaElem.transform({
-          x: 0,
-          y: 0
-        }),
-        this.clickAreaElem.size(a.width, t),
-        this.textElem.size(a.width, a.height),
-        this.textElem.transform({
-          x: 0,
-          y: i
-        }),
-        this.decorationAreaElem.size(a.width, a.height),
-        this.decorationAreaElem.transform({
-          x: 0,
-          y: i
-        }),
-        this.textElemOffset = i,
-        this.geometryBBox.width = a.width,
-        this.geometryBBox.height = t,
-        this.RefreshPaint(),
-        this.formatter.RenderFormattedText(this.textElem, this.decorationAreaElem),
-        this.linksDisabled ||
-        this.cursorState !== ConstantData.CursorState.EDITLINK &&
-        this.cursorState !== ConstantData.CursorState.LINKONLY ||
-        this.formatter.SetHyperlinkCursor(),
-        this.editor.IsActive() &&
-        (
-          this.editor.cursorPos >= 0 ? this.editor.UpdateCursor() : this.editor.selStart >= 0 &&
-            this.editor.UpdateSelection()
-        ),
-        r &&
-        (
-          e = {
-            width: a.width,
-            height: t
-          },
-          this.CallEditCallback('didresize', e)
-        ),
-        this.lastFmtSize = e
-    }
-  }
+          verticalOffset = newHeight - textHeight;
+          break;
+      }
 
-  Activate(e, t) {
-    //'use strict';
-    this.activeEditStyle = - 1,
-      this.selectHidden = !1,
-      this.doc.SetActiveEdit(this),
-      this.editor.Activate(e, t)
-  }
-
-  Deactivate(e) {
-    //'use strict';
-    this.activeEditStyle = - 1,
-      this.doc.activeEdit = null,
-      this.editor.Deactivate(e)
-  }
-
-  IsActive() {
-    //'use strict';
-    return this.editor.IsActive()
-  }
-
-  SetVirtualKeyboardHook(e, t) {
-    this.editor.SetVirtualKeyboardHook(e, t)
-  }
-
-  GetSelectedRange() {
-    //'use strict';
-    var e = {
-      start: - 1,
-      end: - 1
-    };
-    return this.editor.IsActive() &&
-      (e = this.editor.GetSelection()),
-      e
-  }
-
-  SetSelectedRange(e, t, a, r) {
-    //'use strict';
-    e < 0 ||
-      !this.editor.IsActive() ||
-      (
-        e != t &&
-        (this.activeEditStyle = - 1),
-        this.editor.SetSelection(e, t, a, r),
-        this.CallEditCallback('select')
-      )
-  }
-
-  HandleKeyPressEvent(e) {
-    //'use strict';
-    return !!this.editor.IsActive() &&
-      this.editor.HandleKeyPress(e)
-  }
-
-  HandleKeyDownEvent(e) {
-    //'use strict';
-    return !!this.editor.IsActive() &&
-      this.editor.HandleKeyDown(e)
-  }
-
-  HideSelection() {
-    //'use strict';
-    this.selectElem.plot(),
-      this.svgObj.remove(this.selectElem)
-  }
-
-  ShowSelection(e) {
-    //'use strict';
-    this.selectElem.attr('fill', '#8888FF'),
-      this.selectElem.attr('stroke-width', 0),
-      this.selectElem.attr('fill-opacity', 0.4),
-      this.selectElem.attr('pointer-events', 'none'),
-      this.selectElem.transform({
-        y: this.textElemOffset
-      }),
-      this.selectHidden ? this.selectElem.attr('visibility', 'hidden') : this.selectElem.attr('visibility', 'visible'),
-      e &&
-      this.selectElem.plot(e),
-      this.svgObj.add(this.selectElem)
-  }
-
-  SetSelectionVisible(e) {
-    //'use strict';
-    this.selectHidden = !e,
-      this.IsActive() &&
-      (
-        this.selectHidden ? (
-          this.cursorElem.attr('visibility', 'hidden'),
-          this.selectElem.attr('visibility', 'hidden')
-        ) : (
-          this.cursorElem.attr('visibility', 'visible'),
-          this.selectElem.attr('visibility', 'visible')
-        )
-      )
-  }
-
-  HideInputCursor() {
-    //'use strict';
-    void 0 !== this.cursorTimer &&
-      (clearInterval(this.cursorTimer), this.cursorTimer = void 0),
-      this.cursorElem.attr('visibility', 'hidden'),
-      this.svgObj.remove(this.cursorElem),
-      this.cursorPos = void 0
-  }
-
-  ShowInputCursor(e, t, a) {
-    //'use strict';
-    var r = this.doc.ConverWindowToDocLength(1);
-    void 0 !== this.cursorTimer &&
-      clearInterval(this.cursorTimer),
-      this.cursorElem.attr('fill', 'none'),
-      this.cursorElem.attr('stroke-width', r),
-      this.cursorElem.attr('stroke', '#000'),
-      this.cursorElem.attr('pointer-events', 'none'),
-      this.cursorElem.attr({
-        x1: e,
-        y1: t + this.textElemOffset,
-        x2: e,
-        y2: a + this.textElemOffset
-      }),
-      this.selectHidden ? this.cursorElem.attr('visibility', 'hidden') : this.cursorElem.attr('visibility', 'visible'),
-      this.svgObj.add(this.cursorElem),
-      this.cursorPos = {
-        x: e,
-        y1: t + this.textElemOffset,
-        y2: a + this.textElemOffset
-      },
-      this.cursorTimer = setInterval(
-        (
-          function (e) {
-            e.cursorElem.attr('visibility', 'hidden'),
-              setTimeout(
-                (
-                  function (e) {
-                    e.selectHidden ||
-                      e.cursorElem.attr('visibility', 'visible')
-                  }
-                ),
-                250,
-                e
-              )
-          }
-        ),
-        1000,
-        this
-      ),
-      this.editor.IsActive() &&
-      this.editor.virtualKeyboardHook &&
-      this.editor.virtualKeyboardHook(this, !0)
-  }
-
-  GetInputCursorPos() {
-    //'use strict';
-    var e,
-      t;
-    this.cursorPos;
-    if (this.cursorPos) return e = this.doc.ConvertElemToWindowCoords(this.cursorPos.x, this.cursorPos.y1, this.svgObj.node),
-      t = this.doc.ConvertElemToWindowCoords(this.cursorPos.x, this.cursorPos.y2, this.svgObj.node),
-    {
-      x1: e.x,
-      y1: e.y,
-      x2: t.x,
-      y2: t.y
-    }
-  }
-
-  SetCursorState(e) {
-    //'use strict';
-    this.cursorState = e,
-      this.ClearAllCursors(),
-      e !== ConstantData.CursorState.EDITONLY &&
-      e !== ConstantData.CursorState.EDITLINK ||
-      this.SetCursor(Element.CursorType.TEXT),
-      this.linksDisabled ||
-      e !== ConstantData.CursorState.EDITLINK &&
-      e !== ConstantData.CursorState.LINKONLY ||
-      this.formatter.SetHyperlinkCursor()
-  }
-
-  GetCursorState() {
-    //'use strict';
-    return this.cursorState
-  }
-
-  DisableHyperlinks(e) {
-    //'use strict';
-    this.linksDisabled = e,
-      this.SetCursorState(this.cursorState),
-      this.UpdateTextObject()
-  }
-
-  InitDataSettings(e, t, a) {
-    //'use strict';
-    this.dataTableID = e,
-      this.dataRecordID = t,
-      this.dataStyleOverride = a
-  }
-
-  IsDataInitted() {
-    //'use strict';
-    return this.dataTableID > 0 &&
-      this.dataRecordID > 0
-  }
-
-  GetDataField(e) {
-    //'use strict';
-    return this.formatter.GetDataField(e)
-  }
-
-  InsertDataField(e, t, a) {
-    //'use strict';
-    var r = this.GetDataText(e, this.formatter.GetDataNameDisplay()),
-      i = {
-        dataField: /*Basic.Text.Formatter*/BasicTextFormatter.FormatDataFieldID(e, !0)
+      const newFormatSize = {
+        width: formatSize.width,
+        height: newHeight
       };
-    this.SetText(r, i, t, a)
+
+      if (
+        newFormatSize.width !== this.lastFmtSize.width ||
+        newFormatSize.height !== this.lastFmtSize.height
+      ) {
+        this.CallEditCallback('willresize', newFormatSize);
+        isResized = true;
+      }
+
+      this.svgObj.size(formatSize.width, newHeight);
+      this.clickAreaElem.transform({ x: 0, y: 0 });
+      this.clickAreaElem.size(formatSize.width, newHeight);
+      this.textElem.size(formatSize.width, textHeight);
+      this.textElem.transform({ x: 0, y: verticalOffset });
+      this.decorationAreaElem.size(formatSize.width, textHeight);
+      this.decorationAreaElem.transform({ x: 0, y: verticalOffset });
+      this.textElemOffset = verticalOffset;
+      this.geometryBBox.width = formatSize.width;
+      this.geometryBBox.height = newHeight;
+
+      this.RefreshPaint();
+      this.formatter.RenderFormattedText(this.textElem, this.decorationAreaElem);
+
+      if (
+        !this.linksDisabled &&
+        (this.cursorState === ConstantData.CursorState.EDITLINK ||
+          this.cursorState === ConstantData.CursorState.LINKONLY)
+      ) {
+        this.formatter.SetHyperlinkCursor();
+      }
+
+      if (this.editor.IsActive()) {
+        if (this.editor.cursorPos >= 0) {
+          this.editor.UpdateCursor();
+        } else if (this.editor.selStart >= 0) {
+          this.editor.UpdateSelection();
+        }
+      }
+
+      if (isResized) {
+        this.CallEditCallback('didresize', newFormatSize);
+      }
+      this.lastFmtSize = newFormatSize;
+
+      console.log("B.Text: UpdateTextObject output:", newFormatSize);
+    }
   }
 
-  PasteDataField(e) {
-    //'use strict';
-    var t,
-      a,
-      r;
-    this.editor.IsActive() &&
-      (r = this.editor.GetSelection()).start >= 0 &&
-      (t = r.start, a = r.end - r.start),
-      this.InsertDataField(e, t, a),
-      this.CallEditCallback('edit')
+  Activate(inputEvent, callbackData) {
+    console.log("B.Text: Activate input:", { inputEvent, callbackData });
+
+    // Reset active edit style and make selection visible
+    this.activeEditStyle = -1;
+    this.selectHidden = false;
+
+    // Set the current text object as active in the document
+    this.doc.SetActiveEdit(this);
+
+    // Activate the editor with the provided input event and callback data
+    this.editor.Activate(inputEvent, callbackData);
+
+    console.log("B.Text: Activate output: Editor activated");
   }
 
-  HasDataFields() {
-    //'use strict';
-    return this.formatter.HasDataFields()
+  Deactivate(deactivationEvent: any): void {
+    console.log("B.Text: Deactivate input:", { deactivationEvent });
+    this.activeEditStyle = -1;
+    this.doc.activeEdit = null;
+    this.editor.Deactivate(deactivationEvent);
+    console.log("B.Text: Deactivate output: Editor deactivated");
   }
 
-  HasDataField(e) {
-    //'use strict';
-    return this.formatter.HasDataField(e)
+  IsActive(): boolean {
+    console.log("B.Text: IsActive input: none");
+    const isActive = this.editor.IsActive();
+    console.log("B.Text: IsActive output:", isActive);
+    return isActive;
   }
 
-  UpdateFromData(e, t) {
-    //'use strict';
-    void 0 !== e &&
-      void 0 !== t &&
+  SetVirtualKeyboardHook(callback, hookData) {
+    console.log("B.Text: SetVirtualKeyboardHook input:", { callback, hookData });
+    this.editor.SetVirtualKeyboardHook(callback, hookData);
+    console.log("B.Text: SetVirtualKeyboardHook output: hook set successfully");
+  }
+
+  GetSelectedRange(): { start: number; end: number } {
+    console.log("B.Text: GetSelectedRange input: none");
+
+    let selectionRange = { start: -1, end: -1 };
+
+    if (this.editor.IsActive()) {
+      selectionRange = this.editor.GetSelection();
+    }
+
+    console.log("B.Text: GetSelectedRange output:", selectionRange);
+    return selectionRange;
+  }
+
+  SetSelectedRange(startIndex: number, endIndex: number, selectionExtra: any, updateFlag: any) {
+    console.log("B.Text: SetSelectedRange input:", { startIndex, endIndex, selectionExtra, updateFlag });
+
+    // If start index is invalid or editor is not active, exit early
+    if (startIndex < 0 || !this.editor.IsActive()) {
+      console.log("B.Text: SetSelectedRange output: Invalid start index or editor not active");
+      return;
+    }
+
+    // If the selection range is not a single point, reset the active edit style
+    if (startIndex !== endIndex) {
+      this.activeEditStyle = -1;
+    }
+
+    // Update the editor's selection and notify callback
+    this.editor.SetSelection(startIndex, endIndex, selectionExtra, updateFlag);
+    this.CallEditCallback('select');
+
+    console.log("B.Text: SetSelectedRange output:", { startIndex, endIndex });
+  }
+
+  HandleKeyPressEvent(event: any): boolean {
+    console.log("B.Text: HandleKeyPressEvent input:", event);
+    const isEditorActive = this.editor && this.editor.IsActive();
+    const handled = !!isEditorActive && this.editor.HandleKeyPress(event);
+    console.log("B.Text: HandleKeyPressEvent output:", handled);
+    return handled;
+  }
+
+  HandleKeyDownEvent(event: any): boolean {
+    console.log("B.Text: HandleKeyDownEvent input:", event);
+    const isEditorActive = this.editor && this.editor.IsActive();
+    const result = isEditorActive && this.editor.HandleKeyDown(event);
+    console.log("B.Text: HandleKeyDownEvent output:", result);
+    return result;
+  }
+
+  HideSelection(): void {
+    console.log("B.Text: HideSelection input: none");
+    this.selectElem.plot();
+    this.svgObj.remove(this.selectElem);
+    console.log("B.Text: HideSelection output: selection hidden");
+  }
+
+  ShowSelection(selectionData: any): void {
+    console.log("B.Text: ShowSelection input:", selectionData);
+
+    this.selectElem.attr('fill', '#8888FF');
+    this.selectElem.attr('stroke-width', 0);
+    this.selectElem.attr('fill-opacity', 0.4);
+    this.selectElem.attr('pointer-events', 'none');
+    this.selectElem.transform({ y: this.textElemOffset });
+
+    if (this.selectHidden) {
+      this.selectElem.attr('visibility', 'hidden');
+    } else {
+      this.selectElem.attr('visibility', 'visible');
+    }
+
+    if (selectionData) {
+      this.selectElem.plot(selectionData);
+    }
+
+    this.svgObj.add(this.selectElem);
+
+    console.log("B.Text: ShowSelection output: selection displayed successfully");
+  }
+
+  SetSelectionVisible(isVisible: boolean) {
+    console.log("B.Text: SetSelectionVisible input:", { isVisible });
+
+    this.selectHidden = !isVisible;
+
+    if (this.IsActive()) {
+      if (this.selectHidden) {
+        this.cursorElem.attr('visibility', 'hidden');
+        this.selectElem.attr('visibility', 'hidden');
+      } else {
+        this.cursorElem.attr('visibility', 'visible');
+        this.selectElem.attr('visibility', 'visible');
+      }
+    }
+
+    console.log("B.Text: SetSelectionVisible output: selection visibility set to", isVisible);
+  }
+
+  HideInputCursor(): void {
+    console.log("B.Text: HideInputCursor input: no parameters");
+    if (this.cursorTimer !== undefined) {
+      clearInterval(this.cursorTimer);
+      this.cursorTimer = undefined;
+    }
+    this.cursorElem.attr('visibility', 'hidden');
+    this.svgObj.remove(this.cursorElem);
+    this.cursorPos = undefined;
+    console.log("B.Text: HideInputCursor output: Cursor hidden");
+  }
+
+  ShowInputCursor(x: number, startY: number, endY: number) {
+    console.log("B.Text: ShowInputCursor input:", { x, startY, endY });
+
+    const strokeWidth = this.doc.ConverWindowToDocLength(1);
+    if (this.cursorTimer !== undefined) {
+      clearInterval(this.cursorTimer);
+    }
+    this.cursorElem.attr('fill', 'none');
+    this.cursorElem.attr('stroke-width', strokeWidth);
+    this.cursorElem.attr('stroke', '#000');
+    this.cursorElem.attr('pointer-events', 'none');
+    this.cursorElem.attr({
+      x1: x,
+      y1: startY + this.textElemOffset,
+      x2: x,
+      y2: endY + this.textElemOffset
+    });
+    if (this.selectHidden) {
+      this.cursorElem.attr('visibility', 'hidden');
+    } else {
+      this.cursorElem.attr('visibility', 'visible');
+    }
+    this.svgObj.add(this.cursorElem);
+    this.cursorPos = {
+      x: x,
+      y1: startY + this.textElemOffset,
+      y2: endY + this.textElemOffset
+    };
+
+    this.cursorTimer = setInterval(() => {
+      this.cursorElem.attr('visibility', 'hidden');
+      setTimeout(() => {
+        if (!this.selectHidden) {
+          this.cursorElem.attr('visibility', 'visible');
+        }
+      }, 250);
+    }, 1000);
+
+    if (this.editor.IsActive() && this.editor.virtualKeyboardHook) {
+      this.editor.virtualKeyboardHook(this, true);
+    }
+
+    console.log("B.Text: ShowInputCursor output: Cursor shown at", {
+      x,
+      y1: startY + this.textElemOffset,
+      y2: endY + this.textElemOffset
+    });
+  }
+
+  GetInputCursorPos(): { x1: number, y1: number, x2: number, y2: number } | null {
+    console.log("B.Text: GetInputCursorPos input: none");
+
+    if (this.cursorPos) {
+      const startWindowCoords = this.doc.ConvertElemToWindowCoords(this.cursorPos.x, this.cursorPos.y1, this.svgObj.node);
+      const endWindowCoords = this.doc.ConvertElemToWindowCoords(this.cursorPos.x, this.cursorPos.y2, this.svgObj.node);
+      const cursorWindowPosition = {
+        x1: startWindowCoords.x,
+        y1: startWindowCoords.y,
+        x2: endWindowCoords.x,
+        y2: endWindowCoords.y
+      };
+      console.log("B.Text: GetInputCursorPos output:", cursorWindowPosition);
+      return cursorWindowPosition;
+    }
+
+    console.log("B.Text: GetInputCursorPos output: cursor position is not defined");
+    return null;
+  }
+
+  SetCursorState(newCursorState) {
+    console.log("B.Text: SetCursorState input:", newCursorState);
+
+    // Update the cursor state and clear all existing cursors
+    this.cursorState = newCursorState;
+    this.ClearAllCursors();
+
+    // If the new cursor state indicates editing, set the text cursor
+    if (
+      newCursorState === ConstantData.CursorState.EDITONLY ||
+      newCursorState === ConstantData.CursorState.EDITLINK
+    ) {
+      this.SetCursor(Element.CursorType.TEXT);
+    }
+
+    // If hyperlinks are enabled and the new state supports them, update the hyperlink cursor
+    if (
+      !this.linksDisabled &&
       (
-        e == this.dataTableID &&
-        t == this.dataRecordID ||
-        (this.dataStyleOverride = null),
-        this.InitDataSettings(e, t, this.dataStyleOverride)
-      ),
-      this.formatter.RebuildFromData(),
-      this.UpdateTextObject()
-  }
-
-  SetDataNameDisplay(e) {
-    //'use strict';
-    this.formatter.SetDataNameDisplay(e),
-      this.UpdateFromData(this.dataTableID, this.dataRecordID)
-  }
-
-  GetDataNameDisplay() {
-    //'use strict';
-    return this.formatter.GetDataNameDisplay()
-  }
-
-  GetDataText(e, t) {
-    //'use strict';
-    var a,
-      r = ' ';
-    return this.dataTableID < 0 ||
-      this.dataRecordID < 0 ||
-      (
-        e = /*Basic.Text.Formatter*/BasicTextFormatter.FormatDataFieldID(e, !1),
-        t ? r = ListManager.SDData.FieldedDataGetFieldName(this.dataTableID, e) : (
-          r = ListManager.SDData.FieldedDataGetFieldValue(this.dataTableID, this.dataRecordID, e),
-          a = ListManager.SDData.FieldedDataGetFieldType(this.dataTableID, e),
-          r = gListManager.ModifyFieldDataForDisplay(r, a)
-        ),
-        r &&
-        '' != r ||
-        (r = ' ')
-      ),
-      r
-  }
-
-  GetDataStyle(e) {
-    //'use strict';
-    var t = [];
-    if (this.dataTableID < 0 || this.dataRecordID < 0) return t;
-    e = /*Basic.Text.Formatter*/BasicTextFormatter.FormatDataFieldID(e, !1);
-    var a = ListManager.SDData.FieldedDataGetFieldStyle(this.dataTableID, this.dataRecordID, e);
-    return a &&
-      (t = ListManager.SDData.FieldedDataParseStyle(a)),
-      t
-  }
-
-  CheckDataExists(e) {
-    //'use strict';
-    return !(this.dataTableID < 0 || this.dataRecordID < 0) &&
-      (
-        e = /*Basic.Text.Formatter*/BasicTextFormatter.FormatDataFieldID(e, !1),
-        !!ListManager.SDData.FieldedDataGetRecord(this.dataTableID, this.dataRecordID)[e]
+        newCursorState === ConstantData.CursorState.EDITLINK ||
+        newCursorState === ConstantData.CursorState.LINKONLY
       )
+    ) {
+      this.formatter.SetHyperlinkCursor();
+    }
+
+    console.log("B.Text: SetCursorState output: cursorState set to", newCursorState);
   }
 
-  RenderDataFieldHilites() {
-    //'use strict';
-    this.formatter.RenderDataFieldHilites(this.decorationAreaElem)
+  GetCursorState(): number {
+    console.log("B.Text: GetCursorState input: none");
+    const currentCursorState = this.cursorState;
+    console.log("B.Text: GetCursorState output:", currentCursorState);
+    return currentCursorState;
+  }
+
+  DisableHyperlinks(shouldDisableHyperlinks: boolean) {
+    console.log("B.Text: DisableHyperlinks input:", { shouldDisableHyperlinks });
+
+    this.linksDisabled = shouldDisableHyperlinks;
+    this.SetCursorState(this.cursorState);
+    this.UpdateTextObject();
+
+    console.log("B.Text: DisableHyperlinks output:", { linksDisabled: this.linksDisabled });
+  }
+
+  InitDataSettings(tableId: number, recordId: number, styleOverride: any) {
+    console.log("B.Text: InitDataSettings input:", { tableId, recordId, styleOverride });
+    this.dataTableID = tableId;
+    this.dataRecordID = recordId;
+    this.dataStyleOverride = styleOverride;
+    console.log("B.Text: InitDataSettings output:", {
+      dataTableID: this.dataTableID,
+      dataRecordID: this.dataRecordID,
+      dataStyleOverride: this.dataStyleOverride
+    });
+  }
+
+  IsDataInitialized(): boolean {
+    console.log("B.Text: isDataInitialized input: no parameters");
+    const initialized = this.dataTableID > 0 && this.dataRecordID > 0;
+    console.log("B.Text: isDataInitialized output:", initialized);
+    return initialized;
+  }
+
+  GetDataField(startPosition: number) {
+    console.log("B.Text: GetDataField input:", { startPosition });
+    const dataField = this.formatter.GetDataField(startPosition);
+    console.log("B.Text: GetDataField output:", dataField);
+    return dataField;
+  }
+
+  InsertDataField(fieldId: string, startPosition: number, preserveFormatting: boolean) {
+    console.log("B.Text: InsertDataField input:", { fieldId, startPosition, preserveFormatting });
+    const dataText = this.GetDataText(fieldId, this.formatter.GetDataNameDisplay());
+    const dataFieldInfo = {
+      dataField: BasicTextFormatter.FormatDataFieldID(fieldId, true)
+    };
+    this.SetText(dataText, dataFieldInfo, startPosition, preserveFormatting);
+    console.log("B.Text: InsertDataField output: data field inserted", { fieldId, startPosition, preserveFormatting });
+  }
+
+  PasteDataField(dataFieldId: string): void {
+    console.log("B.Text: PasteDataField input:", { dataFieldId });
+    let selectionStart = 0;
+    let selectionLength = 0;
+    let selection;
+
+    if (this.editor.IsActive()) {
+      selection = this.editor.GetSelection();
+      if (selection.start >= 0) {
+        selectionStart = selection.start;
+        selectionLength = selection.end - selection.start;
+      }
+    }
+
+    this.InsertDataField(dataFieldId, selectionStart, selectionLength);
+    this.CallEditCallback('edit');
+    console.log("B.Text: PasteDataField output:", { dataFieldId, selectionStart, selectionLength });
+  }
+
+  HasDataFields(): boolean {
+    console.log("B.Text: HasDataFields input: no parameters");
+    const hasDataFields = this.formatter.HasDataFields();
+    console.log("B.Text: HasDataFields output:", hasDataFields);
+    return hasDataFields;
+  }
+
+  HasDataField(dataField: any) {
+    console.log("B.Text: HasDataField input:", dataField);
+    const result = this.formatter.HasDataField(dataField);
+    console.log("B.Text: HasDataField output:", result);
+    return result;
+  }
+
+  UpdateFromData(tableId?, recordId?) {
+    console.log("B.Text: UpdateFromData input:", { tableId, recordId });
+
+    if (tableId !== undefined && recordId !== undefined) {
+      // If the provided table or record id is different, reset the style override
+      if (tableId !== this.dataTableID || recordId !== this.dataRecordID) {
+        this.dataStyleOverride = null;
+      }
+      this.InitDataSettings(tableId, recordId, this.dataStyleOverride);
+    }
+
+    this.formatter.RebuildFromData();
+    this.UpdateTextObject();
+
+    console.log("B.Text: UpdateFromData output:", "Data updated successfully");
+  }
+
+  SetDataNameDisplay(dataName: string) {
+    console.log("B.Text: SetDataNameDisplay input:", { dataName });
+
+    this.formatter.SetDataNameDisplay(dataName);
+    this.UpdateFromData(this.dataTableID, this.dataRecordID);
+
+    console.log("B.Text: SetDataNameDisplay output: Data name display updated");
+  }
+
+  GetDataNameDisplay(): string {
+    console.log("B.Text: GetDataNameDisplay input: no parameters");
+    const dataNameDisplay = this.formatter.GetDataNameDisplay();
+    console.log("B.Text: GetDataNameDisplay output:", dataNameDisplay);
+    return dataNameDisplay;
+  }
+
+  GetDataText(fieldId: string, useFieldName: boolean): string {
+    console.log("B.Text: GetDataText input:", { fieldId, useFieldName });
+
+    let result: string = ' ';
+
+    if (this.dataTableID < 0 || this.dataRecordID < 0) {
+      console.log("B.Text: GetDataText output:", result);
+      return result;
+    }
+
+    // Format the field ID
+    const formattedFieldId = BasicTextFormatter.FormatDataFieldID(fieldId, false);
+
+    if (useFieldName) {
+      result = ListManager.SDData.FieldedDataGetFieldName(this.dataTableID, formattedFieldId);
+    } else {
+      result = ListManager.SDData.FieldedDataGetFieldValue(this.dataTableID, this.dataRecordID, formattedFieldId);
+      const fieldType = ListManager.SDData.FieldedDataGetFieldType(this.dataTableID, formattedFieldId);
+      result = gListManager.ModifyFieldDataForDisplay(result, fieldType);
+    }
+
+    if (!result || result === "") {
+      result = ' ';
+    }
+
+    console.log("B.Text: GetDataText output:", result);
+    return result;
+  }
+
+  GetDataStyle(dataFieldId: string): any[] {
+    console.log("B.Text: GetDataStyle input:", { dataFieldId });
+    let styleArray: any[] = [];
+
+    if (this.dataTableID < 0 || this.dataRecordID < 0) {
+      console.log("B.Text: GetDataStyle output:", styleArray);
+      return styleArray;
+    }
+
+    const formattedDataFieldId = BasicTextFormatter.FormatDataFieldID(dataFieldId, false);
+    const fieldStyle = ListManager.SDData.FieldedDataGetFieldStyle(this.dataTableID, this.dataRecordID, formattedDataFieldId);
+
+    if (fieldStyle) {
+      styleArray = ListManager.SDData.FieldedDataParseStyle(fieldStyle);
+    }
+
+    console.log("B.Text: GetDataStyle output:", styleArray);
+    return styleArray;
+  }
+
+  CheckDataExists(dataFieldId: string): boolean {
+    console.log("B.Text: CheckDataExists input:", { dataFieldId });
+
+    const tableIsValid = this.dataTableID >= 0;
+    const recordIsValid = this.dataRecordID >= 0;
+    let exists = false;
+
+    if (tableIsValid && recordIsValid) {
+      const formattedFieldId = BasicTextFormatter.FormatDataFieldID(dataFieldId, false);
+      const record = ListManager.SDData.FieldedDataGetRecord(this.dataTableID, this.dataRecordID);
+      exists = !!record[formattedFieldId];
+    }
+
+    console.log("B.Text: CheckDataExists output:", exists);
+    return exists;
+  }
+
+  RenderDataFieldHilites(): void {
+    console.log("B.Text: RenderDataFieldHilites input: no parameters");
+    this.formatter.RenderDataFieldHilites(this.decorationAreaElem);
+    console.log("B.Text: RenderDataFieldHilites output: Data field highlights rendered");
   }
 
   ClearDataFieldHilites() {
-    //'use strict';
-    this.formatter.ClearDataFieldHilites(this.decorationAreaElem)
+    console.log("B.Text: ClearDataFieldHilites input: no parameters");
+    this.formatter.ClearDataFieldHilites(this.decorationAreaElem);
+    console.log("B.Text: ClearDataFieldHilites output: Data field hilites cleared");
   }
 
-  RemapDataFields(e) {
-    //'use strict';
-    this.HasDataFields() &&
-      this.formatter.RemapDataFields(e)
+  RemapDataFields(dataMapping: any) {
+    console.log("B.Text: RemapDataFields input:", dataMapping);
+
+    if (this.HasDataFields()) {
+      this.formatter.RemapDataFields(dataMapping);
+    }
+
+    console.log("B.Text: RemapDataFields output: completed remapping");
   }
 
+  static RemapDataFieldsInRuntimeText(runtimeText: any, mappingArray: any[]) {
+    console.log("B.Text: RemapDataFieldsInRuntimeText input:", { runtimeText, mappingArray });
 
-  static RemapDataFieldsInRuntimeText(e, t) {
-    //'use strict';
-    var a,
-      r,
-      i = function (e) {
-        var a,
-          r = (e = e.split('_'))[0],
-          i = e[1];
-        for (a = 0; a < t.length; a++) t[a].srcFieldID == r &&
-          (r = t[a].dstFieldID);
-        return r += '_' + i
-      };
-    for (a = 0; a < e.styles.length; a++) (r = e.styles[a].dataField) &&
-      (e.styles[a].dataField = i(r))
+    function transformDataField(dataField: string): string {
+      const parts = dataField.split('_');
+      let srcFieldId = parts[0];
+      const suffix = parts[1];
+
+      for (let i = 0; i < mappingArray.length; i++) {
+        if (mappingArray[i].srcFieldID === srcFieldId) {
+          srcFieldId = mappingArray[i].dstFieldID;
+          break;
+        }
+      }
+      return srcFieldId + '_' + suffix;
+    }
+
+    for (let i = 0; i < runtimeText.styles.length; i++) {
+      const currentDataField = runtimeText.styles[i].dataField;
+      if (currentDataField) {
+        runtimeText.styles[i].dataField = transformDataField(currentDataField);
+      }
+    }
+
+    console.log("B.Text: RemapDataFieldsInRuntimeText output:", runtimeText);
   }
 
   static CursorState = {
@@ -956,22 +1299,34 @@ class Text extends Element {
     LINKONLY: 3
   }
 
-  // Object.freeze(Text.CursorState),
   static ParagraphFormat() {
-    this.just = 'center',
-      this.bullet = 'none',
-      this.spacing = 0,
-      this.lindent = 0,
-      this.rindent = 0,
-      this.pindent = 0,
-      this.tabspace = 0,
-      this.vjust = 'middle'
-  }
+    console.log("B.Text: ParagraphFormat input: no parameters");
 
+    // Set default paragraph formatting properties with readable names
+    this.just = 'center';
+    this.bullet = 'none';
+    this.spacing = 0;
+    this.lindent = 0;
+    this.rindent = 0;
+    this.pindent = 0;
+    this.tabspace = 0;
+    this.vjust = 'middle';
+
+    const formatSettings = {
+      justification: this.just,
+      bullet: this.bullet,
+      spacing: this.spacing,
+      leftIndent: this.lindent,
+      rightIndent: this.rindent,
+      paragraphIndent: this.pindent,
+      tabSpace: this.tabspace,
+      verticalJustification: this.vjust
+    };
+
+    console.log("B.Text: ParagraphFormat output:", formatSettings);
+    return formatSettings;
+  }
 
 }
 
 export default Text
-
-
-// export default Basic.Text;

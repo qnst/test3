@@ -15,6 +15,7 @@ import Utils4 from '../../Helper/Utils4'
 import DataOpt from '../../Data/DataOpt'
 
 import ConstantData from '../../Data/ConstantData'
+import ConstantData2 from '../../Data/ConstantData2'
 
 
 class MainController {
@@ -169,12 +170,12 @@ class MainController {
 
   HandleKeyDown(e, t, a) {
     // if (!0 !== this.Modals.ModalsVisible()) {
-    if (GlobalData.optManager.bTouchPanStarted && t == Resources.Keys.Space)
+    if (GlobalData.optManager.bTouchPanStarted && t == ConstantData2.Keys.Space)
       return e.stopPropagation(),
         void e.preventDefault();
-    var r, i, n, o = [], s = 0, l = 0, S = (t == Resources.Keys.Left_Arrow ||
-      t == Resources.Keys.Right_Arrow || t == Resources.Keys.Up_Arrow ||
-      t == Resources.Keys.Down_Arrow) && Resources.DocumentContext &&
+    var r, i, n, o = [], s = 0, l = 0, S = (t == ConstantData2.Keys.Left_Arrow ||
+      t == ConstantData2.Keys.Right_Arrow || t == ConstantData2.Keys.Up_Arrow ||
+      t == ConstantData2.Keys.Down_Arrow) && Resources.DocumentContext &&
       ConstantData.DocumentContext.UserSettings && ConstantData.DocumentContext.UserSettings.DisableCtrlArrowShapeInsert;
 
     // Double === TODO
@@ -219,11 +220,11 @@ class MainController {
           }
         }
         if (!1 === ConstantData.DocumentContext.CanTypeInWorkArea)
-          return void (t === Resources.Keys.Escape && gListManager.Comment_Cancel());
+          return void (t === ConstantData2.Keys.Escape && gListManager.Comment_Cancel());
         if (p !== Resources.Contexts.DimensionText && p !== Resources.Contexts.NoteText || (i = !0),
           p === Resources.Contexts.Text && (a === Resources.ModifierKeys.None || a === Resources.ModifierKeys.Shift || a === Resources.ModifierKeys.Ctrl || a === Resources.ModifierKeys.Ctrl_Shift))
           if (!1 === Commands.MainController.Shapes.IsActiveTextEdit() && "titleInput" != e.target.id) {
-            if (-1 != Resources.NonTextKeys.indexOf(t))
+            if (-1 != ConstantData2.NonTextKeys.indexOf(t))
               continue;
             a != Resources.ModifierKeys.Ctrl && (i = !0)
           } else
@@ -231,7 +232,7 @@ class MainController {
         if (i && a != Resources.ModifierKeys.Ctrl)
           break
       }
-      i && (t === Resources.Keys.Escape ? (GlobalData.optManager.DeactivateAllTextEdit(!1),
+      i && (t === ConstantData2.Keys.Escape ? (GlobalData.optManager.DeactivateAllTextEdit(!1),
         GlobalData.optManager.bInNoteEdit && GlobalData.optManager.Note_CloseEdit(),
         GlobalData.optManager.RenderAllSVGSelectionStates(),
         e.stopPropagation(),
@@ -294,7 +295,7 @@ class MainController {
 
   HandleKeyPress = function (e, t) {
     var a = !1;
-    if (GlobalData.optManager.bTouchPanStarted && t == Resources.Keys.Space)
+    if (GlobalData.optManager.bTouchPanStarted && t == ConstantData2.Keys.Space)
       return e.stopPropagation(),
         void e.preventDefault();
     if (true/*!0 !== this.Modals.ModalsVisible()*/)

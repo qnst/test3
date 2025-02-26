@@ -613,7 +613,7 @@ class FreehandLine extends BaseLine {
     let a = Utils1.DeepCopy(this).GetFreehandPoints(!0);
     if (t.WriteVisio);
     else {
-      var r = SDF.Write_CODE(e, FileParser.SDROpCodesByName.SDF_C_FREEHANDLINE);
+      var r = SDF.Write_CODE(e, ConstantData2.SDROpCodesByName.SDF_C_FREEHANDLINE);
       let t,
         i = {
           InstID: this.BlockID,

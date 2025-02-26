@@ -1,31 +1,19 @@
 
 
-
-
-// import SDJS from "../SDJS/SDJS.Index";
-// import SDUI from "../SDUI/SDUI.Index";
-// import Basic from "./Basic.Index";
-// import GPP from "../gListManager";
 import $ from 'jquery';
 import HvacSVG from "../Helper/SVG.t2"
-
 import Utils1 from "../Helper/Utils1"
 import Utils2 from "../Helper/Utils2"
 import Utils3 from "../Helper/Utils3"
-
-
-// import Global from "./Basic.Global";
-import Element from './Basic.Element';
-
+import Element from './Basic.Element'
 import ConstantData from "../Data/ConstantData"
-
-
+import BasicConstants from './Basic.Constants'
+import Instance from '../Data/Instance/Instance';
 
 class Symbol extends Element {
 
   public shapeElem: any;
   public fillColors: any;
-
   public lineColors: any;
   public lineWidths: any;
   public solidFills: any;
@@ -33,21 +21,11 @@ class Symbol extends Element {
   public lineTrans: any;
   public srcSymbolSVG: any;
 
-
   constructor() {
     super()
   }
 
-  // GetInstanceName(){
-  //   return "Symbol";
-  // }
-  // Basic.Symbol = function () {
-  // },
-  // Basic.Symbol.prototype = new Basic.Element,
-  // Basic.Symbol.prototype.constructor = Basic.Symbol
-
   CreateElement(element, type) {
-    //'use strict';
     console.log("= B.Symbol CreateElement input:", { element, type });
 
     this.svgObj = new HvacSVG.Container(HvacSVG.create('g'));
@@ -67,33 +45,32 @@ class Symbol extends Element {
   }
 
   SetSymbolSource(source: string) {
-    //'use strict';
     console.log("= B.Symbol SetSymbolSource input:", { source });
 
     this.srcSymbolSVG = source;
-    this.fillColors = Symbol.GetPlaceholders(Symbol.Placeholder.FillColor, source);
-    this.lineColors = Symbol.GetPlaceholders(Symbol.Placeholder.LineColor, source);
-    this.lineWidths = Symbol.GetPlaceholders(Symbol.Placeholder.LineThick, source);
-    this.solidFills = Symbol.GetPlaceholders(Symbol.Placeholder.SolidFill, source);
-    this.fillTrans = Symbol.GetPlaceholders(Symbol.Placeholder.FillTrans, source);
-    this.lineTrans = Symbol.GetPlaceholders(Symbol.Placeholder.LineTrans, source);
+    this.fillColors = Symbol.GetPlaceholders(BasicConstants.Placeholder.FillColor, source);
+    this.lineColors = Symbol.GetPlaceholders(BasicConstants.Placeholder.LineColor, source);
+    this.lineWidths = Symbol.GetPlaceholders(BasicConstants.Placeholder.LineThick, source);
+    this.solidFills = Symbol.GetPlaceholders(BasicConstants.Placeholder.SolidFill, source);
+    this.fillTrans = Symbol.GetPlaceholders(BasicConstants.Placeholder.FillTrans, source);
+    this.lineTrans = Symbol.GetPlaceholders(BasicConstants.Placeholder.LineTrans, source);
 
     if (source) {
       source = source.replace(/fill-opacity="[\d.]*"/g, '').replace(/stroke-opacity="[\d.]*"/g, '');
 
       const fillTransPlaceholder = Symbol.CreatePlaceholder(
-        Symbol.Placeholder.FillTrans,
-        Symbol.PlaceholderDefaults[Symbol.Placeholder.FillTrans]
+        BasicConstants.Placeholder.FillTrans,
+        BasicConstants.PlaceholderDefaults[BasicConstants.Placeholder.FillTrans]
       );
       source = source.replace(
         new RegExp('fill="##FILLCOLOR', 'g'),
         'fill-opacity="' + fillTransPlaceholder + '" fill="##FILLCOLOR'
       );
-      this.fillTrans = Symbol.GetPlaceholders(Symbol.Placeholder.FillTrans, source);
+      this.fillTrans = Symbol.GetPlaceholders(BasicConstants.Placeholder.FillTrans, source);
 
       const lineTransPlaceholder = Symbol.CreatePlaceholder(
-        Symbol.Placeholder.LineTrans,
-        Symbol.PlaceholderDefaults[Symbol.Placeholder.LineTrans]
+        BasicConstants.Placeholder.LineTrans,
+        BasicConstants.PlaceholderDefaults[BasicConstants.Placeholder.LineTrans]
       );
       source = source.replace(
         new RegExp('stroke="##LINECOLOR', 'g'),
@@ -102,7 +79,7 @@ class Symbol extends Element {
         new RegExp('fill="##LINECOLOR', 'g'),
         'fill-opacity="' + lineTransPlaceholder + '" fill="##LINECOLOR'
       );
-      this.lineTrans = Symbol.GetPlaceholders(Symbol.Placeholder.LineTrans, source);
+      this.lineTrans = Symbol.GetPlaceholders(BasicConstants.Placeholder.LineTrans, source);
 
       this.srcSymbolSVG = source;
     }
@@ -112,7 +89,6 @@ class Symbol extends Element {
   }
 
   RebuildSymbol() {
-    //'use strict';
     console.log("= B.Symbol RebuildSymbol input:", {
       srcSymbolSVG: this.srcSymbolSVG,
       fillColors: this.fillColors,
@@ -152,7 +128,6 @@ class Symbol extends Element {
   }
 
   GetScaleElement() {
-    //'use strict';
     console.log("= B.Symbol GetScaleElement input:", {});
     const result = this.shapeElem;
     console.log("= B.Symbol GetScaleElement output:", { result });
@@ -160,7 +135,6 @@ class Symbol extends Element {
   }
 
   SetFillColor(color: string, skipClear: boolean) {
-    //'use strict';
     console.log("= B.Symbol SetFillColor input:", { color, skipClear });
 
     let updated = false;
@@ -189,10 +163,9 @@ class Symbol extends Element {
   }
 
   SetTextureFill(patternData) {
-    //'use strict';
     console.log("= B.Symbol SetTextureFill input:", { patternData });
 
-    Basic.Element.prototype.SetTextureFill.call(this, patternData);
+    Instance.Basic.Element.SetTextureFill.call(this, patternData);
     const currentFill = this.svgObj.attr('fill');
     this.svgObj.attr('fill', '');
 
@@ -209,10 +182,9 @@ class Symbol extends Element {
   }
 
   SetGradientFill(gradientData) {
-    //'use strict';
     console.log("= B.Symbol SetGradientFill input:", { gradientData });
 
-    Element.prototype.SetGradientFill.call(this, gradientData);
+    Instance.Basic.Element.SetGradientFill.call(this, gradientData);
     const currentFill = this.svgObj.attr('fill');
     this.svgObj.attr('fill', '');
 
@@ -229,7 +201,6 @@ class Symbol extends Element {
   }
 
   SetStrokeColor(color: string, skipClear: boolean) {
-    //'use strict';
     console.log("= B.Symbol SetStrokeColor input:", { color, skipClear });
 
     if (!skipClear) {
@@ -248,10 +219,9 @@ class Symbol extends Element {
   }
 
   SetTextureStroke(patternData) {
-    //'use strict';
     console.log("= B.Symbol SetTextureStroke input:", { patternData });
 
-    Basic.Element.prototype.SetTextureStroke.call(this, patternData);
+    Instance.Basic.Element.SetTextureStroke.call(this, patternData);
     const currentStroke = this.svgObj.attr('stroke');
     this.svgObj.attr('stroke', '');
 
@@ -268,10 +238,9 @@ class Symbol extends Element {
   }
 
   SetGradientStroke(gradientData) {
-    //'use strict';
     console.log("= B.Symbol SetGradientStroke input:", { gradientData });
 
-    Basic.Element.prototype.SetGradientStroke.call(this, gradientData);
+    Instance.Basic.Element.SetGradientStroke.call(this, gradientData);
     const currentStroke = this.svgObj.attr('stroke');
     this.svgObj.attr('stroke', '');
 
@@ -288,11 +257,10 @@ class Symbol extends Element {
   }
 
   SetStrokeWidth(width: string | number) {
-    //'use strict';
     console.log("= B.Symbol SetStrokeWidth input:", { width });
 
     if (isNaN(Number(width))) {
-      width = Number(Symbol.ParsePlaceholder(width as string, Symbol.Placeholder.LineThick));
+      width = Number(Symbol.ParsePlaceholder(width as string, BasicConstants.Placeholder.LineThick));
     }
 
     for (let i = 0; i < this.lineWidths.length; i++) {
@@ -307,7 +275,6 @@ class Symbol extends Element {
   }
 
   SetFillOpacity(opacity: number) {
-    //'use strict';
     console.log("= B.Symbol SetFillOpacity input:", { opacity });
 
     for (let i = 0; i < this.fillTrans.length; i++) {
@@ -322,7 +289,6 @@ class Symbol extends Element {
   }
 
   SetStrokeOpacity(opacity: number) {
-    //'use strict';
     console.log("= B.Symbol SetStrokeOpacity input:", { opacity });
 
     for (let i = 0; i < this.lineTrans.length; i++) {
@@ -336,37 +302,13 @@ class Symbol extends Element {
     console.log("= B.Symbol SetStrokeOpacity output:", { lineTrans: this.lineTrans });
   }
 
-  SetStrokePattern(e) {
+  SetStrokePattern(event) {
   }
 
-  static Placeholder = {
-    FillColor: '##FILLCOLOR',
-    EndColor: '##ENDCOLOR',
-    FillTrans: '##FILLTRANS',
-    LineColor: '##LINECOLOR',
-    LineTrans: '##LINETRANS',
-    LineThick: '##LINETHICK',
-    SolidFill: '##SOLIDFILL',
-    Terminator: '##'
-  }
-
-
-  // Object.freeze(Basic.Symbol.Placeholder),
-  static PlaceholderDefaults = {
-    '##FILLCOLOR': '#FFFFFF',
-    '##ENDCOLOR': '#FFFFFF',
-    '##FILLTRANS': 1,
-    '##LINECOLOR': '#000',
-    '##LINETRANS': 1,
-    '##LINETHICK': 1,
-    '##SOLIDFILL': '#000'
-  }
-
-  // Object.freeze(Basic.Symbol.PlaceholderDefaults),
   static CreatePlaceholder(placeholderType: string, defaultValue: string = ''): string {
     console.log("= B.Symbol CreatePlaceholder input:", { placeholderType, defaultValue });
 
-    const placeholder = `${placeholderType}=${defaultValue}${Symbol.Placeholder.Terminator}`;
+    const placeholder = `${placeholderType}=${defaultValue}${BasicConstants.Placeholder.Terminator}`;
 
     console.log("= B.Symbol CreatePlaceholder output:", { placeholder });
     return placeholder;
@@ -376,8 +318,8 @@ class Symbol extends Element {
     console.log("= B.Symbol ParsePlaceholder input:", { placeholder, placeholderType });
 
     const startIndex = placeholder.indexOf('=') + 1;
-    const endIndex = placeholder.lastIndexOf(Symbol.Placeholder.Terminator);
-    let defaultValue = Symbol.PlaceholderDefaults[placeholderType];
+    const endIndex = placeholder.lastIndexOf(BasicConstants.Placeholder.Terminator);
+    let defaultValue = BasicConstants.PlaceholderDefaults[placeholderType];
 
     if (startIndex > 0 && endIndex > startIndex) {
       defaultValue = placeholder.slice(startIndex, endIndex);
@@ -408,7 +350,6 @@ class Symbol extends Element {
       console.error("= B.Symbol GetPlaceholders error:", e);
     }
 
-
     console.log("= B.Symbol GetPlaceholders output:", { placeholders });
     return placeholders;
   }
@@ -430,6 +371,3 @@ class Symbol extends Element {
 }
 
 export default Symbol
-
-
-// export default Basic.Symbol

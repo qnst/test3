@@ -1,22 +1,12 @@
 
 
-
-
-// import SDJS from "../SDJS/SDJS.Index";
-// import SDUI from "../SDUI/SDUI.Index";
-// import Basic from "./Basic.Index";
-// import GPP from "../gListManager";
 import $ from 'jquery';
 import HvacSVG from "../Helper/SVG.t2"
-
-// import Global from "./Basic.Global"
 import Path from './Basic.Path'
 import Utils1 from "../Helper/Utils1"
 import Utils2 from "../Helper/Utils2"
 import Utils3 from "../Helper/Utils3"
-
 import ConstantData from "../Data/ConstantData"
-
 
 class Creator {
 
@@ -25,21 +15,18 @@ class Creator {
   public curPosX: number;
   public curPosY: number;
 
-  constructor(element) {
+  constructor(element?) {
     this.element = element;
     this.pathSegs = [];
     this.curPosX = 0;
     this.curPosY = 0;
   }
 
-
   BeginPath() {
-    // //'use strict';
     this.pathSegs = [];
     this.curPosX = 0;
     this.curPosY = 0;
   }
-
 
   MoveTo(x: number, y: number, isRelative: boolean): void {
     console.log("= B.Path.Creator - MoveTo called with x:", x, "y:", y, "isRelative:", isRelative);
@@ -61,7 +48,6 @@ class Creator {
 
     console.log("= B.Path.Creator - MoveTo updated position to curPosX:", this.curPosX, "curPosY:", this.curPosY);
   }
-
 
   LineTo(x: number, y: number, isRelative: boolean): void {
     console.log(`= B.Path.Creator - LineTo called with x: ${x}, y: ${y}, isRelative: ${isRelative}`);
@@ -86,7 +72,6 @@ class Creator {
 
     console.log(`= B.Path.Creator - LineTo updated position from (${prevPosX}, ${prevPosY}) to (${this.curPosX}, ${this.curPosY}), command: ${command}`);
   }
-
 
   CurveTo(controlX: number, controlY: number, endX: number, endY: number, isRelative: boolean): void {
     console.log("= B.Path.Creator - CurveTo called with controlX:", controlX,
@@ -117,8 +102,7 @@ class Creator {
       ") to (", this.curPosX, ",", this.curPosY, "), command:", command);
   }
 
-
-  SimpleArcTo(targetX: number, targetY: number, largeArcFlag: number, isRelative: boolean): void {
+  SimpleArcTo(targetX: number, targetY: number, largeArcFlag: boolean, isRelative: boolean): void {
     console.log("= B.Path.Creator - SimpleArcTo called with targetX:", targetX, "targetY:", targetY, "largeArcFlag:", largeArcFlag, "isRelative:", isRelative);
 
     let absoluteX = targetX;
@@ -144,7 +128,6 @@ class Creator {
       console.log("= B.Path.Creator - SimpleArcTo LineTo executed.");
     }
   }
-
 
   ArcTo(
     targetX: number,
@@ -190,13 +173,11 @@ class Creator {
     console.log("= B.Path.Creator - ArcTo updated position from (", prevPosX, ",", prevPosY, ") to (", this.curPosX, ",", this.curPosY, "), command:", command);
   }
 
-
   ClosePath(): void {
     console.log("= B.Path.Creator - ClosePath called with no parameters");
     this.pathSegs.push('z');
     console.log("= B.Path.Creator - ClosePath output, updated pathSegs:", this.pathSegs);
   }
-
 
   ToString(): string {
     console.log("= B.Path.Creator - ToString called. Input pathSegs:", this.pathSegs);
@@ -204,7 +185,6 @@ class Creator {
     console.log("= B.Path.Creator - ToString output:", joinedPath);
     return joinedPath;
   }
-
 
   Apply(): void {
     console.log("= B.Path.Creator - Apply called.");
@@ -220,12 +200,7 @@ class Creator {
       console.log("= B.Path.Creator - Element is not an instance of Path. No action taken.");
     }
   }
+
 }
 
-export default Creator;
-
-
-
-
-
-// export default Basic.Path.Creator;
+export default Creator

@@ -3,6 +3,7 @@
 // import DataStream from '../Opt/Business/DataStream'
 import T3DataStream from "../Opt/Business/DataStream2"
 //import DataStream from 'datastream-js'
+import ConstantData2 from "./ConstantData2";
 
 const FileParser = {};
 
@@ -586,39 +587,39 @@ FileParser.SDROpCodesByCode = {
   2178: 'SDF_O_TEXTUREEXTRA'
 }
 
-// FileParser.SDRShapeTypes = {
-//   SED_S_Photo: - 2,
-//   SED_S_Table: - 1,
-//   SED_S_Text: 0,
-//   SED_S_Image: 1,
-//   SED_S_Rect: 2,
-//   SED_S_RRect: 3,
-//   SED_S_Oval: 4,
-//   SED_S_Pgm: 5,
-//   SED_S_Diam: 6,
-//   SED_S_Doc: 7,
-//   SED_S_Term: 8,
-//   SED_S_Circ: 9,
-//   SED_S_ArrR: 10,
-//   SED_S_ArrL: 11,
-//   SED_S_ArrT: 12,
-//   SED_S_ArrB: 13,
-//   SED_S_Tri: 14,
-//   SED_S_TriB: 15,
-//   SED_S_Input: 16,
-//   SED_S_Trap: 17,
-//   SED_S_TrapB: 18,
-//   SED_S_Oct: 19,
-//   SED_S_Store: 20,
-//   SED_S_Hex: 21,
-//   SED_S_Pent: 22,
-//   SED_S_PentL: 23,
-//   SED_S_Delay: 24,
-//   SED_S_Disp: 25,
-//   SED_S_Poly: 26,
-//   SED_S_MeasureArea: 27,
-//   SED_S_Last: 27
-// }
+FileParser.SDRShapeTypes = {
+  SED_S_Photo: - 2,
+  SED_S_Table: - 1,
+  SED_S_Text: 0,
+  SED_S_Image: 1,
+  SED_S_Rect: 2,
+  SED_S_RRect: 3,
+  SED_S_Oval: 4,
+  SED_S_Pgm: 5,
+  SED_S_Diam: 6,
+  SED_S_Doc: 7,
+  SED_S_Term: 8,
+  SED_S_Circ: 9,
+  SED_S_ArrR: 10,
+  SED_S_ArrL: 11,
+  SED_S_ArrT: 12,
+  SED_S_ArrB: 13,
+  SED_S_Tri: 14,
+  SED_S_TriB: 15,
+  SED_S_Input: 16,
+  SED_S_Trap: 17,
+  SED_S_TrapB: 18,
+  SED_S_Oct: 19,
+  SED_S_Store: 20,
+  SED_S_Hex: 21,
+  SED_S_Pent: 22,
+  SED_S_PentL: 23,
+  SED_S_Delay: 24,
+  SED_S_Disp: 25,
+  SED_S_Poly: 26,
+  SED_S_MeasureArea: 27,
+  SED_S_Last: 27
+}
 
 FileParser.SDRColorFilters = {
   SD_NOCOLOR_FILL: 1,
@@ -861,7 +862,7 @@ FileParser.TextJust = {
   TA_BOTTOM: 8
 }
 
-FileParser.Image_Dir = {
+FileParser.ImageDir = {
   dir_meta: 113,
   dir_jpg: 124,
   dir_png: 125,
@@ -929,16 +930,16 @@ FileParser.GetImageDir = function (e) {
   var t = 0;
   switch (e.type) {
     case 'image/jpeg':
-      t = FileParser.Image_Dir.dir_jpg;
+      t = ConstantData2.ImageDir.dir_jpg;
       break;
     case 'image/png':
-      t = FileParser.Image_Dir.dir_png;
+      t = ConstantData2.ImageDir.dir_png;
       break;
     case 'image/svg+xml':
-      t = FileParser.Image_Dir.dir_svg;
+      t = ConstantData2.ImageDir.dir_svg;
       break;
     case 'image/wmf':
-      t = FileParser.Image_Dir.dir_meta
+      t = ConstantData2.ImageDir.dir_meta
   }
   return t
 }
@@ -946,16 +947,16 @@ FileParser.GetImageDir = function (e) {
 FileParser.GetImageBlobType = function (e) {
   var t = '';
   switch (e) {
-    case FileParser.Image_Dir.dir_jpg:
+    case ConstantData2.ImageDir.dir_jpg:
       t = 'image/jpeg';
       break;
-    case FileParser.Image_Dir.dir_png:
+    case ConstantData2.ImageDir.dir_png:
       t = 'image/png';
       break;
-    case FileParser.Image_Dir.dir_svg:
+    case ConstantData2.ImageDir.dir_svg:
       t = 'image/svg+xml';
       break;
-    case FileParser.Image_Dir.dir_meta:
+    case ConstantData2.ImageDir.dir_meta:
       t = 'image/wmf'
   }
   return t
@@ -9842,13 +9843,13 @@ FileParser.SDF_TEXTURE_Struct = [
 FileParser.parse_SDF_O_TEXTURE = function (e, t) {
   var a = new T3DataStream(e, null, T3DataStream.LITTLE_ENDIAN).readStruct(FileParser.SDF_TEXTURE_Struct);
   switch (a.imagetype) {
-    case FileParser.Image_Dir.dir_meta:
+    case ConstantData2.ImageDir.dir_meta:
       FileParser.TextureFormat = 'image/meta';
       break;
-    case FileParser.Image_Dir.dir_jpg:
+    case ConstantData2.ImageDir.dir_jpg:
       FileParser.TextureFormat = 'image/jpeg';
       break;
-    case FileParser.Image_Dir.dir_png:
+    case ConstantData2.ImageDir.dir_png:
       FileParser.TextureFormat = 'image/png'
   }
   return a
@@ -9954,42 +9955,42 @@ FileParser.SDR_Parser_Struct = ["start", function (e) {
           return 0;
         var a = {};
         switch (t.code) {
-          case FileParser.SDROpCodesByName.SDF_C_VERSION:
+          case ConstantData2.SDROpCodesByName.SDF_C_VERSION:
             return a = FileParser.parse_SDF_VERSION(e.mapUint8Array(t.length)),
               t.length < 18 ? (a.Unicode = 0,
                 FileParser.ReadUnicode = !1) : FileParser.ReadUnicode = a.Unicode,
               a;
-          case FileParser.SDROpCodesByName.SDF_C_HEADER:
+          case ConstantData2.SDROpCodesByName.SDF_C_HEADER:
             return 28 === t.length ? a = FileParser.parse_SDF_HEADER(e.mapUint8Array(t.length)) : 26 === t.length ? a = FileParser.parse_SDF_HEADER_810(e.mapUint8Array(t.length)) : 22 === t.length ? a = FileParser.parse_SDF_HEADER_22(e.mapUint8Array(t.length)) : 14 === t.length && (a = FileParser.parse_SDF_HEADER_14(e.mapUint8Array(t.length))),
               a;
-          case FileParser.SDROpCodesByName.SDF_C_HEAD_UIINFO:
+          case ConstantData2.SDROpCodesByName.SDF_C_HEAD_UIINFO:
             return a = FileParser.parse_SDF_UIInfo(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_PAGE:
+          case ConstantData2.SDROpCodesByName.SDF_C_PAGE:
             return 30 === t.length ? a = FileParser.parse_SDF_PAGE_30(e.mapUint8Array(t.length)) : 34 === t.length ? a = FileParser.parse_SDF_PAGE_34(e.mapUint8Array(t.length)) : 62 === t.length ? a = FileParser.parse_SDF_PAGE_62(e.mapUint8Array(t.length)) : 126 === t.length && (a = FileParser.parse_SDF_PAGE_126(e.mapUint8Array(t.length))),
               a;
-          case FileParser.SDROpCodesByName.SDF_C_LIBLIST:
+          case ConstantData2.SDROpCodesByName.SDF_C_LIBLIST:
             return a = FileParser.parse_SDF_LibList(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_O_TEXTUREEXTRA:
+          case ConstantData2.SDROpCodesByName.SDF_O_TEXTUREEXTRA:
             return a = FileParser.parse_SDF_TextureExtra(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_FONTNAME12:
+          case ConstantData2.SDROpCodesByName.SDF_C_FONTNAME12:
             return a = FileParser.parse_SDF_FONTNAME12(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_FONTNAME:
+          case ConstantData2.SDROpCodesByName.SDF_C_FONTNAME:
             return a = FileParser.parse_SDF_FONTNAME(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_FONTNAME15:
+          case ConstantData2.SDROpCodesByName.SDF_C_FONTNAME15:
             return a = FileParser.parse_SDF_FONTNAME15(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_DIMFONT:
+          case ConstantData2.SDROpCodesByName.SDF_C_DIMFONT:
             return a = FileParser.parse_SDF_DIMFONT(e.mapUint8Array(t.length, FileParser.ReadUnicode));
-          case FileParser.SDROpCodesByName.SDF_C_BEGIN_THEME12:
+          case ConstantData2.SDROpCodesByName.SDF_C_BEGIN_THEME12:
             return a = FileParser.parse_SDF_BEGIN_THEME12(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_THEME_CAT:
+          case ConstantData2.SDROpCodesByName.SDF_C_THEME_CAT:
             return a = FileParser.parse_SDF_THEME_CAT(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_THEME_COLOR:
+          case ConstantData2.SDROpCodesByName.SDF_C_THEME_COLOR:
             return a = FileParser.parse_SDF_THEME_COLOR(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_THEME_FONT12:
+          case ConstantData2.SDROpCodesByName.SDF_C_THEME_FONT12:
             return a = FileParser.parse_SDF_THEME_FONT12(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_BEGIN_TEXTF:
+          case ConstantData2.SDROpCodesByName.SDF_C_BEGIN_TEXTF:
             return a = FileParser.parse_SDF_BEGIN_TEXTF(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_DRAW12:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAW12:
             switch (t.length) {
               case 440:
                 a = FileParser.parse_SDF_DRAW12_440(e.mapUint8Array(t.length));
@@ -10022,281 +10023,281 @@ FileParser.SDR_Parser_Struct = ["start", function (e) {
                 a = FileParser.parse_SDF_DRAW12_336(e.mapUint8Array(t.length))
             }
             return a;
-          case FileParser.SDROpCodesByName.SDF_C_DRAW8:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAW8:
             return 272 === t.length ? a = FileParser.parse_SDF_DRAW8_272(e.mapUint8Array(t.length)) : 264 === t.length ? a = FileParser.parse_SDF_DRAW8_264(e.mapUint8Array(t.length)) : 228 === t.length ? a = FileParser.parse_SDF_DRAW8_228(e.mapUint8Array(t.length)) : 224 === t.length ? a = FileParser.parse_SDF_DRAW8_224(e.mapUint8Array(t.length)) : 216 === t.length && (a = FileParser.parse_SDF_DRAW8_216(e.mapUint8Array(t.length))),
               a;
-          case FileParser.SDROpCodesByName.SDF_C_DRAW:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAW:
             return 236 === t.length ? a = FileParser.parse_SDF_DRAW_236(e.mapUint8Array(t.length)) : 252 === t.length ? a = FileParser.parse_SDF_DRAW_252(e.mapUint8Array(t.length)) : 268 === t.length && (a = FileParser.parse_SDF_DRAW_268(e.mapUint8Array(t.length))),
               a;
-          case FileParser.SDROpCodesByName.SDF_C_DRAW7:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAW7:
             return 48 === t.length ? a = FileParser.parse_SDF_DRAW7_48(e.mapUint8Array(t.length)) : 52 === t.length && (a = FileParser.parse_SDF_DRAW7_52(e.mapUint8Array(t.length))),
               a;
-          case FileParser.SDROpCodesByName.SDF_C_DRAWEXTRA:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWEXTRA:
             return 14 === t.length && (a = FileParser.parse_SDF_DRAWEXTRA_14(e.mapUint8Array(t.length))),
               a;
-          case FileParser.SDROpCodesByName.SDF_C_DRAWOBJ5:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWOBJ5:
             return 60 === t.length && (a = FileParser.parse_SDF_DRAWOBJ5_60(e.mapUint8Array(t.length))),
               a;
-          case FileParser.SDROpCodesByName.SDF_C_DRAWOBJ8:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWOBJ8:
             return 448 === t.length ? a = FileParser.parse_SDF_DRAWOBJ8_448(e.mapUint8Array(t.length)) : 316 === t.length ? a = FileParser.parse_SDF_DRAWOBJ8_316(e.mapUint8Array(t.length)) : 312 === t.length ? a = FileParser.parse_SDF_DRAWOBJ8_312(e.mapUint8Array(t.length)) : 308 === t.length ? a = FileParser.parse_SDF_DRAWOBJ8_848(e.mapUint8Array(t.length)) : 304 === t.length ? a = FileParser.parse_SDF_DRAWOBJ8_847(e.mapUint8Array(t.length)) : 300 === t.length ? a = FileParser.parse_SDF_DRAWOBJ8_837(e.mapUint8Array(t.length)) : 296 === t.length ? a = FileParser.parse_SDF_DRAWOBJ8_830(e.mapUint8Array(t.length)) : 288 === t.length ? a = FileParser.parse_SDF_DRAWOBJ8_824(e.mapUint8Array(t.length)) : 280 === t.length ? a = FileParser.parse_SDF_DRAWOBJ8_814(e.mapUint8Array(t.length)) : 252 === t.length && (a = FileParser.parse_SDF_DRAWOBJ8_810(e.mapUint8Array(t.length))),
               a;
-          case FileParser.SDROpCodesByName.SDF_C_DRAWOBJ:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWOBJ:
             return a = FileParser.parse_SDF_DRAWOBJ(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_TABLEVP:
+          case ConstantData2.SDROpCodesByName.SDF_C_TABLEVP:
             return a = FileParser.parse_SDF_TABLE(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_TABLE:
+          case ConstantData2.SDROpCodesByName.SDF_C_TABLE:
             return a = FileParser.parse_SDF_TABLE_Short(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_TABLECELL8:
+          case ConstantData2.SDROpCodesByName.SDF_C_TABLECELL8:
             return a = FileParser.parse_SDF_TABLE_CELL(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_TABLECELL:
+          case ConstantData2.SDROpCodesByName.SDF_C_TABLECELL:
             return a = FileParser.parse_SDF_TABLE_CELL7(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_TABLECELLEXTRAOLD:
+          case ConstantData2.SDROpCodesByName.SDF_C_TABLECELLEXTRAOLD:
             return a = FileParser.parse_SDF_TABLE_CELLEXTRAOLD(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_TABLECELLEXTRA:
+          case ConstantData2.SDROpCodesByName.SDF_C_TABLECELLEXTRA:
             return a = FileParser.parse_SDF_TABLE_CELLEXTRA(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_TABLECELLPROP:
+          case ConstantData2.SDROpCodesByName.SDF_C_TABLECELLPROP:
             return a = FileParser.parse_SDF_TABLE_CELLPROP(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_TABLEROWVP:
+          case ConstantData2.SDROpCodesByName.SDF_C_TABLEROWVP:
             return a = FileParser.parse_SDF_TABLE_ROW(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_TABLEROW:
+          case ConstantData2.SDROpCodesByName.SDF_C_TABLEROW:
             return a = FileParser.parse_SDF_TABLE_ROW_Short(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_GRAPH:
+          case ConstantData2.SDROpCodesByName.SDF_C_GRAPH:
             return a = FileParser.parse_SDF_GRAPH(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_GRAPH_AXIS:
+          case ConstantData2.SDROpCodesByName.SDF_C_GRAPH_AXIS:
             return a = FileParser.parse_SDF_GRAPH_AXIS(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_GRAPH_POINT:
+          case ConstantData2.SDROpCodesByName.SDF_C_GRAPH_POINT:
             return a = FileParser.parse_SDF_GRAPH_POINT(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_GRAPH_TITLE:
+          case ConstantData2.SDROpCodesByName.SDF_C_GRAPH_TITLE:
             return a = FileParser.parse_SDF_GRAPH_TITLE(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_GRAPH_LABEL:
+          case ConstantData2.SDROpCodesByName.SDF_C_GRAPH_LABEL:
             return a = FileParser.parse_SDF_GRAPH_AXIS_LABEL(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_GRAPH_LEGEND:
+          case ConstantData2.SDROpCodesByName.SDF_C_GRAPH_LEGEND:
             return a = FileParser.parse_SDF_GRAPH_LEGEND_ENTRY(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_DRAWTEXT:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWTEXT:
             return 182 === t.length ? a = FileParser.parse_SDF_DRAWTEXT182(e.mapUint8Array(t.length)) : 110 === t.length ? a = FileParser.parse_SDF_DRAWTEXT110(e.mapUint8Array(t.length)) : 106 === t.length ? a = FileParser.parse_SDF_DRAWTEXT106(e.mapUint8Array(t.length)) : 94 === t.length ? a = FileParser.parse_SDF_DRAWTEXT94(e.mapUint8Array(t.length)) : 90 === t.length ? a = FileParser.parse_SDF_DRAWTEXT(e.mapUint8Array(t.length)) : 88 === t.length ? a = FileParser.parse_SDF_DRAWTEXT_88(e.mapUint8Array(t.length)) : 72 === t.length && (a = FileParser.parse_SDF_DRAWTEXT_72(e.mapUint8Array(t.length))),
               a;
-          case FileParser.SDROpCodesByName.SDF_C_BEGIN_PAINT:
+          case ConstantData2.SDROpCodesByName.SDF_C_BEGIN_PAINT:
             return a = FileParser.parse_SDF_SDPaint(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_DRAWPOLY:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWPOLY:
             return 8 === t.length ? a = FileParser.parse_SDF_PolyList_8(e.mapUint8Array(t.length)) : 12 === t.length ? a = FileParser.parse_SDF_PolyList_12(e.mapUint8Array(t.length)) : 20 === t.length ? a = FileParser.parse_SDF_PolyList_20(e.mapUint8Array(t.length)) : 24 === t.length && (a = FileParser.parse_SDF_PolyList_24(e.mapUint8Array(t.length))),
               a;
-          case FileParser.SDROpCodesByName.SDF_C_DRAWPOLYSEG:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWPOLYSEG:
             return 18 === t.length && (a = FileParser.parse_SDF_PolySeg_18(e.mapUint8Array(t.length))),
               28 === t.length ? a = FileParser.parse_SDF_PolySeg(e.mapUint8Array(t.length)) : 26 === t.length ? a = FileParser.parse_SDF_PolySeg_26(e.mapUint8Array(t.length)) : 32 === t.length ? a = FileParser.parse_SDF_PolySeg_32(e.mapUint8Array(t.length)) : 40 === t.length ? a = FileParser.parse_SDF_PolySeg_40(e.mapUint8Array(t.length)) : 50 === t.length && (a = FileParser.parse_SDF_PolySeg_50(e.mapUint8Array(t.length))),
               a;
-          case FileParser.SDROpCodesByName.SDF_C_POLYSEGEXPLICITPOINTS:
+          case ConstantData2.SDROpCodesByName.SDF_C_POLYSEGEXPLICITPOINTS:
             return a = FileParser.parse_SDF_PolySegExplicitPoints(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_DRAWLINK:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWLINK:
             return a = FileParser.parse_SDF_LinkList(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_DRAWLINK6:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWLINK6:
             return a = FileParser.parse_SDF_LinkList6(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_DRAWARRAYTEXT:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWARRAYTEXT:
             return a = FileParser.parse_SDF_ArrayHookText(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_OBJDATA:
+          case ConstantData2.SDROpCodesByName.SDF_C_OBJDATA:
             return a = FileParser.parse_SDF_OBJDATA(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_O_RULER:
+          case ConstantData2.SDROpCodesByName.SDF_O_RULER:
             return a = FileParser.parse_SDF_RULER(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_LINEDRAWLIST:
+          case ConstantData2.SDROpCodesByName.SDF_C_LINEDRAWLIST:
             return a = FileParser.parse_SDF_LINEDRAWLIST(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_BEGIN_LINE:
-          case FileParser.SDROpCodesByName.SDF_C_BEGIN_HLINE:
-          case FileParser.SDROpCodesByName.SDF_C_BEGIN_VLINE:
+          case ConstantData2.SDROpCodesByName.SDF_C_BEGIN_LINE:
+          case ConstantData2.SDROpCodesByName.SDF_C_BEGIN_HLINE:
+          case ConstantData2.SDROpCodesByName.SDF_C_BEGIN_VLINE:
             return a = FileParser.parse_SDF_BEGIN_LINE(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_FILLEDLINE:
+          case ConstantData2.SDROpCodesByName.SDF_C_FILLEDLINE:
             return a = FileParser.parse_SDF_FILLED_LINE(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_OUTSIDE:
+          case ConstantData2.SDROpCodesByName.SDF_C_OUTSIDE:
             return a = FileParser.parse_SDF_OUTSIDE(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_INSIDEEFFECT:
+          case ConstantData2.SDROpCodesByName.SDF_C_INSIDEEFFECT:
             return a = FileParser.parse_SDF_INSIDEEFFECT(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_EFFECT:
+          case ConstantData2.SDROpCodesByName.SDF_C_EFFECT:
             return a = FileParser.parse_SDF_EFFECT(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_TEXTURE:
+          case ConstantData2.SDROpCodesByName.SDF_C_TEXTURE:
             return a = FileParser.parse_SDF_TEXTURE(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_HATCH:
+          case ConstantData2.SDROpCodesByName.SDF_C_HATCH:
             return a = FileParser.parse_SDF_HATCH(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_GRADIENT:
+          case ConstantData2.SDROpCodesByName.SDF_C_GRADIENT:
             return a = FileParser.parse_SDF_GRADIENT(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_RICHGRADIENT:
+          case ConstantData2.SDROpCodesByName.SDF_C_RICHGRADIENT:
             return a = FileParser.parse_SDF_RICHGRADIENT(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_RICHGRADIENTSTOP:
+          case ConstantData2.SDROpCodesByName.SDF_C_RICHGRADIENTSTOP:
             return a = FileParser.parse_SDF_RICHGRADIENTSTOP(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_THEMEGRADIENT:
+          case ConstantData2.SDROpCodesByName.SDF_C_THEMEGRADIENT:
             return a = FileParser.parse_SDF_THEMEGRADIENT(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_BEGIN_STYLE:
+          case ConstantData2.SDROpCodesByName.SDF_C_BEGIN_STYLE:
             return a = FileParser.parse_SDF_BEGIN_STYLE(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_DRAWARROW:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWARROW:
             return a = FileParser.parse_SDF_DRAWARROW(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_DRAWHOOK:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWHOOK:
             return a = 22 === t.length ? FileParser.parse_SDF_DRAWHOOK_Visio(e.mapUint8Array(t.length)) : 10 === t.length ? FileParser.parse_SDF_DRAWHOOK_10(e.mapUint8Array(t.length)) : FileParser.parse_SDF_DRAWHOOK(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_DRAWBORDER:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWBORDER:
             return a = FileParser.parse_SDF_DRAWBORDER(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_GANTTINFO:
+          case ConstantData2.SDROpCodesByName.SDF_C_GANTTINFO:
             return a = FileParser.parse_SDF_GANTTINFO(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_DRAWLINE:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWLINE:
             return a = FileParser.parse_SDF_DRAWLINE(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_DRAWFILL:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWFILL:
             return a = 6 === t.length ? FileParser.parse_SDF_DRAWFILL_6(e.mapUint8Array(t.length)) : FileParser.parse_SDF_DRAWFILL(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_DRAWOBJ7:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWOBJ7:
             return a = FileParser.parse_SDF_DRAWOBJ7(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_DRAWOBJ6:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWOBJ6:
             return a = FileParser.parse_SDF_DRAWOBJ6(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_CONNECTPOINT:
+          case ConstantData2.SDROpCodesByName.SDF_C_CONNECTPOINT:
             return a = FileParser.parse_SDF_CONNECTPOINT(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_LONGTEXT8:
+          case ConstantData2.SDROpCodesByName.SDF_C_LONGTEXT8:
             return a = 8 === t.length ? FileParser.parse_SDF_LONGTEXT8_8(e.mapUint8Array(t.length)) : FileParser.parse_SDF_LONGTEXT8(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_TEXT:
+          case ConstantData2.SDROpCodesByName.SDF_C_TEXT:
             return a = FileParser.parse_SDF_TEXT(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_LONGTEXT:
+          case ConstantData2.SDROpCodesByName.SDF_C_LONGTEXT:
             return a = FileParser.parse_SDF_LONGTEXT(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_TEXTCHAR:
+          case ConstantData2.SDROpCodesByName.SDF_C_TEXTCHAR:
             return t.length && (a = FileParser.ReadUnicode ? FileParser.parse_SDF_TEXTCHAR(e.mapUint8Array(t.length)) : FileParser.parse_SDF_TEXTCHAR_8(e.mapUint8Array(t.length))),
               a;
-          case FileParser.SDROpCodesByName.SDF_C_TEXTRUN:
+          case ConstantData2.SDROpCodesByName.SDF_C_TEXTRUN:
             return a = FileParser.parse_SDF_TEXTRUNS(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_TEXTSTYLE:
+          case ConstantData2.SDROpCodesByName.SDF_C_TEXTSTYLE:
             return a = FileParser.parse_SDF_TEXTSTYLE(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_TEXTLINK:
+          case ConstantData2.SDROpCodesByName.SDF_C_TEXTLINK:
             return a = FileParser.parse_SDF_TEXTLINK(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_TEXTDATA:
+          case ConstantData2.SDROpCodesByName.SDF_C_TEXTDATA:
             return a = FileParser.parse_SDF_TEXTDATA(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_D3SETTINGS:
+          case ConstantData2.SDROpCodesByName.SDF_C_D3SETTINGS:
             return a = FileParser.parse_SDF_D3SETTINGS(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_DRAWSEGL:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWSEGL:
             return 58 === t.length ? a = FileParser.parse_SDF_SegLine_58(e.mapUint8Array(t.length)) : 158 === t.length ? a = FileParser.parse_SDF_SegLine(e.mapUint8Array(t.length)) : 208 === t.length ? a = FileParser.parse_SDF_SegLine_208(e.mapUint8Array(t.length)) : 210 === t.length && (a = FileParser.parse_SDF_SegLine_210(e.mapUint8Array(t.length))),
               a;
-          case FileParser.SDROpCodesByName.SDF_C_DRAWARRAY:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWARRAY:
             return 34 === t.length ? a = FileParser.parse_SDF_Array_34(e.mapUint8Array(t.length)) : 30 === t.length ? a = FileParser.parse_SDF_Array_30(e.mapUint8Array(t.length)) : 42 === t.length ? a = FileParser.parse_SDF_Array(e.mapUint8Array(t.length)) : 38 === t.length ? a = FileParser.parse_SDF_Array_38(e.mapUint8Array(t.length)) : 14 === t.length && (a = FileParser.parse_SDF_Array_14(e.mapUint8Array(t.length))),
               a;
-          case FileParser.SDROpCodesByName.SDF_C_DRAWARRAYHOOK:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWARRAYHOOK:
             return 14 == t.length ? a = FileParser.parse_SDF_ArrayHook_14(e.mapUint8Array(t.length)) : 18 == t.length ? a = FileParser.parse_SDF_ArrayHook_18(e.mapUint8Array(t.length)) : 38 == t.length ? a = FileParser.parse_SDF_ArrayHook_38(e.mapUint8Array(t.length)) : 50 == t.length && (a = FileParser.parse_SDF_ArrayHook_50(e.mapUint8Array(t.length))),
               a;
-          case FileParser.SDROpCodesByName.SDF_C_DRAWCONTAINER:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWCONTAINER:
             return 92 == t.length ? a = FileParser.parse_SDF_ContainerList_92(e.mapUint8Array(t.length)) : 100 == t.length && (a = FileParser.parse_SDF_ContainerList_100(e.mapUint8Array(t.length))),
               a;
-          case FileParser.SDROpCodesByName.SDF_C_DRAWCONTAINERHOOK:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWCONTAINERHOOK:
             return a = 20 == t.length ? FileParser.parse_SDF_ContainerHook_20(e.mapUint8Array(t.length)) : FileParser.parse_SDF_ContainerHook_28(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_PRINTERST:
-          case FileParser.SDROpCodesByName.SDF_C_LIBLIST_PATH:
-          case FileParser.SDROpCodesByName.SDF_C_LIBLIST_GUID:
-          case FileParser.SDROpCodesByName.SDF_C_PARENTPAGEID:
-          case FileParser.SDROpCodesByName.SDF_C_ORIGTEMPLATE:
-          case FileParser.SDROpCodesByName.SDF_C_GUIDE:
-          case FileParser.SDROpCodesByName.SDF_C_EXPORTPATH:
-          case FileParser.SDROpCodesByName.SDF_C_DEFAULTLIBS:
-          case FileParser.SDROpCodesByName.SDF_C_PRESENTATION_BACKGROUND:
-          case FileParser.SDROpCodesByName.SDF_C_PRESENTATION_NAME:
-          case FileParser.SDROpCodesByName.SDF_C_IMPORT_SOURCE_PATH:
-          case FileParser.SDROpCodesByName.SDF_C_TASKPANEL:
-          case FileParser.SDROpCodesByName.SDF_C_ORGCHARTTABLE:
-          case FileParser.SDROpCodesByName.SDF_C_KANBAN_PC_TITLE:
-          case FileParser.SDROpCodesByName.SDF_C_KANBAN_ASSIGN_TITLE:
-          case FileParser.SDROpCodesByName.SDF_C_THEME_TEXTURE:
-          case FileParser.SDROpCodesByName.SDF_C_KANBAN_ASSIGN_TITLE:
-          case FileParser.SDROpCodesByName.SDF_C_DEFAULTLIBS:
-          case FileParser.SDROpCodesByName.SDF_C_CELL_STYLENAME:
-          case FileParser.SDROpCodesByName.SDF_O_TEXTURENAME:
-          case FileParser.SDROpCodesByName.SDF_O_TEXTURECATNAME:
-          case FileParser.SDROpCodesByName.SDF_C_DRAWJUMP:
-          case FileParser.SDROpCodesByName.SDF_C_IMAGEURL:
-          case FileParser.SDROpCodesByName.SDF_C_BUSINESSMODULE:
-          case FileParser.SDROpCodesByName.SDF_C_SYMBOLSEARCHSTRING:
-          case FileParser.SDROpCodesByName.SDF_C_SEARCHLIB:
-          case FileParser.SDROpCodesByName.SDF_C_SEARCHLIB_NAME:
-          case FileParser.SDROpCodesByName.SDF_C_SEARCHLIBSYMBOL_ID:
-          case FileParser.SDROpCodesByName.SDF_C_SEARCHLIBSYMBOL_NAME:
-          case FileParser.SDROpCodesByName.SDF_C_CURRENTSYMBOL_ID:
-          case FileParser.SDROpCodesByName.SDF_C_LIBLIST_SEARCH_RESULT_ID:
-          case FileParser.SDROpCodesByName.SDF_C_RECENTSYMBOL_ID:
-          case FileParser.SDROpCodesByName.SDF_C_RECENTSYMBOL_NAME:
-          case FileParser.SDROpCodesByName.SDF_C_RECENTSYMBOL_NOMENU:
-          case FileParser.SDROpCodesByName.SDF_C_TOOLPALETTES_NAME:
-          case FileParser.SDROpCodesByName.SDF_C_BUSINESSNAME_STR:
+          case ConstantData2.SDROpCodesByName.SDF_C_PRINTERST:
+          case ConstantData2.SDROpCodesByName.SDF_C_LIBLIST_PATH:
+          case ConstantData2.SDROpCodesByName.SDF_C_LIBLIST_GUID:
+          case ConstantData2.SDROpCodesByName.SDF_C_PARENTPAGEID:
+          case ConstantData2.SDROpCodesByName.SDF_C_ORIGTEMPLATE:
+          case ConstantData2.SDROpCodesByName.SDF_C_GUIDE:
+          case ConstantData2.SDROpCodesByName.SDF_C_EXPORTPATH:
+          case ConstantData2.SDROpCodesByName.SDF_C_DEFAULTLIBS:
+          case ConstantData2.SDROpCodesByName.SDF_C_PRESENTATION_BACKGROUND:
+          case ConstantData2.SDROpCodesByName.SDF_C_PRESENTATION_NAME:
+          case ConstantData2.SDROpCodesByName.SDF_C_IMPORT_SOURCE_PATH:
+          case ConstantData2.SDROpCodesByName.SDF_C_TASKPANEL:
+          case ConstantData2.SDROpCodesByName.SDF_C_ORGCHARTTABLE:
+          case ConstantData2.SDROpCodesByName.SDF_C_KANBAN_PC_TITLE:
+          case ConstantData2.SDROpCodesByName.SDF_C_KANBAN_ASSIGN_TITLE:
+          case ConstantData2.SDROpCodesByName.SDF_C_THEME_TEXTURE:
+          case ConstantData2.SDROpCodesByName.SDF_C_KANBAN_ASSIGN_TITLE:
+          case ConstantData2.SDROpCodesByName.SDF_C_DEFAULTLIBS:
+          case ConstantData2.SDROpCodesByName.SDF_C_CELL_STYLENAME:
+          case ConstantData2.SDROpCodesByName.SDF_O_TEXTURENAME:
+          case ConstantData2.SDROpCodesByName.SDF_O_TEXTURECATNAME:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWJUMP:
+          case ConstantData2.SDROpCodesByName.SDF_C_IMAGEURL:
+          case ConstantData2.SDROpCodesByName.SDF_C_BUSINESSMODULE:
+          case ConstantData2.SDROpCodesByName.SDF_C_SYMBOLSEARCHSTRING:
+          case ConstantData2.SDROpCodesByName.SDF_C_SEARCHLIB:
+          case ConstantData2.SDROpCodesByName.SDF_C_SEARCHLIB_NAME:
+          case ConstantData2.SDROpCodesByName.SDF_C_SEARCHLIBSYMBOL_ID:
+          case ConstantData2.SDROpCodesByName.SDF_C_SEARCHLIBSYMBOL_NAME:
+          case ConstantData2.SDROpCodesByName.SDF_C_CURRENTSYMBOL_ID:
+          case ConstantData2.SDROpCodesByName.SDF_C_LIBLIST_SEARCH_RESULT_ID:
+          case ConstantData2.SDROpCodesByName.SDF_C_RECENTSYMBOL_ID:
+          case ConstantData2.SDROpCodesByName.SDF_C_RECENTSYMBOL_NAME:
+          case ConstantData2.SDROpCodesByName.SDF_C_RECENTSYMBOL_NOMENU:
+          case ConstantData2.SDROpCodesByName.SDF_C_TOOLPALETTES_NAME:
+          case ConstantData2.SDROpCodesByName.SDF_C_BUSINESSNAME_STR:
             return a = FileParser.ReadUnicode ? FileParser.parse_SDF_ORIGTEMPLATE(e.mapUint8Array(t.length)) : FileParser.parse_SDF_ORIGTEMPLATE8(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_EMFHASH:
+          case ConstantData2.SDROpCodesByName.SDF_C_EMFHASH:
             return a = FileParser.parse_SDF_ORIGTEMPLATE8(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_SVGFRAGMENTID:
-          case FileParser.SDROpCodesByName.SDF_C_SVGIMAGEID:
+          case ConstantData2.SDROpCodesByName.SDF_C_SVGFRAGMENTID:
+          case ConstantData2.SDROpCodesByName.SDF_C_SVGIMAGEID:
             return a = FileParser.parse_SDF_ORIGTEMPLATE(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_LEFTPANELINFO:
-          case FileParser.SDROpCodesByName.SDF_C_LIBLIST_ENTRY:
-          case FileParser.SDROpCodesByName.SDF_C_LIB_COLLAPSED:
-          case FileParser.SDROpCodesByName.SDF_C_SEARCHLIB_COLLAPSED:
-          case FileParser.SDROpCodesByName.SDF_C_SEARCHLIB_HIDDEN:
-          case FileParser.SDROpCodesByName.SDF_C_HILITELIST:
+          case ConstantData2.SDROpCodesByName.SDF_C_LEFTPANELINFO:
+          case ConstantData2.SDROpCodesByName.SDF_C_LIBLIST_ENTRY:
+          case ConstantData2.SDROpCodesByName.SDF_C_LIB_COLLAPSED:
+          case ConstantData2.SDROpCodesByName.SDF_C_SEARCHLIB_COLLAPSED:
+          case ConstantData2.SDROpCodesByName.SDF_C_SEARCHLIB_HIDDEN:
+          case ConstantData2.SDROpCodesByName.SDF_C_HILITELIST:
             return a = FileParser.parse_SDF_LONGVALUE(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_HILITE:
+          case ConstantData2.SDROpCodesByName.SDF_C_HILITE:
             return a = FileParser.parse_SDF_HILITE(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_CTHUMBNAIL:
+          case ConstantData2.SDROpCodesByName.SDF_C_CTHUMBNAIL:
             return a = FileParser.parse_image(e.mapUint8Array(t.length), "image/png");
-          case FileParser.SDROpCodesByName.SDF_C_DRAWIMAGE8:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWIMAGE8:
             return a = FileParser.parse_SDF_DRAWIMAGE8(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_DRAWMETA:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWMETA:
             return a = FileParser.parse_image(e.mapUint8Array(t.length), "image/wmf");
-          case FileParser.SDROpCodesByName.SDF_C_DRAWPNG:
-          case FileParser.SDROpCodesByName.SDF_C_DRAWPREVIEWPNG:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWPNG:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWPREVIEWPNG:
             return a = FileParser.parse_image(e.mapUint8Array(t.length), "image/png");
-          case FileParser.SDROpCodesByName.SDF_C_DRAWJPG:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWJPG:
             return a = FileParser.parse_image(e.mapUint8Array(t.length), "image/jpeg");
-          case FileParser.SDROpCodesByName.SDF_C_DRAWSVG:
+          case ConstantData2.SDROpCodesByName.SDF_C_DRAWSVG:
             return a = FileParser.parse_image(e.mapUint8Array(t.length), "image/svg+xml");
-          case FileParser.SDROpCodesByName.SDF_C_OLEHEADER:
+          case ConstantData2.SDROpCodesByName.SDF_C_OLEHEADER:
             return a = FileParser.parse_SDF_C_OLEHEADER(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_OLESTORAGE:
+          case ConstantData2.SDROpCodesByName.SDF_C_OLESTORAGE:
             return a = FileParser.parse_image(e.mapUint8Array(t.length), "image/store");
-          case FileParser.SDROpCodesByName.SDF_C_NATIVESTORAGE:
+          case ConstantData2.SDROpCodesByName.SDF_C_NATIVESTORAGE:
             return a = FileParser.parse_nativebuffer(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_SDDATA64:
-          case FileParser.SDROpCodesByName.SDF_C_SDDATA64C:
+          case ConstantData2.SDROpCodesByName.SDF_C_SDDATA64:
+          case ConstantData2.SDROpCodesByName.SDF_C_SDDATA64C:
             return a = FileParser.parse_SDF_C_SDDATA(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_LAYERFLAGS:
+          case ConstantData2.SDROpCodesByName.SDF_C_LAYERFLAGS:
             return a = 2 == t.length ? FileParser.parse_SDF_C_LAYERFLAGS_2(e.mapUint8Array(t.length), t.length) : FileParser.parse_SDF_C_LAYERFLAGS_4(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_LAYERNAME:
+          case ConstantData2.SDROpCodesByName.SDF_C_LAYERNAME:
             return a = FileParser.ReadUnicode ? FileParser.parse_SDF_ORIGTEMPLATE(e.mapUint8Array(t.length)) : FileParser.parse_SDF_ORIGTEMPLATE8(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_LAYERTYPE:
+          case ConstantData2.SDROpCodesByName.SDF_C_LAYERTYPE:
             return a = FileParser.parse_SDF_C_LAYERTYPE(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_LAYERLIST:
+          case ConstantData2.SDROpCodesByName.SDF_C_LAYERLIST:
             return a = FileParser.parse_SDF_C_LAYERLIST(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_NATIVEID:
+          case ConstantData2.SDROpCodesByName.SDF_C_NATIVEID:
             return a = FileParser.parse_SDF_C_NATIVEID(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_TOOLPALETTES_COLLAPSED:
+          case ConstantData2.SDROpCodesByName.SDF_C_TOOLPALETTES_COLLAPSED:
             return a = FileParser.parse_SDF_C_TOOLPALETTES_COLLAPSED(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_IMAGEID:
-          case FileParser.SDROpCodesByName.SDF_C_EMFID:
-          case FileParser.SDROpCodesByName.SDF_C_OLESTORAGEID:
+          case ConstantData2.SDROpCodesByName.SDF_C_IMAGEID:
+          case ConstantData2.SDROpCodesByName.SDF_C_EMFID:
+          case ConstantData2.SDROpCodesByName.SDF_C_OLESTORAGEID:
             return a = FileParser.parse_SDF_C_IMAGEID(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_C_NATIVEBLOCK:
-          case FileParser.SDROpCodesByName.SDF_C_NATIVEWINBLOCK:
+          case ConstantData2.SDROpCodesByName.SDF_C_NATIVEBLOCK:
+          case ConstantData2.SDROpCodesByName.SDF_C_NATIVEWINBLOCK:
             return a = FileParser.parse_SDF_C_NATIVEBLOCK(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_IMAGEBLOCK:
-          case FileParser.SDROpCodesByName.SDF_C_EMFBLOCK:
+          case ConstantData2.SDROpCodesByName.SDF_C_IMAGEBLOCK:
+          case ConstantData2.SDROpCodesByName.SDF_C_EMFBLOCK:
             return a = FileParser.parse_SDF_C_IMAGEBLOCK(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_EXPANDEDVIEWBLOCK:
-          case FileParser.SDROpCodesByName.SDF_C_TABLEBLOCK:
+          case ConstantData2.SDROpCodesByName.SDF_C_EXPANDEDVIEWBLOCK:
+          case ConstantData2.SDROpCodesByName.SDF_C_TABLEBLOCK:
             return a = FileParser.parse_SDF_LONGVALUE(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_CLOUDCOMMENTBLOCK:
+          case ConstantData2.SDROpCodesByName.SDF_C_CLOUDCOMMENTBLOCK:
             return a = FileParser.parse_SDF_COMMENT(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_GRAPHBLOCK:
+          case ConstantData2.SDROpCodesByName.SDF_C_GRAPHBLOCK:
             return a = FileParser.parse_SDF_LONGVALUE(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_EXPANDEDVIEW:
+          case ConstantData2.SDROpCodesByName.SDF_C_EXPANDEDVIEW:
             return a = FileParser.parse_SDF_EXPANDEDVIEW(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_GANTTINFOBLOCK:
-          case FileParser.SDROpCodesByName.SDF_C_GRAPHID:
-          case FileParser.SDROpCodesByName.SDF_C_TABLEID:
-          case FileParser.SDROpCodesByName.SDF_C_GANTTINFOID:
-          case FileParser.SDROpCodesByName.SDF_C_NOTEID:
-          case FileParser.SDROpCodesByName.SDF_C_EXPANDEDVIEWID:
+          case ConstantData2.SDROpCodesByName.SDF_C_GANTTINFOBLOCK:
+          case ConstantData2.SDROpCodesByName.SDF_C_GRAPHID:
+          case ConstantData2.SDROpCodesByName.SDF_C_TABLEID:
+          case ConstantData2.SDROpCodesByName.SDF_C_GANTTINFOID:
+          case ConstantData2.SDROpCodesByName.SDF_C_NOTEID:
+          case ConstantData2.SDROpCodesByName.SDF_C_EXPANDEDVIEWID:
             return a = FileParser.parse_SDF_LONGVALUE(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_O_TEXTURELIST:
+          case ConstantData2.SDROpCodesByName.SDF_O_TEXTURELIST:
             return a = FileParser.parse_SDF_C_LAYERTYPE(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_O_TEXTURE:
+          case ConstantData2.SDROpCodesByName.SDF_O_TEXTURE:
             return a = FileParser.parse_SDF_O_TEXTURE(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_O_TEXTUREEXT:
+          case ConstantData2.SDROpCodesByName.SDF_O_TEXTUREEXT:
             return a = FileParser.parse_SDF_O_TEXTUREEXT(e.mapUint8Array(t.length), t.length);
-          case FileParser.SDROpCodesByName.SDF_O_TEXTUREDATA:
+          case ConstantData2.SDROpCodesByName.SDF_O_TEXTUREDATA:
             return a = FileParser.parse_image(e.mapUint8Array(t.length), FileParser.TextureFormat);
-          case FileParser.SDROpCodesByName.SDF_C_COMMENT:
+          case ConstantData2.SDROpCodesByName.SDF_C_COMMENT:
             return a = 8 === t.length ? FileParser.parse_SDF_LONGTEXT8_8(e.mapUint8Array(t.length)) : FileParser.parse_SDF_LONGTEXT8(e.mapUint8Array(t.length));
-          case FileParser.SDROpCodesByName.SDF_C_FREEHANDLINE:
+          case ConstantData2.SDROpCodesByName.SDF_C_FREEHANDLINE:
             return a = FileParser.parse_SDF_FreehandLine_Struct(e.mapUint8Array(t.length));
           default:
             return "data[" + (a = e.mapUint8Array(t.length).length) + "]"
@@ -10353,7 +10354,7 @@ FileParser.SDR_Parser_Struct = ["start", function (e) {
 //         get: function (e, t) {
 //           if (16384 & t.code) return 0;
 //           var a = {};
-//           return t.code === FileParser.SDROpCodesByName.SDF_C_VERSION ? (
+//           return t.code === ConstantData2.SDROpCodesByName.SDF_C_VERSION ? (
 //             a = FileParser.parse_SDF_VERSION(e.mapUint8Array(t.length)),
 //             t.length < 18 ? (a.Unicode = 0, FileParser.ReadUnicode = !1) : FileParser.ReadUnicode = a.Unicode,
 //             a
@@ -10382,7 +10383,7 @@ FileParser.SDR_Parser_HeaderOnly_Struct = ["start", function (e) {
         if (16384 & t.code)
           return 0;
         var a = {};
-        return t.code === FileParser.SDROpCodesByName.SDF_C_VERSION ? (a = FileParser.parse_SDF_VERSION(e.mapUint8Array(t.length)),
+        return t.code === ConstantData2.SDROpCodesByName.SDF_C_VERSION ? (a = FileParser.parse_SDF_VERSION(e.mapUint8Array(t.length)),
           t.length < 18 ? (a.Unicode = 0,
             FileParser.ReadUnicode = !1) : FileParser.ReadUnicode = a.Unicode,
           a) : void 0

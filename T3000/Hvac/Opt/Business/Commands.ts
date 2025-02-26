@@ -131,7 +131,7 @@ class Commands {
     null != t.value ? (
       shapeType = parseInt(t.value),
       SDUI.ConstantData.DocumentContext.ShapeTool != shapeType &&
-      SDJS.SDF.ChangeHeader(SDJS.FileParser.SDROpCodesByName.SDF_C_HEAD_UIINFO, !1),
+      SDJS.SDF.ChangeHeader(SDJS.ConstantData2.SDROpCodesByName.SDF_C_HEAD_UIINFO, !1),
       SDUI.Commands.MainController.Selection.SetShapeTool(shapeType),
       SDUI.Commands.MainController.Shapes.StampOrDragDropNewShape(e, shapeType)
     ) : SDUI.Commands.MainController.Shapes.StampOrDragDropNewShape(e, null)
@@ -158,7 +158,7 @@ class Commands {
     //     null != t.value ? (
     //     shapeType = 2,// parseInt(t.value),
     //     ConstantData.DocumentContext.ShapeTool != shapeType &&
-    //     SDF.ChangeHeader(FileParser.SDROpCodesByName.SDF_C_HEAD_UIINFO, !1),
+    //     SDF.ChangeHeader(ConstantData2.SDROpCodesByName.SDF_C_HEAD_UIINFO, !1),
     //     SDUI.Commands.MainController.Selection.SetShapeTool(shapeType),
     //     SDUI.Commands.MainController.Shapes.StampOrDragDropNewShape(e, shapeType)
     //   ) : SDUI.Commands.MainController.Shapes.StampOrDragDropNewShape(e,/* null*/2)
@@ -171,7 +171,7 @@ class Commands {
     // if (shapeTypeAttr && shapeTypeAttr.value) {
     //   const shapeType = parseInt(shapeTypeAttr.value, 10);
     //   if (ConstantData.DocumentContext.ShapeTool !== shapeType) {
-    //     SDF.ChangeHeader(FileParser.SDROpCodesByName.SDF_C_HEAD_UIINFO, false);
+    //     SDF.ChangeHeader(ConstantData2.SDROpCodesByName.SDF_C_HEAD_UIINFO, false);
     //   }
     //   SDUI.Commands.MainController.Selection.SetShapeTool(shapeType);
     //   SDUI.Commands.MainController.Shapes.StampOrDragDropNewShape(e, shapeType);
@@ -201,7 +201,7 @@ class Commands {
     //       null != t.value ? (
     //       shapeType =type,//2,// parseInt(t.value),
     //       SDUI.ConstantData.DocumentContext.ShapeTool != shapeType &&
-    //       SDJS.SDF.ChangeHeader(SDJS.FileParser.SDROpCodesByName.SDF_C_HEAD_UIINFO, !1),
+    //       SDJS.SDF.ChangeHeader(SDJS.ConstantData2.SDROpCodesByName.SDF_C_HEAD_UIINFO, !1),
     //       SDUI.Commands.MainController.Selection.SetShapeTool(shapeType),
     //       SDUI.Commands.MainController.Shapes.StampOrDragDropNewShape(e, shapeType)
     //     ) : SDUI.Commands.MainController.Shapes.StampOrDragDropNewShape(e,/* null2*/type)
@@ -233,7 +233,7 @@ class Commands {
     //   null != t &&
     //     null != t.value ? (
     //     ConstantData.DocumentContext.LineTool != t.value &&
-    //     SDF.ChangeHeader(FileParser.SDROpCodesByName.SDF_C_HEAD_UIINFO, !1),
+    //     SDF.ChangeHeader(ConstantData2.SDROpCodesByName.SDF_C_HEAD_UIINFO, !1),
 
     //     // Hightlight the selected line tool
     //     SDUI.Commands.MainController.Selection.SetLineTool(t.value),

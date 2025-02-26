@@ -17,7 +17,14 @@ class Utils4 {
     return new QuickStyle();
   }
 
-}
+  static MakeShortUniqueID() {
+    return "aaaaaaaaaaaaaaaa".replace(/a/g, (function () {
+      var e = 16 * Math.random();
+      return (e = Math.floor(e)).toString(16)
+    }
+    ))
+  }
 
+}
 
 export default Utils4

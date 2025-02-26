@@ -5397,12 +5397,12 @@ class BaseDrawingObject {
         }
 
         // Hyperlink icon
-        if (this.HyperlinkText && Global.ResolveHyperlink(this.HyperlinkText)) {
+        if (this.HyperlinkText && Utils1.ResolveHyperlink(this.HyperlinkText)) {
           iconParams.iconID = ConstantData.ShapeIconType.HYPERLINK;
           iconParams.imageURL = Constants.FilePath_Icons + Constants.Icon_Hyperlink;
           const hyperlinkIcon = this.AddIcon(svgDoc, container, iconParams);
           hyperlinkIcon.SetHyperlinkAttribute(this.HyperlinkText);
-          hyperlinkIcon.SetTooltip(Global.ResolveHyperlinkForDisplay(this.HyperlinkText));
+          hyperlinkIcon.SetTooltip(Utils1.ResolveHyperlinkForDisplay(this.HyperlinkText));
         }
         // Attachment icon
         if (this.AttachmentInfo) {

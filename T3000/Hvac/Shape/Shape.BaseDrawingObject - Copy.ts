@@ -5476,7 +5476,7 @@ class BaseDrawingObject {
         t ||
         e ||
         this.HyperlinkText &&
-        Global.ResolveHyperlink(this.HyperlinkText) ||
+        Utils1.ResolveHyperlink(this.HyperlinkText) ||
         - 1 != this.NoteID ||
         GlobalData.optManager.NoteIsShowing(this.BlockID, null)
       )
@@ -5530,14 +5530,14 @@ class BaseDrawingObject {
             )
           ),
           this.HyperlinkText &&
-          Global.ResolveHyperlink(this.HyperlinkText)
+          Utils1.ResolveHyperlink(this.HyperlinkText)
         ) {
           a.iconID = ConstantData.ShapeIconType.HYPERLINK,
             a.imageURL = Constants.FilePath_Icons + Constants.Icon_Hyperlink;
           var l = this.AddIcon(e, t, a);
           l.SetHyperlinkAttribute(this.HyperlinkText),
             l.SetTooltip(
-              Global.ResolveHyperlinkForDisplay(this.HyperlinkText)
+              Utils1.ResolveHyperlinkForDisplay(this.HyperlinkText)
             )
         }
         if (

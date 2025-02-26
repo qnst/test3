@@ -8,7 +8,6 @@ import DefaultEvt from '../Event/DefaultEvt'
 import Document from '../Basic/Basic.Document'
 import Globals from '../Data/Globals'
 import FileParser from '../Data/FileParser'
-// import Global from '../Basic/Basic.Global';
 import '../Helper/HammerTest2'
 import '../Helper/pathseg'
 import Element from '../Basic/Basic.Element'

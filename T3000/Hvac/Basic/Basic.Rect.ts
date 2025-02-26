@@ -1,21 +1,12 @@
 
 
-
-// import Basic from "./Basic.Index";
 import HvacSVG from "../Helper/SVG.t2"
 import $ from "jquery";
-// import SDJS from "../SDJS/SDJS.Index";
-// import SDUI from "../SDUI/SDUI.Index";
-// this.svgObj = new SVG.Container(SVG.create('g')),
-
 import Element from "./Basic.Element";
-// import Global from "./Basic.Global";
 import Utils1 from "../Helper/Utils1"
 import Utils2 from "../Helper/Utils2"
 import Utils3 from "../Helper/Utils3"
-
 import ConstantData from "../Data/ConstantData"
-
 
 class Rect extends Element {
 
@@ -23,39 +14,32 @@ class Rect extends Element {
 
   constructor() {
     super();
-    //'use strict';
-    this.svgObj = null,
-      this.shapeElem = null
+    this.svgObj = null;
+    this.shapeElem = null;
   }
-  // GetInstanceName(){
-  //   return "Rect";
-  // }
 
-
-  // Basic.Rect.prototype = new Basic.Element
-  // Basic.Rect.prototype.constructor = Basic.Rect
-  CreateElement(e, t) {
-    console.log('= B.Rect CreateElement input:', { e, t });
+  CreateElement(elementData, transformData) {
+    console.log('= B.Rect CreateElement input:', { elementData, transformData });
 
     this.svgObj = new HvacSVG.Container(HvacSVG.create('g'));
     this.shapeElem = new HvacSVG.Rect();
     this.svgObj.add(this.shapeElem);
 
-    this.InitElement(e, t);
+    this.InitElement(elementData, transformData);
 
     console.log('= B.Rect CreateElement output svgObj:', this.svgObj);
     return this.svgObj;
   }
 
-  SetSize(e, t) {
-    //'use strict';
-    console.log('= B.Rect SetSize input:', { width: e, height: t });
+  SetSize(newWidth: number, newHeight: number) {
+    console.log('= B.Rect SetSize input:', { newWidth, newHeight });
 
-    const roundedWidth = Utils1.RoundCoord(e);
-    const roundedHeight = Utils1.RoundCoord(t);
+    const roundedWidth = Utils1.RoundCoord(newWidth);
+    const roundedHeight = Utils1.RoundCoord(newHeight);
 
     this.geometryBBox.width = roundedWidth;
     this.geometryBBox.height = roundedHeight;
+
     this.svgObj.size(roundedWidth, roundedHeight);
     this.shapeElem.size(roundedWidth, roundedHeight);
 
@@ -67,6 +51,4 @@ class Rect extends Element {
 
 }
 
-export default Rect;
-
-// export default Basic.Rect;
+export default Rect

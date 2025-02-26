@@ -213,7 +213,7 @@ FloorPlan.prototype.StartAddingWalls = function () {
 }
 
 FloorPlan.prototype.StopAddingWalls = function (e) {
-  var t = ListManager.ModalOperations;
+  var t = ConstantData2.ModalOperations;
   if (this.IsAddingWalls()) {
     this.ToggleAddingWalls(),
       (
@@ -329,7 +329,7 @@ FloorPlan.prototype.MoveOutline = function (e) {
     GlobalData.optManager.SetEditMode(ConstantData.EditState.DEFAULT),
     GlobalData.optManager.CancelModalOperation(),
     ConstantData.DocumentContext.PolyLineContainerMoveMode = !0,
-    GlobalData.optManager.SetModalOperation(ListManager.ModalOperations.NONE)
+    GlobalData.optManager.SetModalOperation(ConstantData2.ModalOperations.NONE)
 }
 
 FloorPlan.prototype.AddCornerStart = function (e) {
@@ -344,7 +344,7 @@ FloorPlan.prototype.AddCornerStart = function (e) {
       r.objecttype === ConstantData.ObjectTypes.SD_OBJT_FLOORPLAN_WALL
     ) GlobalData.optManager.svgObjectLayer.GetElementByID(t[a]).svgObj.SDGObj.GetEventProxy().on('dragstart', this.AddCorner)
   }
-  GlobalData.optManager.SetModalOperation(ListManager.ModalOperations.ADDCORNER)
+  GlobalData.optManager.SetModalOperation(ConstantData2.ModalOperations.ADDCORNER)
 }
 
 FloorPlan.prototype.PostObjectDrawHook = function (e) {
@@ -578,7 +578,7 @@ FloorPlan.prototype.SplitWallStart = function (e) {
       r.objecttype === ConstantData.ObjectTypes.SD_OBJT_FLOORPLAN_WALL
     ) GlobalData.optManager.svgObjectLayer.GetElementByID(t[a]).svgObj.SDGObj.GetEventProxy().on('dragstart', this.SplitWall)
   }
-  GlobalData.optManager.SetModalOperation(ListManager.ModalOperations.SPLITWALL)
+  GlobalData.optManager.SetModalOperation(ConstantData2.ModalOperations.SPLITWALL)
 }
 
 FloorPlan.prototype.EnsureCubicleBehindOutline = function (e) {

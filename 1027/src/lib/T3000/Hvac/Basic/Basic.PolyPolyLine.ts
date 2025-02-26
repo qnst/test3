@@ -1,24 +1,12 @@
 
 
-
-
-// import SDJS from "../SDJS/SDJS.Index";
-// import SDUI from "../SDUI/SDUI.Index";
-// import Basic from "./Basic.Index";
-// import GPP from "../gListManager";
 import $ from 'jquery';
 import HvacSVG from "../Helper/SVG.t2"
-
-// import Global from "./Basic.Global";
-
-
 import Path from "./Basic.Path";
 import Utils1 from "../Helper/Utils1"
 import Utils2 from "../Helper/Utils2"
 import Utils3 from "../Helper/Utils3"
-
 import ConstantData from "../Data/ConstantData"
-
 
 class PolyPolyLine extends Path {
 
@@ -30,19 +18,7 @@ class PolyPolyLine extends Path {
     this.arrowElems = [];
   }
 
-  // GetInstanceName(){
-  //   return "PolyPolyLine";
-  // }
-
-  // Basic.PolyPolyLine = function () {
-  //   //'use strict';
-  //   this.pList = [],
-  //     this.arrowElems = []
-  // // },
-  //   Basic.PolyPolyLine.prototype = new Basic.Path,
-  //   Basic.PolyPolyLine.prototype.constructor = Basic.PolyPolyLine,
   Clear() {
-    //'use strict';
     console.log("= B.PolyPolyLine Clear: Clearing polyline list");
     this.pList = [];
     this.BuildPath();
@@ -50,7 +26,6 @@ class PolyPolyLine extends Path {
   }
 
   AddPolyLine(points, startArrowFlag, endArrowFlag) {
-    //'use strict';
     console.log("= B.PolyPolyLine AddPolyLine: Adding polyline", { points, startArrowFlag, endArrowFlag });
     this.pList.push({
       points: points,
@@ -61,135 +36,143 @@ class PolyPolyLine extends Path {
   }
 
   BuildPath() {
-    //'use strict';
-    console.log("= B.PolyPolyLine BuildPath: Building path");
-    let e, t, a, r, i, n, o, s, l, S;
-    const c = this.PathCreator();
-    let u = null;
-    const p = { x: 0, y: 0 };
-    const d = { x: 0, y: 0 };
-    let D = true;
-    let g = true;
+    console.log("= B.PolyPolyLine BuildPath: Input - Building path");
 
+    // Remove all existing arrow children
     while (this.arrowAreaElem.children().length) {
       this.arrowAreaElem.removeAt(0);
     }
-
     this.arrowElems.length = 0;
-    c.BeginPath();
+
+    const pathCreator = this.PathCreator();
+    pathCreator.BeginPath();
     this.arrowheadBounds = [];
-    a = this.pList.length;
 
-    for (e = 0; e < a; e++) {
-      i = null;
-      n = null;
-      r = this.pList[e].points.length;
+    let currentPoint = null;
+    const boundingMin = { x: 0, y: 0 };
+    const boundingMax = { x: 0, y: 0 };
+    let isFirstSegment = true;
+    let arrowGenerated = false;
 
-      for (t = 0; t < r - 1; t++) {
-        s = t === 0;
-        l = t === r - 2;
-        u = this.pList[e].points[t];
-        o = this.pList[e].points[t + 1];
+    const polylineCount = this.pList.length;
+    for (let polyIndex = 0; polyIndex < polylineCount; polyIndex++) {
+      let startArrowData = null;
+      let endArrowData = null;
+      const pointsCount = this.pList[polyIndex].points.length;
 
-        if (s && this.pList[e].sArrowFlag && this.sArrowRec) {
-          i = {
+      for (let pointIndex = 0; pointIndex < pointsCount - 1; pointIndex++) {
+        const isFirstSegmentOfPolyline = pointIndex === 0;
+        const isLastSegmentOfPolyline = pointIndex === pointsCount - 2;
+
+        const startPoint = this.pList[polyIndex].points[pointIndex];
+        let endPoint = this.pList[polyIndex].points[pointIndex + 1];
+
+        // Prepare arrowhead data for start and end of segment if available
+        if (isFirstSegmentOfPolyline && this.pList[polyIndex].sArrowFlag && this.sArrowRec) {
+          startArrowData = {
             arrowRec: this.sArrowRec,
             arrowSize: this.sArrowSize,
             arrowDisp: this.sArrowDisp
           };
         }
 
-        if (l && this.pList[e].eArrowFlag && this.eArrowRec) {
-          n = {
+        if (isLastSegmentOfPolyline && this.pList[polyIndex].eArrowFlag && this.eArrowRec) {
+          endArrowData = {
             arrowRec: this.eArrowRec,
             arrowSize: this.eArrowSize,
             arrowDisp: this.eArrowDisp
           };
         }
 
-        if (i || n) {
-          this.GenerateArrowheads(u, o, i, n);
-          g = false;
+        // Generate arrowheads if any arrow data exists
+        if (startArrowData || endArrowData) {
+          console.log("= B.PolyPolyLine BuildPath: Generating arrowheads", { startPoint, endPoint, startArrowData, endArrowData });
+          this.GenerateArrowheads(startPoint, endPoint, startArrowData, endArrowData);
+          arrowGenerated = true;
         }
 
-        if (D) {
-          p.x = Math.min(u.x, o.x);
-          p.y = Math.min(u.y, o.y);
-          d.x = Math.max(u.x, o.x);
-          d.y = Math.max(u.y, o.y);
+        // Update the bounding box
+        if (isFirstSegment) {
+          boundingMin.x = Math.min(startPoint.x, endPoint.x);
+          boundingMin.y = Math.min(startPoint.y, endPoint.y);
+          boundingMax.x = Math.max(startPoint.x, endPoint.x);
+          boundingMax.y = Math.max(startPoint.y, endPoint.y);
         } else {
-          p.x = Math.min(p.x, u.x, o.x);
-          p.y = Math.min(p.y, u.y, o.y);
-          d.x = Math.max(d.x, u.x, o.x);
-          d.y = Math.max(d.y, u.y, o.y);
+          boundingMin.x = Math.min(boundingMin.x, startPoint.x, endPoint.x);
+          boundingMin.y = Math.min(boundingMin.y, startPoint.y, endPoint.y);
+          boundingMax.x = Math.max(boundingMax.x, startPoint.x, endPoint.x);
+          boundingMax.y = Math.max(boundingMax.y, startPoint.y, endPoint.y);
+        }
+        isFirstSegment = false;
+
+        // Adjust start and end points based on arrowheads if generated
+        if (startArrowData) {
+          currentPoint = startArrowData.segPt;
+        } else {
+          currentPoint = startPoint;
+        }
+        if (endArrowData) {
+          endPoint = endArrowData.segPt;
         }
 
-        D = false;
-
-        if (i) {
-          u = i.segPt;
+        // Plot the path
+        if (isFirstSegmentOfPolyline) {
+          pathCreator.MoveTo(currentPoint.x, currentPoint.y);
+        } else if (!isLastSegmentOfPolyline) {
+          pathCreator.LineTo(currentPoint.x, currentPoint.y);
         }
-
-        if (n) {
-          o = n.segPt;
-        }
-
-        if (s) {
-          c.MoveTo(u.x, u.y);
-        } else if (!l) {
-          c.LineTo(u.x, u.y);
-        }
-
-        if (l) {
-          c.LineTo(o.x, o.y);
+        if (isLastSegmentOfPolyline) {
+          pathCreator.LineTo(endPoint.x, endPoint.y);
         }
       }
 
-      if (i) {
-        this.arrowAreaElem.add(i.arrowElem);
-        this.arrowElems.push(i.arrowElem);
+      // Add arrow elements to the arrow area
+      if (startArrowData) {
+        this.arrowAreaElem.add(startArrowData.arrowElem);
+        this.arrowElems.push(startArrowData.arrowElem);
       }
-
-      if (n) {
-        this.arrowAreaElem.add(n.arrowElem);
-        this.arrowElems.push(n.arrowElem);
+      if (endArrowData) {
+        this.arrowAreaElem.add(endArrowData.arrowElem);
+        this.arrowElems.push(endArrowData.arrowElem);
       }
     }
 
-    if (g && u) {
-      i = {
+    // Fallback arrowhead generation if none was added
+    if (!arrowGenerated && currentPoint) {
+      const fallbackArrowData = {
         arrowRec: this.EmptyArrowhead(),
         arrowSize: this.sArrowSize,
-        arrowDisp: false
+        arrowDisp: false,
+        arrowElem: null
       };
-      this.GenerateArrowheads(u, o, i, null);
-      this.arrowAreaElem.add(i.arrowElem);
-      this.arrowElems.push(i.arrowElem);
+      // Using the last known endPoint from the loop to generate arrowhead
+      this.GenerateArrowheads(currentPoint, currentPoint, fallbackArrowData, null);
+      this.arrowAreaElem.add(fallbackArrowData.arrowElem);
+      this.arrowElems.push(fallbackArrowData.arrowElem);
     }
 
-    S = c.ToString();
-    this.origPathData = S;
-    this.pathElem.plot(S);
+    const pathData = pathCreator.ToString();
+    this.origPathData = pathData;
+    this.pathElem.plot(pathData);
     this.UpdateTransform();
-    this.geometryBBox.x = p.x;
-    this.geometryBBox.y = p.y;
-    this.geometryBBox.width = d.x - p.x;
-    this.geometryBBox.height = d.y - p.y;
+
+    this.geometryBBox.x = boundingMin.x;
+    this.geometryBBox.y = boundingMin.y;
+    this.geometryBBox.width = boundingMax.x - boundingMin.x;
+    this.geometryBBox.height = boundingMax.y - boundingMin.y;
     this.RefreshPaint();
 
-    console.log("= B.PolyPolyLine BuildPath: Path built", {
-      origPathData: this.origPathData,
+    console.log("= B.PolyPolyLine BuildPath: Output", {
+      origPathData: pathData,
       geometryBBox: this.geometryBBox
     });
   }
 
   UpdateArrowheads() {
-    //'use strict';
     this.BuildPath()
   }
 
   GenerateArrowheads(startPoint, endPoint, startArrow, endArrow) {
-    //'use strict';
     console.log("= B.PolyPolyLine GenerateArrowheads: Generating arrowheads", { startPoint, endPoint, startArrow, endArrow });
 
     let deltaX, deltaY, distance, startArrowDim, endArrowDim, trimAmount, startTrim, endTrim;
@@ -279,7 +262,4 @@ class PolyPolyLine extends Path {
 
 }
 
-
-
-
-export default PolyPolyLine;
+export default PolyPolyLine

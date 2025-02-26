@@ -61,6 +61,8 @@ import Rectangle from "../Model/Rectangle"
 import Hook from "../Model/Hook"
 import ConstantData1 from "../Data/ConstantData1"
 import TextObject from "../Model/TextObject"
+import DynamicGuides from "../Model/DynamicGuides"
+import ConstantData2 from "../Data/ConstantData2"
 
 class OptHandler {
 
@@ -192,8 +194,8 @@ class OptHandler {
       this.NudgeY = 0;
       this.NudgeGrowX = 0;
       this.NudgeGrowY = 0;
-      this.currentModalOperation = ListManager.ModalOperations.NONE;
-      this.FormatPainterMode = ListManager.FormatPainterModes.NONE;
+      this.currentModalOperation = ConstantData2.ModalOperations.NONE;
+      this.FormatPainterMode = ConstantData2.FormatPainterModes.NONE;
       this.FormatPainterStyle = new QuickStyle();
       this.FormatPainterSticky = false;
       this.FormatPainterText = new QuickStyle();
@@ -223,7 +225,7 @@ class OptHandler {
 
 
       // if (Resources.CurrentTheme) {
-      //   const foundStyle = Resources.FindStyle(/*ConstantData.Defines.DefaultStyle*/ 'Style30');
+      //   const foundStyle = Utils4.FindStyle(/*ConstantData.Defines.DefaultStyle*/ 'Style30');
       //   console.log('Initialize foundStyle',foundStyle);
       //   if (foundStyle) {
       //     defaultStyle = $.extend(true, {}, foundStyle);
@@ -1549,7 +1551,7 @@ OptHandler.prototype.StartRubberBandSelect = function (e) {
       throw e;
     }
     if (
-      this.currentModalOperation === ListManager.ModalOperations.FORMATPAINTER
+      this.currentModalOperation === ConstantData2.ModalOperations.FORMATPAINTER
     ) {
       if (!0 === this.FormatPainterSticky) return;
       this.SetFormatPainter(!0, !1)
@@ -1620,7 +1622,7 @@ OptHandler.prototype.StartRubberBandSelect = function (e) {
 
     console.log('ListManager.LM.prototype.StartRubberBandSelect this.currentModalOperation=>', this.currentModalOperation);
 
-    if (this.currentModalOperation === ListManager.ModalOperations.FORMATPAINTER) {
+    if (this.currentModalOperation === ConstantData2.ModalOperations.FORMATPAINTER) {
       if (this.FormatPainterSticky) return;
       this.SetFormatPainter(true, false);
     }
@@ -1846,8 +1848,8 @@ OptHandler.prototype.SetFormatPainter = function (e, t) {
     s,
     l;
   if (
-    this.currentModalOperation === ListManager.ModalOperations.FORMATPAINTER
-  ) this.currentModalOperation = ListManager.ModalOperations.NONE,
+    this.currentModalOperation === ConstantData2.ModalOperations.FORMATPAINTER
+  ) this.currentModalOperation = ConstantData2.ModalOperations.NONE,
     this.SetEditMode(ConstantData.EditState.DEFAULT),
     this.FormatPainterSticky = !1;
   else if (!e) if (
@@ -1856,8 +1858,8 @@ OptHandler.prototype.SetFormatPainter = function (e, t) {
     i = GlobalData.optManager.Table_GetActiveID(),
     null != a
   ) {
-    this.currentModalOperation = ListManager.ModalOperations.FORMATPAINTER,
-      this.FormatPainterMode = ListManager.FormatPainterModes.TEXT,
+    this.currentModalOperation = ConstantData2.ModalOperations.FORMATPAINTER,
+      this.FormatPainterMode = ConstantData2.FormatPainterModes.TEXT,
       this.FormatPainterSticky = t;
     var S = this.svgDoc.GetActiveEdit();
     S &&
@@ -1873,9 +1875,9 @@ OptHandler.prototype.SetFormatPainter = function (e, t) {
       )
   } else if (i >= 0) {
     if ((r = this.GetObjectPtr(i, !1)) && (o = r.GetTable(!1))) if (o.select >= 0) {
-      this.currentModalOperation = ListManager.ModalOperations.FORMATPAINTER,
+      this.currentModalOperation = ConstantData2.ModalOperations.FORMATPAINTER,
         this.FormatPainterSticky = t,
-        this.FormatPainterMode = ListManager.FormatPainterModes.TABLE,
+        this.FormatPainterMode = ConstantData2.FormatPainterModes.TABLE,
         this.FormatPainterStyle = {
           StyleRecord: {
           }
@@ -1897,9 +1899,9 @@ OptHandler.prototype.SetFormatPainter = function (e, t) {
         this.FormatPainterParaFormat = c,
         this.SetEditMode(ConstantData.EditState.FORMATPAINT)
     } else o.rselect >= 0 ? (
-      this.currentModalOperation = ListManager.ModalOperations.FORMATPAINTER,
+      this.currentModalOperation = ConstantData2.ModalOperations.FORMATPAINTER,
       this.FormatPainterSticky = t,
-      this.FormatPainterMode = ListManager.FormatPainterModes.TABLE,
+      this.FormatPainterMode = ConstantData2.FormatPainterModes.TABLE,
       this.FormatPainterStyle = {
         StyleRecord: {
         }
@@ -1910,9 +1912,9 @@ OptHandler.prototype.SetFormatPainter = function (e, t) {
       this.SetEditMode(ConstantData.EditState.FORMATPAINT)
     ) : o.cselect >= 0 &&
     (
-      this.currentModalOperation = ListManager.ModalOperations.FORMATPAINTER,
+      this.currentModalOperation = ConstantData2.ModalOperations.FORMATPAINTER,
       this.FormatPainterSticky = t,
-      this.FormatPainterMode = ListManager.FormatPainterModes.TABLE,
+      this.FormatPainterMode = ConstantData2.FormatPainterModes.TABLE,
       this.FormatPainterStyle = {
         StyleRecord: {
         }
@@ -1924,9 +1926,9 @@ OptHandler.prototype.SetFormatPainter = function (e, t) {
   } else (a = this.GetTargetSelect()) >= 0 &&
     (r = this.GetObjectPtr(a, !1)) &&
     (
-      this.currentModalOperation = ListManager.ModalOperations.FORMATPAINTER,
+      this.currentModalOperation = ConstantData2.ModalOperations.FORMATPAINTER,
       this.FormatPainterSticky = t,
-      this.FormatPainterMode = ListManager.FormatPainterModes.OBJECT,
+      this.FormatPainterMode = ConstantData2.FormatPainterModes.OBJECT,
       this.FormatPainterStyle = Utils1.DeepCopy(r.StyleRecord),
       this.FormatPainterStyle.Border = Utils1.DeepCopy(r.StyleRecord.Line),
       !(
@@ -1957,7 +1959,7 @@ OptHandler.prototype.SetFormatPainter = function (e, t) {
       this.SetEditMode(ConstantData.EditState.FORMATPAINT)
     );
   // Commands.MainController.Selection.SetFormatPainterHighlight(
-  //   this.currentModalOperation === ListManager.ModalOperations.FORMATPAINTER
+  //   this.currentModalOperation === ConstantData2.ModalOperations.FORMATPAINTER
   // )
 }
 
@@ -2548,7 +2550,7 @@ OptHandler.prototype.DrawNewObject = function (drwShape, isClearSection) {
   // debugger
   console.log('= Opt DrawNewObject drwShape,isClearSection', drwShape, isClearSection)
 
-  this.SetModalOperation(ListManager.ModalOperations.DRAW);
+  this.SetModalOperation(ConstantData2.ModalOperations.DRAW);
   this.GetObjectPtr(this.theTEDSessionBlockID, false);
   this.CloseEdit();
   this.LineDrawID = - 1;
@@ -2565,8 +2567,8 @@ OptHandler.prototype.DrawNewObject = function (drwShape, isClearSection) {
 }
 
 OptHandler.prototype.SetModalOperation = function (e) {
-  e != ListManager.ModalOperations.NONE &&
-    this.currentModalOperation != ListManager.ModalOperations.NONE &&
+  e != ConstantData2.ModalOperations.NONE &&
+    this.currentModalOperation != ConstantData2.ModalOperations.NONE &&
     this.currentModalOperation != e &&
     this.CancelModalOperation(),
     this.currentModalOperation = e
@@ -3233,7 +3235,7 @@ OptHandler.prototype.FindObject = function (e, t, a, r, i, n) {
 //   console.log('ListManager.LM.prototype.DoAutoGrowDragInit 2 t=', t);
 
 //   this.GetObjectPtr(this.theTEDSessionBlockID, false);
-//   var a = this.currentModalOperation === ListManager.ModalOperations.FORMATPAINTER &&
+//   var a = this.currentModalOperation === ConstantData2.ModalOperations.FORMATPAINTER &&
 //     (
 //       e === ConstantData.ActionTriggerType.TABLE_ROW ||
 //       e === ConstantData.ActionTriggerType.TABLE_COL
@@ -3256,7 +3258,7 @@ OptHandler.prototype.DoAutoGrowDragInit = function (actionType, closeEdit) {
   /*
   this.GetObjectPtr(this.theTEDSessionBlockID, false);
 
-  const isFormatPainter = this.currentModalOperation === ListManager.ModalOperations.FORMATPAINTER &&
+  const isFormatPainter = this.currentModalOperation === ConstantData2.ModalOperations.FORMATPAINTER &&
     (actionType === ConstantData.ActionTriggerType.TABLE_ROW || actionType === ConstantData.ActionTriggerType.TABLE_COL);
 
   if (actionType === ConstantData.ActionTriggerType.TABLE_SELECT || isFormatPainter) {
@@ -3392,7 +3394,7 @@ OptHandler.prototype.AddNewObject1 = function (e, t, a, r) {
     var g,
       h = e.EMFBuffer,
       m = new ListManager.BlobBytes(e.EMFBufferType, h);
-    e.EMFBufferType === FileParser.Image_Dir.dir_meta ? (
+    e.EMFBufferType === ConstantData2.ImageDir.dir_meta ? (
       g = GlobalData.objectStore.CreateBlock(ConstantData.StoredObjectType.BLOBBYTES_OBJECT, m)
     ) &&
       (e.EMFBlobBytesID = g.ID) : (
@@ -3400,12 +3402,12 @@ OptHandler.prototype.AddNewObject1 = function (e, t, a, r) {
       ) &&
     (e.BlobBytesID = g.ID),
       e.EMFBuffer = null,
-      e.EMFBufferType != FileParser.Image_Dir.dir_meta &&
+      e.EMFBufferType != ConstantData2.ImageDir.dir_meta &&
       delete e.EMFHash
   } else e.EMFHash &&
     e.SymbolData &&
     null != e.EMFBufferType &&
-    e.EMFBufferType !== FileParser.Image_Dir.dir_svg &&
+    e.EMFBufferType !== ConstantData2.ImageDir.dir_svg &&
     (l = !0);
   null == e.SymbolID &&
     (e.SymbolData = null);
@@ -3604,7 +3606,7 @@ OptHandler.prototype.AddNewObject = function (drw, t, a, r) {
     var h = drw.EMFBuffer;
     var m = new ListManager.BlobBytes(drw.EMFBufferType, h);
 
-    if (drw.EMFBufferType === FileParser.Image_Dir.dir_meta) {
+    if (drw.EMFBufferType === ConstantData2.ImageDir.dir_meta) {
       g = GlobalData.objectStore.CreateBlock(ConstantData.StoredObjectType.BLOBBYTES_OBJECT, m);
       if (g) {
         drw.EMFBlobBytesID = g.ID;
@@ -3618,10 +3620,10 @@ OptHandler.prototype.AddNewObject = function (drw, t, a, r) {
 
     drw.EMFBuffer = null;
 
-    if (drw.EMFBufferType !== FileParser.Image_Dir.dir_meta) {
+    if (drw.EMFBufferType !== ConstantData2.ImageDir.dir_meta) {
       delete drw.EMFHash;
     }
-  } else if (drw.EMFHash && drw.SymbolData && drw.EMFBufferType != null && drw.EMFBufferType !== FileParser.Image_Dir.dir_svg) {
+  } else if (drw.EMFHash && drw.SymbolData && drw.EMFBufferType != null && drw.EMFBufferType !== ConstantData2.ImageDir.dir_svg) {
     l = true;
   }
 
@@ -4313,24 +4315,24 @@ OptHandler.prototype.GetToUnits = function () {
 
 OptHandler.prototype.CancelModalOperation = function () {
   switch (this.currentModalOperation) {
-    case ListManager.ModalOperations.NONE:
+    case ConstantData2.ModalOperations.NONE:
       break;
-    case ListManager.ModalOperations.STAMP:
+    case ConstantData2.ModalOperations.STAMP:
       this.CancelObjectStamp(!0);
       break;
-    case ListManager.ModalOperations.STAMPTEXTONTAP:
+    case ConstantData2.ModalOperations.STAMPTEXTONTAP:
       this.CancelObjectStampTextOnTap(!0);
       break;
-    case ListManager.ModalOperations.DRAGDROP:
+    case ConstantData2.ModalOperations.DRAGDROP:
       this.CancelObjectDragDrop(!0);
       break;
-    case ListManager.ModalOperations.DRAW:
+    case ConstantData2.ModalOperations.DRAW:
       this.CancelObjectDraw();
       break;
-    case ListManager.ModalOperations.FORMATPAINTER:
+    case ConstantData2.ModalOperations.FORMATPAINTER:
       this.SetFormatPainter(!0, !1);
       break;
-    case ListManager.ModalOperations.ADDCORNER:
+    case ConstantData2.ModalOperations.ADDCORNER:
       GlobalData.gBusinessManager &&
         GlobalData.gBusinessManager.AddCorner &&
         this.ResetHammerGesture(
@@ -4339,7 +4341,7 @@ OptHandler.prototype.CancelModalOperation = function () {
           GlobalData.Evt_ShapeDragStart
         );
       break;
-    case ListManager.ModalOperations.SPLITWALL:
+    case ConstantData2.ModalOperations.SPLITWALL:
       GlobalData.gBusinessManager &&
         GlobalData.gBusinessManager.SplitWall &&
         (
@@ -4357,7 +4359,7 @@ OptHandler.prototype.CancelObjectDraw = function () {
   var e = this.GetObjectPtr(this.theActionStoredObjectID, !1),
     t = e instanceof PolyLine ||
       e instanceof PolyLineContainer;
-  this.SetModalOperation(ListManager.ModalOperations.NONE),
+  this.SetModalOperation(ConstantData2.ModalOperations.NONE),
     this.LM_StampPostRelease(!1),
     this.theActionStoredObjectID >= 0 &&
       !t ? (
@@ -4465,7 +4467,7 @@ OptHandler.prototype.Undo = function (e, t) {
   //debugger
   if (t) GlobalData.optManager.CancelModalOperation();
   else if (
-    this.currentModalOperation != ListManager.ModalOperations.NONE
+    this.currentModalOperation != ConstantData2.ModalOperations.NONE
   ) return !1;
   if (null === GlobalData.stateManager)
     //    throw new SDJSError({
@@ -5839,7 +5841,7 @@ OptHandler.prototype.ResetObjectDraw = function () {
     this.SetEditMode(ConstantData.EditState.DEFAULT),
     this.WorkAreaHammer.on('dragstart', DefaultEvt.Evt_WorkAreaHammerDragStart),
     this.WorkAreaHammer.on('tap', DefaultEvt.Evt_WorkAreaHammerTap),
-    this.SetModalOperation(ListManager.ModalOperations.NONE)
+    this.SetModalOperation(ConstantData2.ModalOperations.NONE)
 }
 
 // Double === update tool
@@ -5905,7 +5907,7 @@ OptHandler.prototype.LM_MoveClick = function (e) {
       void Collab.UnBlockMessages()
     );
     Collab.UnLockMessages(),
-      this.currentModalOperation === ListManager.ModalOperations.NONE &&
+      this.currentModalOperation === ConstantData2.ModalOperations.NONE &&
       GlobalData.optManager.SetEditMode(ConstantData.EditState.DRAGSHAPE),
       GlobalData.optManager.WorkAreaHammer.on('drag', DefaultEvt.Evt_ShapeDrag),
       GlobalData.optManager.WorkAreaHammer.on('dragend', DefaultEvt.Evt_ShapeDragEnd)
@@ -5969,7 +5971,7 @@ OptHandler.prototype.LM_SetupMove = function (e) {
   if (
     Collab.AllowMessage() &&
     (Collab.LockMessages(), Collab.BeginSecondaryEdit()),
-    this.currentModalOperation === ListManager.ModalOperations.FORMATPAINTER
+    this.currentModalOperation === ConstantData2.ModalOperations.FORMATPAINTER
   ) {
     if (r = t.GetID(), this.FormatPainterClick(r, e)) return !1;
     t = this.svgObjectLayer.GetElementByID(r)
@@ -5978,8 +5980,8 @@ OptHandler.prototype.LM_SetupMove = function (e) {
   var u,
     p = this.svgDoc.ConvertWindowToDocCoords(e.gesture.center.clientX, e.gesture.center.clientY);
   if (
-    this.currentModalOperation !== ListManager.ModalOperations.FORMATPAINTER ||
-    this.FormatPainterMode !== ListManager.FormatPainterModes.OBJECT
+    this.currentModalOperation !== ConstantData2.ModalOperations.FORMATPAINTER ||
+    this.FormatPainterMode !== ConstantData2.FormatPainterModes.OBJECT
   ) {
     var d = t.GetTargetForEvent(e),
       D = d.GetID(),
@@ -6126,7 +6128,7 @@ OptHandler.prototype.LM_SetupMove = function (e) {
       height: 0
     },
     this.PinRect = null,
-    this.Dynamic_Guides = new ListManager.Dynamic_Guides,
+    this.Dynamic_Guides = new DynamicGuides(),
     n.objecttype === ConstantData.ObjectTypes.SD_OBJT_GANTT_BAR
   ) this.theMoveBounds = n.GetMoveRect(!1, !1),
     (P = []).push(this.theDragTargetID),
@@ -6504,7 +6506,7 @@ OptHandler.prototype.LM_MovePreTrack = function (e, t) {
         n = this.GetObjectPtr(l, !1).GetSnapRect(),
           sobj_theRect = $.extend(!0, {
           }, n);
-        var S = new ListManager.Dynamic_Guides,
+        var S = new DynamicGuides(),
           c = [];
         c.push(this.theDragTargetID);
         this.DynamicSnaps_GetSnapObjects(l, sobj_theRect, S, c, null, s);
@@ -7951,7 +7953,7 @@ OptHandler.prototype.DragDropNewShape = function (e, t, a, r, i, n) {
 
   /*
  try {
-  this.SetModalOperation(ListManager.ModalOperations.DRAGDROP);
+  this.SetModalOperation(ConstantData2.ModalOperations.DRAGDROP);
   this.GetObjectPtr(this.theTEDSessionBlockID, !1);
   this.CloseEdit(),
     this.stampCompleteCallback = i ||
@@ -7994,7 +7996,7 @@ OptHandler.prototype.DragDropNewShape = function (e, t, a, r, i, n) {
 
 
   try {
-    this.SetModalOperation(ListManager.ModalOperations.DRAGDROP);
+    this.SetModalOperation(ConstantData2.ModalOperations.DRAGDROP);
     this.GetObjectPtr(this.theTEDSessionBlockID, false);
     this.CloseEdit();
     this.stampCompleteCallback = i || null;
@@ -8109,7 +8111,7 @@ OptHandler.prototype.MouseStampNewShape = function (e, t, a, r, i, n) {
   console.log('======== ListManager.LM.prototype.MouseStampNewShape 5 i=', i)
   console.log('======== ListManager.LM.prototype.MouseStampNewShape 6 n=', n)
 
-  this.SetModalOperation(ListManager.ModalOperations.STAMP);
+  this.SetModalOperation(ConstantData2.ModalOperations.STAMP);
   this.GetObjectPtr(this.theTEDSessionBlockID, !1);
   this.DeactivateTextEdit(!1),
     this.stampCompleteCallback = i ||
@@ -8273,7 +8275,7 @@ OptHandler.prototype.MouseStampObjectDone = function (e, t) {
       this.theDragElementList = [],
       this.theActionStoredObjectID = - 1,
       this.theActionSVGObject = null,
-      this.SetModalOperation(ListManager.ModalOperations.NONE),
+      this.SetModalOperation(ConstantData2.ModalOperations.NONE),
       m &&
       (
         Collab.IsSecondary() &&
@@ -8337,7 +8339,7 @@ OptHandler.prototype.SetLinkFlagsOnFilledClosedPolylines = function (e) {
 
 
 OptHandler.prototype.CancelObjectStamp = function (e) {
-  this.SetModalOperation(ListManager.ModalOperations.NONE),
+  this.SetModalOperation(ConstantData2.ModalOperations.NONE),
     ConstantData.DocumentContext.SelectionToolSticky = !1,
     this.LM_StampPostRelease(!1),
     this.theActionStoredObjectID >= 0 &&
@@ -8382,7 +8384,7 @@ OptHandler.prototype.DragDrop_ExceptionCleanup = function () {
 
 OptHandler.prototype.CancelObjectDragDrop = function (e) {
   if (
-    this.SetModalOperation(ListManager.ModalOperations.NONE),
+    this.SetModalOperation(ConstantData2.ModalOperations.NONE),
     this.LM_StampPostRelease(!1),
     this.theActionStoredObjectID >= 0
   ) {
@@ -8595,7 +8597,7 @@ OptHandler.prototype.DragDropObjectDone = function (e, t) {
       this.theDragBBoxList = [],
       this.theDragElementList = [],
       this.theActionSVGObject = null,
-      this.SetModalOperation(ListManager.ModalOperations.NONE),
+      this.SetModalOperation(ConstantData2.ModalOperations.NONE),
       this.CompleteOperation(S),
       this.UpdateTools()
 
@@ -8877,7 +8879,7 @@ OptHandler.prototype.StampObjectMoveCommon = function (e, t, a) {
         var A = {},
           _ = r.CanSnapToShapes(A);
         if (_ >= 0) {
-          var E = new ListManager.Dynamic_Guides;
+          var E = new DynamicGuides();
           o = this.GetObjectPtr(_, !1).GetSnapRect();
           var w = $.extend(!0, {
           }, o);
@@ -13003,7 +13005,7 @@ OptHandler.prototype.PasteObjects = function (e) {
       )
     )
   } catch (e) {
-    GlobalData.optManager.ExceptionCleanup(e)
+    // GlobalData.optManager.ExceptionCleanup(e)
     throw e;
   }
 }
@@ -14454,7 +14456,7 @@ OptHandler.prototype.MakeSameSize = function (e) {
 
 
 OptHandler.prototype.StampNewTextShapeOnTap = function (e, t, a, r, i, n, o) {
-  this.SetModalOperation(ListManager.ModalOperations.STAMPTEXTONTAP),
+  this.SetModalOperation(ConstantData2.ModalOperations.STAMPTEXTONTAP),
     this.stampCompleteCallback = n ||
     null,
     this.stampCompleteUserData = o ||
@@ -14489,7 +14491,7 @@ OptHandler.prototype.StampNewTextShapeOnTap = function (e, t, a, r, i, n, o) {
 
 
 OptHandler.prototype.CancelObjectStampTextOnTap = function (e) {
-  this.SetModalOperation(ListManager.ModalOperations.NONE),
+  this.SetModalOperation(ConstantData2.ModalOperations.NONE),
     this.LM_StampPostRelease(!1),
     this.SetEditMode(ConstantData.EditState.DEFAULT),
     e &&
@@ -14561,7 +14563,7 @@ OptHandler.prototype.StampTextObjectOnTapDone = function (e, t) {
     a.push(this.theActionStoredObjectID),
     this.theActionStoredObjectID = - 1,
     this.theActionSVGObject = null,
-    this.SetModalOperation(ListManager.ModalOperations.NONE),
+    this.SetModalOperation(ConstantData2.ModalOperations.NONE),
     this.UpdateTools()
 }
 
@@ -15029,15 +15031,15 @@ OptHandler.prototype.HandleKeyDown = function (e, t, a) {
     if (!this.bInNoteEdit) {
       var i = this.GetObjectPtr(this.theTEDSessionBlockID, !1);
       if (- 1 != i.theActiveTextEditObjectID) switch (t) {
-        case Resources.Keys.Left_Arrow:
-        case Resources.Keys.Right_Arrow:
-        case Resources.Keys.Up_Arrow:
-        case Resources.Keys.Down_Arrow:
+        case ConstantData2.Keys.Left_Arrow:
+        case ConstantData2.Keys.Right_Arrow:
+        case ConstantData2.Keys.Up_Arrow:
+        case ConstantData2.Keys.Down_Arrow:
           i.theTELastOp != ConstantData.TELastOp.INIT &&
             this.RegisterLastTEOp(ConstantData.TELastOp.SELECT);
           break;
-        case Resources.Keys.Backspace:
-        case Resources.Keys.Delete:
+        case ConstantData2.Keys.Backspace:
+        case ConstantData2.Keys.Delete:
           this.RegisterLastTEOp(ConstantData.TELastOp.CHAR)
       }
     }
@@ -15170,13 +15172,13 @@ OptHandler.prototype.GenerateEncapsulatedSVG = function (e, t, a, r, i, n) {
         0 === a.toLowerCase().indexOf(Constants.FilePath_CMSRoot.toLowerCase()) &&
           (a = a.slice(Constants.FilePath_CMSRoot.length), i = !0);
         var n = !1,
-          o = FileParser.GetImageBlobType(FileParser.Image_Dir.dir_svg);
+          o = FileParser.GetImageBlobType(ConstantData2.ImageDir.dir_svg);
         a.toLowerCase().indexOf('.png') > 0 ? (
-          o = FileParser.GetImageBlobType(FileParser.Image_Dir.dir_png),
+          o = FileParser.GetImageBlobType(ConstantData2.ImageDir.dir_png),
           n = !0
         ) : a.toLowerCase().indexOf('.jpg') > 0 &&
         (
-          o = FileParser.GetImageBlobType(FileParser.Image_Dir.dir_jpg),
+          o = FileParser.GetImageBlobType(ConstantData2.ImageDir.dir_jpg),
           n = !0
         );
         var l = function (l) {
@@ -15189,7 +15191,7 @@ OptHandler.prototype.GenerateEncapsulatedSVG = function (e, t, a, r, i, n) {
                 216 === c[1] &&
                 255 === c[2] &&
                 (
-                  o = FileParser.GetImageBlobType(FileParser.Image_Dir.dir_jpg),
+                  o = FileParser.GetImageBlobType(ConstantData2.ImageDir.dir_jpg),
                   u = !0
                 ),
                 !u &&
@@ -15203,12 +15205,12 @@ OptHandler.prototype.GenerateEncapsulatedSVG = function (e, t, a, r, i, n) {
                 26 === c[6] &&
                 10 === c[7] &&
                 (
-                  o = FileParser.GetImageBlobType(FileParser.Image_Dir.dir_png),
+                  o = FileParser.GetImageBlobType(ConstantData2.ImageDir.dir_png),
                   u = !0
                 ),
                 u ||
                 (
-                  o = FileParser.GetImageBlobType(FileParser.Image_Dir.dir_svg)
+                  o = FileParser.GetImageBlobType(ConstantData2.ImageDir.dir_svg)
                 )
             }
             if (
@@ -16562,13 +16564,13 @@ OptHandler.prototype.TextResizeCommon = function (e, t, a, r, i) {
                 var N = this.GraphTextHitInfo(_, _.selectedText);
                 if (N) {
                   switch (l.svgObj.SDGObj.SetParagraphAlignment(N.just), N.vJust) {
-                    case FileParser.TextJust.TA_TOP:
+                    case ConstantData2.TextJust.TA_TOP:
                       l.vAlign = 'top';
                       break;
-                    case FileParser.TextJust.TA_BOTTOM:
+                    case ConstantData2.TextJust.TA_BOTTOM:
                       l.vAlign = 'bottom';
                       break;
-                    case FileParser.TextJust.TA_CENTER:
+                    case ConstantData2.TextJust.TA_CENTER:
                       l.vAlign = 'middle'
                   }
                   l.SetConstraints(N.maxDim.cx, N.maxDim.cx, N.maxDim.cy)

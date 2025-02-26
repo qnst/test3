@@ -27,6 +27,7 @@ import HitResult from '../Model/HitResult'
 import SelectionAttributes from '../Model/SelectionAttributes'
 import RightClickData from '../Model/RightClickData'
 import ConstantData1 from '../Data/ConstantData1'
+import ConstantData2 from '../Data/ConstantData2'
 
 class PolyLine extends BaseLine {
 
@@ -3104,7 +3105,7 @@ class PolyLine extends BaseLine {
     var tempArray = [];
     // Make a deep copy of this polyline object.
     var polyObj = Utils1.DeepCopy(this);
-    var writeCode = SDF.Write_CODE(writer, FileParser.SDROpCodesByName.SDF_C_DRAWPOLY);
+    var writeCode = SDF.Write_CODE(writer, ConstantData2.SDROpCodesByName.SDF_C_DRAWPOLY);
     var hasEMFHashWritten = false;
 
     // If line thickness is defined, the polyline is closed, and segments exist,
@@ -3267,7 +3268,7 @@ class PolyLine extends BaseLine {
             segStruct.pt.y = SDF.ToSDWinCoords(ellipsePoints[2].y, options.coordScaleFactor);
           }
         }
-        writeCode = SDF.Write_CODE(writer, FileParser.SDROpCodesByName.SDF_C_DRAWPOLYSEG);
+        writeCode = SDF.Write_CODE(writer, ConstantData2.SDROpCodesByName.SDF_C_DRAWPOLYSEG);
         writer.writeStruct(FileParser.SDF_PolySeg_Struct_40, segStruct);
       } else {
         var segStructAlt = {
@@ -3280,21 +3281,21 @@ class PolyLine extends BaseLine {
           flags: polyObj.polylist.segs[segIndex].flags,
           weight: polyObj.polylist.segs[segIndex].weight
         };
-        writeCode = SDF.Write_CODE(writer, FileParser.SDROpCodesByName.SDF_C_DRAWPOLYSEG);
+        writeCode = SDF.Write_CODE(writer, ConstantData2.SDROpCodesByName.SDF_C_DRAWPOLYSEG);
         writer.writeStruct(FileParser.SDF_PolySeg_Struct_50, segStructAlt);
       }
       SDF.Write_LENGTH(writer, writeCode);
     }
 
     // Write polyline end code.
-    writer.writeUint16(FileParser.SDROpCodesByName.SDF_C_DRAWPOLY_END);
+    writer.writeUint16(ConstantData2.SDROpCodesByName.SDF_C_DRAWPOLY_END);
 
     if (!(usePolyListDimensions || (options.WriteVisio && this.LineType !== ConstantData.LineType.POLYLINE))) {
       if (this.DataID >= 0) {
         // Adjust text flags based on text alignment.
         switch (SDF.TextAlignToWin(this.TextAlign).vjust) {
-          case FileParser.TextJust.TA_TOP:
-          case FileParser.TextJust.TA_BOTTOM:
+          case ConstantData2.TextJust.TA_TOP:
+          case ConstantData2.TextJust.TA_BOTTOM:
             break;
         }
         var textFlag = ConstantData.TextFlags.SED_TF_AttachC;
@@ -3309,26 +3310,26 @@ class PolyLine extends BaseLine {
         SDF.WriteTextParams(writer, this, polyID, options),
         options.WriteVisio && polyID >= 0 && SDF.WriteText(writer, this, null, null, false, options),
         this.EMFHash && !hasEMFHashWritten) {
-        SDF.WriteString8(writer, this.EMFHash, FileParser.SDROpCodesByName.SDF_C_EMFHASH, options);
+        SDF.WriteString8(writer, this.EMFHash, ConstantData2.SDROpCodesByName.SDF_C_EMFHASH, options);
         hasEMFHashWritten = true;
       }
       var emfBlobBytes = this.GetEMFBlobBytes();
       if (emfBlobBytes) {
         SDF.WriteImageHeader(writer, this, options);
         if (this.EMFHash && !hasEMFHashWritten) {
-          SDF.WriteString8(writer, this.EMFHash, FileParser.SDROpCodesByName.SDF_C_EMFHASH, options);
+          SDF.WriteString8(writer, this.EMFHash, ConstantData2.SDROpCodesByName.SDF_C_EMFHASH, options);
         }
         if (options.WriteBlocks || options.WriteGroupBlock) {
-          SDF.WriteEMFBlobBytesID(writer, this.EMFBlobBytesID, FileParser.Image_Dir.dir_meta, options);
+          SDF.WriteEMFBlobBytesID(writer, this.EMFBlobBytesID, ConstantData2.ImageDir.dir_meta, options);
         } else {
-          SDF.WriteBlob(writer, emfBlobBytes.Bytes, FileParser.SDROpCodesByName.SDF_C_DRAWMETA);
+          SDF.WriteBlob(writer, emfBlobBytes.Bytes, ConstantData2.SDROpCodesByName.SDF_C_DRAWMETA);
         }
         var blobBytes = this.GetBlobBytes();
         if (blobBytes) {
           if (options.WriteBlocks || options.WriteGroupBlock) {
-            SDF.WriteBlobBytesID(writer, this.BlobBytesID, FileParser.Image_Dir.dir_png, options);
+            SDF.WriteBlobBytesID(writer, this.BlobBytesID, ConstantData2.ImageDir.dir_png, options);
           } else {
-            SDF.WriteBlob(writer, blobBytes.Bytes, FileParser.SDROpCodesByName.SDF_C_DRAWPREVIEWPNG);
+            SDF.WriteBlob(writer, blobBytes.Bytes, ConstantData2.SDROpCodesByName.SDF_C_DRAWPREVIEWPNG);
           }
         }
       } else {
@@ -3336,20 +3337,20 @@ class PolyLine extends BaseLine {
         if (altBlobBytes) {
           SDF.WriteImageHeader(writer, this, options);
           switch (altBlobBytes.ImageDir) {
-            case FileParser.Image_Dir.dir_jpg:
+            case ConstantData2.ImageDir.dir_jpg:
               SDF.WriteImageHeader(writer, this, options);
               if (options.WriteBlocks || options.WriteGroupBlock) {
-                SDF.WriteBlobBytesID(writer, this.BlobBytesID, FileParser.Image_Dir.dir_jpg, options);
+                SDF.WriteBlobBytesID(writer, this.BlobBytesID, ConstantData2.ImageDir.dir_jpg, options);
               } else {
-                SDF.WriteBlob(writer, altBlobBytes.Bytes, FileParser.SDROpCodesByName.SDF_C_DRAWJPG);
+                SDF.WriteBlob(writer, altBlobBytes.Bytes, ConstantData2.SDROpCodesByName.SDF_C_DRAWJPG);
               }
               break;
-            case FileParser.Image_Dir.dir_png:
+            case ConstantData2.ImageDir.dir_png:
               SDF.WriteImageHeader(writer, this, options);
               if (options.WriteBlocks || options.WriteGroupBlock) {
-                SDF.WriteBlobBytesID(writer, this.BlobBytesID, FileParser.Image_Dir.dir_png, options);
+                SDF.WriteBlobBytesID(writer, this.BlobBytesID, ConstantData2.ImageDir.dir_png, options);
               } else {
-                SDF.WriteBlob(writer, altBlobBytes.Bytes, FileParser.SDROpCodesByName.SDF_C_DRAWPNG);
+                SDF.WriteBlob(writer, altBlobBytes.Bytes, ConstantData2.SDROpCodesByName.SDF_C_DRAWPNG);
               }
               break;
           }

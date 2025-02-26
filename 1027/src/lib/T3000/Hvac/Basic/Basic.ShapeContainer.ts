@@ -1,25 +1,12 @@
 
 
-
-
-// import SDJS from "../SDJS/SDJS.Index";
-// import SDUI from "../SDUI/SDUI.Index";
-// import Basic from "./Basic.Index";
-// import GPP from "../gListManager";
 import $ from 'jquery';
 import HvacSVG from "../Helper/SVG.t2"
-
-// import Global from "./Basic.Global";
-
-
-
 import Group from "./Basic.Group";
 import Utils1 from "../Helper/Utils1"
 import Utils2 from "../Helper/Utils2"
 import Utils3 from "../Helper/Utils3"
-
 import ConstantData from "../Data/ConstantData"
-
 
 class ShapeContainer extends Group {
 
@@ -28,14 +15,6 @@ class ShapeContainer extends Group {
   constructor() {
     super()
   }
-
-  // GetInstanceName(){
-  //   return "Group";
-  // }
-  // Basic.ShapeContainer = function () {
-  // },
-  // Basic.ShapeContainer.prototype = new Basic.Group,
-  // Basic.ShapeContainer.prototype.constructor = Basic.ShapeContainer
 
   CreateElement(element: any, type: any) {
     console.log("= B.ShapeContainer CreateElement input:", { element, type });
@@ -254,10 +233,4 @@ class ShapeContainer extends Group {
 
 }
 
-export default ShapeContainer;
-
-
-
-
-
-// export default Basic.ShapeContainer;
+export default ShapeContainer

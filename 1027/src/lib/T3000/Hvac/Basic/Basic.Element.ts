@@ -1,32 +1,18 @@
 
 
-
-// import Basic from "./Basic.Index";
-// import SDUI from "../SDUI/SDUI.Index";
-// import GPP from "../gListManager";
 import $ from "jquery";
-// import SDJS from "../SDJS/SDJS.Index";
-// import SDUI from "../SDUI/SDUI.Index";
-// import HvacSVG from '../../app-t5/Hvac.SVG.t2';
 import HvacSVG from "../Helper/SVG.t2";
-
-// import Global from "./Basic.Global"
 import Effects from "./Basic.Element.Effects"
 import Style from "./Basic.Element.Style";
-// import Container from "./Basic.Container";
-// import Group from './Basic.Group'
 import Utils1 from "../Helper/Utils1"
 import Utils2 from "../Helper/Utils2"
 import Utils3 from "../Helper/Utils3"
 import GlobalData from '../Data/GlobalData'
 import Instance from "../Data/Instance/Instance";
-
 import ConstantData from "../Data/ConstantData"
 import BasicConstants from "./Basic.Constants";
 
-
 class Element {
-
 
   public doc: any;
   public parent: any;
@@ -53,10 +39,6 @@ class Element {
     this.parent = null;
     this.svgObj = null;
   }
-
-  // GetInstanceName() {
-  //   return "Element";
-  // }
 
   InitElement(svgDoc: any, parent: any) {
     console.log('= B.Element.InitElement: input =>', { svgDoc, parent });
@@ -184,7 +166,7 @@ class Element {
 
   SetHyperlinkAttribute(hyperlink: string) {
     console.log('= B.Element.SetHyperlinkAttribute: input =>', { hyperlink });
-    const resolvedHyperlink = Global.ResolveHyperlink(hyperlink);
+    const resolvedHyperlink = Utils1.ResolveHyperlink(hyperlink);
     if (resolvedHyperlink) {
       this.SetCustomAttribute('_explink_', resolvedHyperlink);
     }
@@ -497,26 +479,7 @@ class Element {
     return result;
   }
 
-  // CalcElementFrame(e) {
-  //   //'use strict';
-  //   for (
-  //     var t = this.GetGeometryBBox(),
-  //     a = {
-  //       x: t.x,
-  //       y: t.y,
-  //       width: t.width,
-  //       height: t.height
-  //     },
-  //     r = this.svgObj;
-  //     r &&
-  //     r !== this.doc.svgObj &&
-  //     (a.x += r.trans.x, a.y += r.trans.y, r = r.parent, !e);
-  //   );
-  //   return a
-  // }
-
   CalcElementFrame(e) {
-    //'use strict';
     for (
       var t = this.GetGeometryBBox(),
       a = {
@@ -586,7 +549,6 @@ class Element {
   }
 
   GetArrowheadBounds() {
-    //'use strict';
     return []
   }
 
@@ -721,7 +683,6 @@ class Element {
   }
 
   SetGradientFill(e) {
-    //'use strict';
     var t,
       a;
     if (e && e.stops && e.stops.length) {
@@ -753,7 +714,6 @@ class Element {
   }
 
   ClearColorData(e) {
-    //'use strict';
     var t,
       a;
     e ? (t = this.fillPatternData, a = this.fillGradientData) : (t = this.strokePatternData, a = this.strokeGradientData),
@@ -771,7 +731,6 @@ class Element {
   }
 
   UpdatePattern(e, t) {
-    //'use strict';
     var a;
     if ((a = t ? this.fillPatternData : this.strokePatternData) && a.ID == e) {
       if (
@@ -795,7 +754,6 @@ class Element {
   }
 
   UpdateImagePattern(e) {
-    //'use strict';
     var t,
       a,
       r,
@@ -875,7 +833,6 @@ class Element {
   }
 
   UpdateTexturePattern(e) {
-    //'use strict';
     var t,
       a,
       r,
@@ -1141,29 +1098,7 @@ class Element {
     console.log("= B.Element.UpdateGradient: output =>", {});
   }
 
-  // RefreshPaint(e) {
-  //   //'use strict';
-  //   if (
-  //     this.fillPatternData ? this.UpdatePattern(this.fillPatternData.ID, !0) : this.fillGradientData &&
-  //       this.UpdateGradient(this.fillGradientData.ID, !0),
-  //     this.strokePatternData ? this.UpdatePattern(this.strokePatternData.ID, !1) : this.strokeGradientData &&
-  //       this.UpdateGradient(this.strokeGradientData.ID, !1),
-  //     e &&
-  //     false // Double move to Group class
-  //     // this instanceof Group
-  //     // this.GetInstanceName() === "Group"
-  //   ) {
-  //     var t,
-  //       a,
-  //       r = this.ElementCount();
-  //     for (t = 0; t < r; t++) (a = this.GetElementByIndex(t)) &&
-  //       a.RefreshPaint(e)
-  //   }
-  // }
-
-
-
-  RefreshPaint(shouldRefreshChildren: boolean) {
+  RefreshPaint(shouldRefreshChildren?: boolean) {
     console.log('= B.Element.RefreshPaint: input =>', { shouldRefreshChildren });
 
     // Update fill pattern or gradient if exists
@@ -1288,7 +1223,7 @@ class Element {
 
     // Check if e is not a number and parse it if necessary
     if (isNaN(Number(e))) {
-      e = Basic.Symbol.ParsePlaceholder(e, Basic.Symbol.Placeholder.LineThick);
+      e = Instance.Basic.Symbol.ParsePlaceholder(e, BasicConstants.Placeholder.LineThick);
     }
 
     // Update the strokeWidth property with a numeric value
@@ -1300,10 +1235,10 @@ class Element {
     console.log("= B.Element.SetStrokeWidth: output =>", { strokeWidth: this.strokeWidth });
   }
 
-  SetStrokePattern(e: string) {
-    console.log('= B.Element.SetStrokePattern: input =>', { e });
+  SetStrokePattern(dashArray: string) {
+    console.log('= B.Element.SetStrokePattern: input =>', { dashArray });
 
-    this.strokeDashArray = e;
+    this.strokeDashArray = dashArray;
     const patternForWidth = this.GetStrokePatternForWidth();
     this.svgObj.attr('stroke-dasharray', patternForWidth);
 
@@ -1450,64 +1385,63 @@ class Element {
     console.log('= B.Element.RemoveCursorsOnSVGObj: output =>', { completed: true });
   }
 
-  GetTargetForEvent2(e: any) {
-    console.log("= B.Element.GetTargetForEvent2: input =>", { e });
-    "use strict";
+  // GetTargetForEvent2(e: any) {
+  //   console.log("= B.Element.GetTargetForEvent2: input =>", { e });
 
-    let domTarget: any, foundElement: any, rootElement: any;
+  //   let domTarget: any, foundElement: any, rootElement: any;
 
-    // Ensure the event exists and the current instance is a valid container.
-    if (!(e && this instanceof Instance.Basic.Container)) {
-      console.log("= B.Element.GetTargetForEvent2: output =>", this);
-      return this;
-    }
+  //   // Ensure the event exists and the current instance is a valid container.
+  //   if (!(e && this instanceof Instance.Basic.Container)) {
+  //     console.log("= B.Element.GetTargetForEvent2: output =>", this);
+  //     return this;
+  //   }
 
-    domTarget = e.target || e.srcElement;
-    rootElement = this.DOMElement();
+  //   domTarget = e.target || e.srcElement;
+  //   rootElement = this.DOMElement();
 
-    if (!domTarget || domTarget === rootElement) {
-      console.log("= B.Element.GetTargetForEvent2: output =>", this);
-      return this;
-    }
+  //   if (!domTarget || domTarget === rootElement) {
+  //     console.log("= B.Element.GetTargetForEvent2: output =>", this);
+  //     return this;
+  //   }
 
-    foundElement = this.FindElementByDOMElement(domTarget);
+  //   foundElement = this.FindElementByDOMElement(domTarget);
 
-    while (domTarget && !foundElement) {
-      domTarget = domTarget.parentNode;
-      foundElement = (domTarget === rootElement) ? this : this.FindElementByDOMElement(domTarget);
-    }
+  //   while (domTarget && !foundElement) {
+  //     domTarget = domTarget.parentNode;
+  //     foundElement = (domTarget === rootElement) ? this : this.FindElementByDOMElement(domTarget);
+  //   }
 
-    console.log("= B.Element.GetTargetForEvent2: output =>", foundElement || this);
-    return foundElement || this;
-  }
+  //   console.log("= B.Element.GetTargetForEvent2: output =>", foundElement || this);
+  //   return foundElement || this;
+  // }
 
-  GetTargetForEvent1(e: any): any {
-    console.log("= B.Element.GetTargetForEvent1: input =>", { e });
+  // GetTargetForEvent1(e: any): any {
+  //   console.log("= B.Element.GetTargetForEvent1: input =>", { e });
 
-    let target: any = e.target || e.srcElement;
-    let rootElement: any = this.DOMElement();
-    let element: any;
+  //   let target: any = e.target || e.srcElement;
+  //   let rootElement: any = this.DOMElement();
+  //   let element: any;
 
-    if (!target || target === rootElement) {
-      console.log("= B.Element.GetTargetForEvent1: output =>", this);
-      return this;
-    }
+  //   if (!target || target === rootElement) {
+  //     console.log("= B.Element.GetTargetForEvent1: output =>", this);
+  //     return this;
+  //   }
 
-    element = this.FindElementByDOMElement(target);
+  //   element = this.FindElementByDOMElement(target);
 
-    while (target && !element) {
-      target = target.parentNode;
-      if (target === rootElement) {
-        element = this;
-        break;
-      } else {
-        element = this.FindElementByDOMElement(target);
-      }
-    }
+  //   while (target && !element) {
+  //     target = target.parentNode;
+  //     if (target === rootElement) {
+  //       element = this;
+  //       break;
+  //     } else {
+  //       element = this.FindElementByDOMElement(target);
+  //     }
+  //   }
 
-    console.log("= B.Element.GetTargetForEvent1: output =>", element || this);
-    return element || this;
-  }
+  //   console.log("= B.Element.GetTargetForEvent1: output =>", element || this);
+  //   return element || this;
+  // }
 
   static EventBehavior = {
     NORMAL: 'visiblePainted',

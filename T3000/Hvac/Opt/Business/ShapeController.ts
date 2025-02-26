@@ -4,6 +4,7 @@ import GlobalData from '../../Data/GlobalData'
 import Utils1 from '../../Helper/Utils1'
 import Utils3 from '../../Helper/Utils3'
 import Utils2 from '../../Helper/Utils2'
+import Utils4 from '../../Helper/Utils4'
 import ListManager from '../../Data/ListManager'
 import Resources from '../../Data/Resources'
 import FileParser from '../../Data/FileParser'
@@ -391,7 +392,7 @@ class ShapeController {
       d = Utils1.DeepCopy(i.def.style);
     if (r && r.Data && r.Data.attributes && r.Data.attributes.StyleRecord) d = Utils1.DeepCopy(r.Data.attributes.StyleRecord);
     else {
-      var D = Resources.FindStyle(ConstantData.Defines.TextBlockStyle);
+      var D = Utils4.FindStyle(ConstantData.Defines.TextBlockStyle);
       d.Text.Paint.Color = '#000000'//Double D.Text.Paint.Color
     }
     if (
@@ -577,7 +578,7 @@ class ShapeController {
       }
     } else GlobalData.optManager.DeactivateTextEdit();
     var o = GlobalData.objectStore.GetObject(GlobalData.optManager.theSEDSessionBlockID).Data,
-      s = Resources.FindStyle(ConstantData.Defines.TextBlockStyle);
+      s = Utils4.FindStyle(ConstantData.Defines.TextBlockStyle);
     null == s &&
       (s = o.def.style);
     var l = {
@@ -1157,7 +1158,7 @@ class ShapeController {
     //   ) {
     //     if ('click' == r.type || 'mousedown' == r.type) return;
     //     if (
-    //       GlobalData.optManager.currentModalOperation != ListManager.ModalOperations.NONE
+    //       GlobalData.optManager.currentModalOperation != ConstantData2.ModalOperations.NONE
     //     ) return;
     //     if (GlobalData.optManager.symbolLibraryItemID != i) return void (GlobalData.optManager.symbolLibraryItemID = i);
     //     r.preventDefault &&
@@ -1262,7 +1263,7 @@ class ShapeController {
       u = Utils1.DeepCopy(i.def.style);
     if (a && a.Data && a.Data.attributes && a.Data.attributes.StyleRecord) u = Utils1.DeepCopy(a.Data.attributes.StyleRecord);
     else {
-      var p = Resources.FindStyle(ConstantData.Defines.TextBlockStyle);
+      var p = Utils4.FindStyle(ConstantData.Defines.TextBlockStyle);
       u.Text.Paint.Color = p.Text.Paint.Color
     }
     if (
@@ -1317,7 +1318,7 @@ class ShapeController {
       u = Utils1.DeepCopy(i.def.style);
     if (a && a.Data && a.Data.attributes && a.Data.attributes.StyleRecord) u = Utils1.DeepCopy(a.Data.attributes.StyleRecord);
     else {
-      var p = Resources.FindStyle(ConstantData.Defines.TextBlockStyle);
+      var p = Utils4.FindStyle(ConstantData.Defines.TextBlockStyle);
       u.Text.Paint.Color = p.Text.Paint.Color
     }
     if (
@@ -1383,7 +1384,7 @@ class ShapeController {
       u = Utils1.DeepCopy(i.def.style);
     if (a && a.Data && a.Data.attributes && a.Data.attributes.StyleRecord) u = Utils1.DeepCopy(a.Data.attributes.StyleRecord);
     else {
-      var p = Resources.FindStyle(ConstantData.Defines.TextBlockStyle);
+      var p = Utils4.FindStyle(ConstantData.Defines.TextBlockStyle);
       u.Text.Paint.Color = p.Text.Paint.Color
     }
     if (c.StyleRecord = u, e) return c;
@@ -1519,7 +1520,7 @@ class ShapeController {
       u = Utils1.DeepCopy(i.def.style);
     if (a && a.Data && a.Data.attributes && a.Data.attributes.StyleRecord) u = Utils1.DeepCopy(a.Data.attributes.StyleRecord);
     else {
-      var p = Resources.FindStyle(ConstantData.Defines.TextBlockStyle);
+      var p = Utils4.FindStyle(ConstantData.Defines.TextBlockStyle);
       u.Text.Paint.Color = p.Text.Paint.Color
     }
     if (
@@ -2223,7 +2224,7 @@ export default ShapeController
 //         d = Utils1.DeepCopy(i.def.style);
 //       if (r && r.Data && r.Data.attributes && r.Data.attributes.StyleRecord) d = Utils1.DeepCopy(r.Data.attributes.StyleRecord);
 //       else {
-//         var D = Resources.FindStyle(ConstantData.Defines.TextBlockStyle);
+//         var D = Utils4.FindStyle(ConstantData.Defines.TextBlockStyle);
 //         d.Text.Paint.Color = D.Text.Paint.Color
 //       }
 //       if (

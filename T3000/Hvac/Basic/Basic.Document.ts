@@ -19,7 +19,6 @@ import ShapeContainer from './Basic.ShapeContainer'
 import Text from './Basic.Text'
 import Formatter from "./Basic.Text.Formatter"
 import Spell from "./Basic.Text.Spell"
-// import Global from "./Basic.Global"
 import Image from './Basic.Image'
 import Utils1 from "../Helper/Utils1"
 import Utils2 from "../Helper/Utils2"

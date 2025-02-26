@@ -1,43 +1,23 @@
 
 
-
-
-// import SDJS from "../SDJS/SDJS.Index";
-// import SDUI from "../SDUI/SDUI.Index";
-// import Basic from "./Basic.Index";
-// import GPP from "../gListManager";
 import $ from 'jquery';
 import HvacSVG from "../Helper/SVG.t2"
-
-
-// import Global from "./Basic.Global";
 import Utils1 from "../Helper/Utils1"
 import Utils2 from "../Helper/Utils2"
 import Utils3 from "../Helper/Utils3"
-
-
 import ConstantData from "../Data/ConstantData"
-
-
-
 import Element from "./Basic.Element";
 
 class Oval extends Element {
-  public shapeElem: any;
 
+  public shapeElem: any;
 
   constructor() {
     super();
-    //'use strict';
     this.svgObj = null,
       this.shapeElem = null
   }
 
-  // GetInstanceName(){
-  //   return "Oval";
-  // }
-  // Basic.Oval.prototype = new Basic.Element,
-  // Basic.Oval.prototype.constructor = Basic.Oval,
   CreateElement(width: number, height: number) {
     console.log("= B.Oval CreateElement input =>", { width, height });
 
@@ -72,6 +52,3 @@ class Oval extends Element {
 }
 
 export default Oval
-
-
-// export default Basic.Oval;

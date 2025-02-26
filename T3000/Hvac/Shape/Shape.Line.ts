@@ -289,7 +289,7 @@ class Line extends BaseLine {
     let shapeElement;
     const shapeContainer = GlobalData.optManager.svgObjectLayer.GetElementByID(this.BlockID);
 
-    if (GlobalData.optManager.currentModalOperation === ListManager.ModalOperations.ADDCORNER) {
+    if (GlobalData.optManager.currentModalOperation === ConstantData2.ModalOperations.ADDCORNER) {
       shapeElement = shapeContainer.GetElementByID(ConstantData.SVGElementClass.SLOP);
       if (shapeElement) {
         shapeElement.SetCursor(Element.CursorType.CROSSHAIR);

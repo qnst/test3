@@ -13,6 +13,8 @@ import Element from "../Basic/Basic.Element";
 import ListManager from '../Data/ListManager';
 import ConstantData from '../Data/ConstantData'
 import $ from 'jquery';
+import ConstantData2 from '../Data/ConstantData2';
+import SDF from '../Data/SDF';
 
 class SVGFragmentSymbol extends BaseSymbol {
 
@@ -505,7 +507,7 @@ class SVGFragmentSymbol extends BaseSymbol {
     ) {
       const isTextGrowHorizontal = this.TextGrow === ConstantData.TextGrowBehavior.HORIZONTAL &&
         (this.flags & ConstantData.ObjFlags.SEDO_TextOnly) &&
-        SDF.TextAlignToWin(this.TextAlign).just === FileParser.TextJust.TA_LEFT;
+        SDF.TextAlignToWin(this.TextAlign).just === ConstantData2.TextJust.TA_LEFT;
       knobConfig.shapeType = ConstantData.CreateShapeType.OVAL;
       knobConfig.x = isTextGrowHorizontal ? width + adjustedRKnobSize : width - 3 * adjustedRKnobSize;
       knobConfig.y = height / 2 - adjustedRKnobSize / 2;

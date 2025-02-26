@@ -1,24 +1,12 @@
 
 
-
-
-// import SDJS from "../SDJS/SDJS.Index";
-// import SDUI from "../SDUI/SDUI.Index";
-// import Basic from "./Basic.Index";
-// import GPP from "../gListManager";
 import $ from 'jquery';
 import HvacSVG from "../Helper/SVG.t2"
-
-
 import Path from "./Basic.Path";
-
-// import Global from "./Basic.Global";
 import Utils1 from "../Helper/Utils1"
 import Utils2 from "../Helper/Utils2"
 import Utils3 from "../Helper/Utils3"
-
 import ConstantData from "../Data/ConstantData"
-
 
 class Line extends Path {
 
@@ -26,15 +14,6 @@ class Line extends Path {
     super()
   }
 
-  // GetInstanceName(){
-  //   return "Line";
-  // }
-
-
-  // Basic.Line = function () {
-  // },
-  //   Basic.Line.prototype = new Basic.Path,
-  //   Basic.Line.prototype.constructor = Basic.Line,
   SetPoints(
     startXCoord: number,
     startYCoord: number,
@@ -66,9 +45,4 @@ class Line extends Path {
 
 }
 
-export default Line;
-
-
-
-
-// export default Basic.Line;
+export default Line

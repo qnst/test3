@@ -1,25 +1,18 @@
 
-// import Basic from "./Basic.Index";
-import HvacSVG from "../Helper/SVG.t2"
-// import { RotatePoint } from "../Common";
-import $ from "jquery";
-// import GPP from "../gListManager";
-// import SDJS from "../SDJS/SDJS.Index";
-// import SDUI from "../SDUI/SDUI.Index";
-// import '../../app-t5/pathseg';
-import "../Helper/pathseg"
 
+import HvacSVG from "../Helper/SVG.t2"
+import $ from "jquery";
+import "../Helper/pathseg"
 import Container from "./Basic.Container";
-// import Global from "./Basic.Global"
 import Creator from "./Basic.Path.Creator";
 import Utils1 from "../Helper/Utils1"
 import Utils2 from "../Helper/Utils2"
 import Utils3 from "../Helper/Utils3"
-
 import ConstantData from "../Data/ConstantData"
 import ConstantData1 from "../Data/ConstantData1"
 import ConstantData2 from "../Data/ConstantData2"
-
+import Instance from "../Data/Instance/Instance";
+import BasicConstants from "./Basic.Constants";
 
 class Path extends Container {
 
@@ -58,11 +51,6 @@ class Path extends Container {
     this.arrowheadBounds = [];
   }
 
-  // GetInstanceName(){
-  //   return "Path";
-  // }
-
-  // Basic.Path.prototype = new Basic.Container,
   CreateElement(svgDoc: any, parent: any) {
     console.log("= B.Path CreateElement called with svgDoc:", svgDoc, "parent:", parent);
 
@@ -78,7 +66,6 @@ class Path extends Container {
     console.log("= B.Path CreateElement returning svgObj:", this.svgObj);
     return this.svgObj;
   }
-
 
   SetArrowheads(
     startArrowRec: any,
@@ -103,12 +90,11 @@ class Path extends Container {
     console.log("= B.Path SetArrowheads completed with sArrowRec:", this.sArrowRec, "eArrowRec:", this.eArrowRec, "sArrowSize:", this.sArrowSize, "eArrowSize:", this.eArrowSize, "sArrowDisp:", this.sArrowDisp, "eArrowDisp:", this.eArrowDisp);
   }
 
-
   SetStrokeWidth(strokeWidth: any) {
     console.log("= B.Path SetStrokeWidth called with strokeWidth:", strokeWidth);
 
     if (isNaN(strokeWidth) && typeof strokeWidth === 'string') {
-      strokeWidth = Basic.Symbol.ParsePlaceholder(strokeWidth, Basic.Symbol.Placeholder.LineThick);
+      strokeWidth = Instance.Basic.Symbol.ParsePlaceholder(strokeWidth, BasicConstants.Placeholder.LineThick);
     }
 
     strokeWidth = Utils1.RoundCoord(strokeWidth);
@@ -119,7 +105,6 @@ class Path extends Container {
 
     console.log("= B.Path SetStrokeWidth completed with strokeWidth:", strokeWidth);
   }
-
 
   SetStrokeColor(strokeColor: string) {
     console.log("= B.Path SetStrokeColor called with strokeColor:", strokeColor);
@@ -134,12 +119,11 @@ class Path extends Container {
     console.log("= B.Path SetStrokeColor completed with strokeColor:", strokeColor);
   }
 
-
   UpdatePattern(patternId, isFill) {
     console.log('= B.Path UpdatePattern called with patternId:', patternId, 'isFill:', isFill);
 
     let strokeColor;
-    Basic.Element.prototype.UpdatePattern.call(this, patternId, isFill);
+    Instance.Basic.Element.prototype.UpdatePattern.call(this, patternId, isFill);
 
     if (!isFill) {
       strokeColor = this.svgObj.attr('stroke');
@@ -152,12 +136,11 @@ class Path extends Container {
     console.log('= B.Path UpdatePattern completed with strokeColor:', strokeColor);
   }
 
-
   UpdateGradient(gradientId, isFill) {
     console.log('= B.Path UpdateGradient called with gradientId:', gradientId, 'isFill:', isFill);
 
     let strokeColor;
-    Basic.Element.prototype.UpdateGradient.call(this, gradientId, isFill);
+    Instance.Basic.Element.prototype.UpdateGradient.call(this, gradientId, isFill);
 
     if (!isFill) {
       strokeColor = this.svgObj.attr('stroke');
@@ -170,7 +153,6 @@ class Path extends Container {
     console.log('= B.Path UpdateGradient completed with strokeColor:', strokeColor);
   }
 
-
   SetStrokePattern(dashArray: string) {
     console.log("= B.Path SetStrokePattern called with dashArray:", dashArray);
 
@@ -180,76 +162,14 @@ class Path extends Container {
     console.log("= B.Path SetStrokePattern completed with strokeDashArray:", this.strokeDashArray);
   }
 
-
   SetSize(e, t) {
   }
 
-
   GetArrowheadBounds() {
-    // //'use strict';
-    // return $.extend(!0, [], this.arrowheadBounds)
-
-    // //'use strict';
     return [...this.arrowheadBounds];
   }
 
-
   UpdateArrowheads() {
-    // //'use strict';
-    // for (
-    //   var e = this.sArrowRec,
-    //   t = this.eArrowRec,
-    //   a = this.sArrowSize,
-    //   r = this.eArrowSize,
-    //   i = null,
-    //   n = null;
-    //   this.arrowAreaElem.children().length;
-    // ) this.arrowAreaElem.removeAt(0);
-    // this.arrowElems.length = 0,
-    //   this.arrowheadBounds = [],
-    //   this.IsClosed() ||
-    //   this.origPathData &&
-    //   (
-    //     this.pathElem.plot(this.origPathData),
-    //     e ||
-    //     t ||
-    //     (e = this.EmptyArrowhead()),
-    //     e &&
-    //     (
-    //       this.sArrowMetrics = this.CalcArrowheadDim(e, a, this.sArrowDisp)
-    //     ),
-    //     t &&
-    //     (
-    //       this.eArrowMetrics = this.CalcArrowheadDim(t, r, this.eArrowDisp)
-    //     ),
-    //     this.CalcArrowheadPlacement(e, t),
-    //     e &&
-    //     (
-    //       i = this.CreateArrowheadElem(e, this.sArrowMetrics, !0, this.arrowheadBounds)
-    //     ),
-    //     t &&
-    //     (
-    //       n = this.CreateArrowheadElem(t, this.eArrowMetrics, !1, this.arrowheadBounds)
-    //     ),
-    //     e &&
-    //     this.sArrowMetrics.trimAmount &&
-    //     this.TrimPath('start', this.sArrowMetrics.trimAmount),
-    //     t &&
-    //     this.eArrowMetrics.trimAmount &&
-    //     this.TrimPath('end', this.eArrowMetrics.trimAmount),
-    //     i &&
-    //     (this.arrowElems.push(i), this.arrowAreaElem.add(i)),
-    //     n &&
-    //     (this.arrowElems.push(n), this.arrowAreaElem.add(n))
-    //   )
-
-
-
-
-
-
-
-    // //'use strict';
     const sArrowRec = this.sArrowRec;
     const eArrowRec = this.eArrowRec;
     const sArrowSize = this.sArrowSize;
@@ -308,7 +228,6 @@ class Path extends Container {
     }
   }
 
-
   CalcArrowheadDim(arrowRec, arrowSize, displayArrow) {
     console.log("= B.Path CalcArrowheadDim called with arrowRec:", arrowRec, "arrowSize:", arrowSize, "displayArrow:", displayArrow);
 
@@ -352,7 +271,6 @@ class Path extends Container {
     return metrics;
   }
 
-
   CreateArrowheadElem(
     arrowRecord: any,
     metrics: any,
@@ -369,7 +287,7 @@ class Path extends Container {
     // Get strokeWidth and strokeOpacity with fallbacks
     let strokeWidth = this.pathElem.attr("stroke-width");
     if (isNaN(strokeWidth)) {
-      strokeWidth = Number(Basic.Symbol.ParsePlaceholder(strokeWidth, Basic.Symbol.Placeholder.LineThick));
+      strokeWidth = Number(Instance.Basic.Symbol.ParsePlaceholder(strokeWidth, Instance.Basic.Symbol.Placeholder.LineThick));
     }
     let strokeOpacity = this.svgObj.attr("stroke-opacity");
     if (isNaN(strokeOpacity)) {
@@ -581,8 +499,6 @@ class Path extends Container {
     return container;
   }
 
-
-
   CalcArrowheadPlacement(sArrowRec, eArrowRec) {
     console.log("= B.Path CalcArrowheadPlacement called with sArrowRec:", sArrowRec, "eArrowRec:", eArrowRec);
 
@@ -642,7 +558,6 @@ class Path extends Container {
     console.log("= B.Path CalcArrowheadPlacement updated sArrowMetrics:", this.sArrowMetrics, "eArrowMetrics:", this.eArrowMetrics);
   }
 
-
   EmptyArrowhead() {
     console.log("= B.Path EmptyArrowhead called");
 
@@ -682,7 +597,6 @@ class Path extends Container {
     console.log("= B.Path EmptyArrowhead returning", emptyArrowhead);
     return emptyArrowhead;
   }
-
 
   TrimPath(position: string, trimLength: number) {
     console.log("= B.Path TrimPath called with position:", position, "trimLength:", trimLength);
@@ -773,7 +687,6 @@ class Path extends Container {
     console.log("= B.Path TrimPath completed");
   }
 
-
   CalcSegEndpoint(pathElem, segmentIndex) {
     console.log("= B.Path CalcSegEndpoint called with pathElem:", pathElem, "segmentIndex:", segmentIndex);
 
@@ -812,7 +725,6 @@ class Path extends Container {
     return endpoint;
   }
 
-
   GetGeometryBBox() {
     console.log("= B.Path GetGeometryBBox called");
 
@@ -840,7 +752,6 @@ class Path extends Container {
     return this.geometryBBox;
   }
 
-
   IsSegmentAbs(segment) {
     console.log("= B.Path IsSegmentAbs called with segment:", segment);
 
@@ -860,7 +771,6 @@ class Path extends Container {
     console.log("= B.Path IsSegmentAbs returning:", isAbsolute);
     return isAbsolute;
   }
-
 
   IsClosed() {
     console.log("= B.Path IsClosed called");
@@ -882,24 +792,7 @@ class Path extends Container {
     return isClosed;
   }
 
-
-  // SetPath(e, t) {
-  //   // //'use strict';
-  //   this.origPathData = e,
-  //     this.pathElem.plot(e),
-  //     this.UpdateArrowheads(),
-  //     this.UpdateTransform(),
-  //     t ? (
-  //       this.geometryBBox.x = t.x,
-  //       this.geometryBBox.y = t.y,
-  //       this.geometryBBox.width = t.width,
-  //       this.geometryBBox.height = t.height
-  //     ) : (this.geometryBBox.width = - 1, this.geometryBBox.height = - 1),
-  //     this.RefreshPaint()
-  // }
-
-
-  SetPath(pathData: any, bbox: any) {
+  SetPath(pathData: any, bbox?: any) {
     console.log("= B.Path SetPath called with pathData:", pathData, "bbox:", bbox);
 
     this.origPathData = pathData;
@@ -922,16 +815,6 @@ class Path extends Container {
     console.log("= B.Path SetPath updated geometryBBox:", this.geometryBBox);
   }
 
-
-
-
-  // PathCreator() {
-  //   //'use strict';
-  //   return this.pathCreator ||
-  //     (this.pathCreator = new Creator(this)),
-  //     this.pathCreator
-  // }
-
   PathCreator() {
     console.log("= B.Path PathCreator called");
     if (!this.pathCreator) {
@@ -945,5 +828,3 @@ class Path extends Container {
 }
 
 export default Path
-
-// export default Basic.Path;

@@ -791,7 +791,7 @@ class Polygon extends BaseShape {
       if (this.polylist) {
         ListManager.PolyLine.prototype.WriteSDFAttributes.call(this, writer, context, true);
       } else {
-        let code = SDF.Write_CODE(writer, FileParser.SDROpCodesByName.SDF_C_DRAWPOLY);
+        let code = SDF.Write_CODE(writer, ConstantData2.SDROpCodesByName.SDF_C_DRAWPOLY);
         vertexCount = this.VertexArray.length;
         width = SDF.ToSDWinCoords(this.Frame.width, context.coordScaleFactor);
         height = SDF.ToSDWinCoords(this.Frame.height, context.coordScaleFactor);
@@ -830,11 +830,11 @@ class Polygon extends BaseShape {
             lpt: { x: vertexX, y: vertexY },
             dimDeflection: 0
           };
-          code = SDF.Write_CODE(writer, FileParser.SDROpCodesByName.SDF_C_DRAWPOLYSEG);
+          code = SDF.Write_CODE(writer, ConstantData2.SDROpCodesByName.SDF_C_DRAWPOLYSEG);
           writer.writeStruct(FileParser.SDF_PolySeg_Struct, polySegment);
           SDF.Write_LENGTH(writer, code);
         }
-        writer.writeUint16(FileParser.SDROpCodesByName.SDF_C_DRAWPOLY_END);
+        writer.writeUint16(ConstantData2.SDROpCodesByName.SDF_C_DRAWPOLY_END);
       }
     }
     super.WriteSDFAttributes(writer, context);

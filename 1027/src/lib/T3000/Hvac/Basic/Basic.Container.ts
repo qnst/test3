@@ -1,14 +1,7 @@
 
 
-
-
-
-
-
-
 import HvacSVG from "../Helper/SVG.t2"
 import Element from "./Basic.Element"
-// import Global from "./Basic.Global"
 import Utils1 from "../Helper/Utils1"
 import ConstantData from "../Data/ConstantData"
 

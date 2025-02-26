@@ -543,7 +543,7 @@ class D3Symbol extends BaseSymbol {
     if (this.d3Settings) {
       const d3SettingsString = this.ExportD3Settings();
       if (d3SettingsString) {
-        SDF.WriteString(file, d3SettingsString, FileParser.SDROpCodesByName.SDF_C_D3SETTINGS, options);
+        SDF.WriteString(file, d3SettingsString, ConstantData2.SDROpCodesByName.SDF_C_D3SETTINGS, options);
       }
     }
 

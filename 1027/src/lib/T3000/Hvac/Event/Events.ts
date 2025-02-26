@@ -5,6 +5,7 @@ import $ from 'jquery'
 import GlobalData from '../Data/GlobalData'
 import Commands from '../Opt/Business/Commands'
 import ConstantData from '../Data/ConstantData'
+import ConstantData2 from '../Data/ConstantData2'
 
 class Events {
 
@@ -31,19 +32,19 @@ class Events {
   }
 
   static OnKeyUp(e) {
-    e.keyCode === Resources.Keys.Space && (ConstantData.DocumentContext.SpacebarDown = !1)
+    e.keyCode === ConstantData2.Keys.Space && (ConstantData.DocumentContext.SpacebarDown = !1)
   }
 
   static OnKeyDown(e) {
     var t = e.keyCode
       , a = Utils4.GetModifierKeys(e);
-    t === Resources.Keys.Space && (ConstantData.DocumentContext.SpacebarDown = !0);
+    t === ConstantData2.Keys.Space && (ConstantData.DocumentContext.SpacebarDown = !0);
     var r = $(e.target || e.srcElement);
     8 != e.keyCode || r.is('input,[contenteditable="true"],textarea') && "radio" != r.attr("type") && "checkbox" != r.attr("type") || e.preventDefault();
     try {
       var i = !1;
       r && r[0].attributes && (i = r[0].attributes.getNamedItem(/*Constants.Attr_DropdownText*/"dropDownText")),
-        null != i && "1" === i.value || e.keyCode !== Resources.Keys.Alt && e.keyCode !== Resources.Keys.Ctrl,
+        null != i && "1" === i.value || e.keyCode !== ConstantData2.Keys.Alt && e.keyCode !== ConstantData2.Keys.Ctrl,
         // && Commands.MainController.Dropdowns.HideAllDropdowns(),
         Commands.MainController.HandleKeyDown(e, t, a)
     } catch (e) {

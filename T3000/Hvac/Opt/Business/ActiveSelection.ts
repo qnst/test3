@@ -142,7 +142,7 @@ export default ActiveSelection
 //             Item: i.Cut,
 //             Highlight: e.allowcopy
 //           }),
-//           a = GlobalData.optManager.currentModalOperation === ListManager.ModalOperations.FORMATPAINTER,
+//           a = GlobalData.optManager.currentModalOperation === ConstantData2.ModalOperations.FORMATPAINTER,
 //           s.push({
 //             Item: i.FormatPainter,
 //             Highlight: e.allowcopy ||
@@ -951,12 +951,12 @@ export default ActiveSelection
 //               t.removeClass('collapsed'),
 //               a.removeClass('toolsCollapsed'),
 //               ConstantData.DocumentContext.CollapseTools = !1,
-//               SDF.ChangeHeader(FileParser.SDROpCodesByName.SDF_C_HEAD_UIINFO, !1)
+//               SDF.ChangeHeader(ConstantData2.SDROpCodesByName.SDF_C_HEAD_UIINFO, !1)
 //             ) : (
 //               t.addClass('collapsed'),
 //               a.addClass('toolsCollapsed'),
 //               ConstantData.DocumentContext.CollapseTools = !0,
-//               SDF.ChangeHeader(FileParser.SDROpCodesByName.SDF_C_HEAD_UIINFO, !1)
+//               SDF.ChangeHeader(ConstantData2.SDROpCodesByName.SDF_C_HEAD_UIINFO, !1)
 //             )
 //           )
 //       }

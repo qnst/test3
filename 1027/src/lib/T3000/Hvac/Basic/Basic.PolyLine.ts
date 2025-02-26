@@ -1,25 +1,13 @@
 
 
 
-
-// import SDJS from "../SDJS/SDJS.Index";
-// import SDUI from "../SDUI/SDUI.Index";
-// import Basic from "./Basic.Index";
-// import GPP from "../gListManager";
 import $ from 'jquery';
 import HvacSVG from "../Helper/SVG.t2"
-
-
-// import Global from "./Basic.Global";
-
-
 import Path from "./Basic.Path";
 import Utils1 from "../Helper/Utils1"
 import Utils2 from "../Helper/Utils2"
 import Utils3 from "../Helper/Utils3"
-
 import ConstantData from "../Data/ConstantData"
-
 
 class PolyLine extends Path {
 
@@ -27,14 +15,6 @@ class PolyLine extends Path {
     super()
   }
 
-  // GetInstanceName(){
-  //   return "PolyLine";
-  // }
-
-  // Basic.PolyLine = function () {
-  // },
-  //   Basic.PolyLine.prototype = new Basic.Path,
-  //   Basic.PolyLine.prototype.constructor = Basic.PolyLine,
   SetPoints(points: { x: number, y: number }[]) {
     console.log("= B.PolyLine SetPoints input:", points);
 
@@ -81,8 +61,3 @@ class PolyLine extends Path {
 }
 
 export default PolyLine
-
-
-
-
-// export default Basic.PolyLine

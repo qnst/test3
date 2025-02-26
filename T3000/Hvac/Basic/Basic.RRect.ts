@@ -1,23 +1,11 @@
 
 
-
-
-// import SDJS from "../SDJS/SDJS.Index";
-// import SDUI from "../SDUI/SDUI.Index";
-// import Basic from "./Basic.Index";
-// import GPP from "../gListManager";
 import $ from 'jquery';
 import HvacSVG from "../Helper/SVG.t2"
-
-
-// import Global from "./Basic.Global";
 import Utils1 from "../Helper/Utils1"
 import Utils2 from "../Helper/Utils2"
 import Utils3 from "../Helper/Utils3"
-
 import ConstantData from "../Data/ConstantData"
-
-
 
 import Path from "./Basic.Path";
 
@@ -28,59 +16,50 @@ class RRect extends Path {
 
   constructor() {
     super()
-    //'use strict';
     this.rx = 0;
     this.ry = 0;
   }
 
-  // GetInstanceName(){
-  //   return "RRect";
-  // }
-  // Basic.RRect.prototype = new Basic.Path,
-  // Basic.RRect.prototype.constructor = Basic.RRect,
+  SetRRectSize(width: number, height: number, radiusX: number, radiusY: number) {
+    console.log("= B.RRect SetRRectSize input:", { width, height, radiusX, radiusY });
 
-
-  SetRRectSize(e: number, t: number, a: number, r: number) {
-    console.log("= B.RRect SetRRectSize input:", { e, t, a, r });
-    //'use strict';
-
-    if (a >= e / 2) {
-      a = (e - 1) / 2;
+    if (radiusX >= width / 2) {
+      radiusX = (width - 1) / 2;
     }
-    if (r >= t / 2) {
-      r = (t - 1) / 2;
+    if (radiusY >= height / 2) {
+      radiusY = (height - 1) / 2;
     }
 
-    this.rx = a;
-    this.ry = r;
+    this.rx = radiusX;
+    this.ry = radiusY;
 
-    const i = this.PathCreator();
-    const n = e - 2 * a;
-    const o = t - 2 * r;
+    const pathCreator = this.PathCreator();
+    const innerWidth = width - 2 * radiusX;
+    const innerHeight = height - 2 * radiusY;
 
-    i.BeginPath();
-    if (a && r) {
-      i.MoveTo(0, r);
-      i.SimpleArcTo(a, -r, true, true);
-      i.LineTo(n, 0, true);
-      i.SimpleArcTo(a, r, true, true);
-      i.LineTo(0, o, true);
-      i.SimpleArcTo(-a, r, true, true);
-      i.LineTo(-n, 0, true);
-      i.SimpleArcTo(-a, -r, true, true);
-      i.ClosePath();
+    pathCreator.BeginPath();
+    if (radiusX && radiusY) {
+      pathCreator.MoveTo(0, radiusY);
+      pathCreator.SimpleArcTo(radiusX, -radiusY, true, true);
+      pathCreator.LineTo(innerWidth, 0, true);
+      pathCreator.SimpleArcTo(radiusX, radiusY, true, true);
+      pathCreator.LineTo(0, innerHeight, true);
+      pathCreator.SimpleArcTo(-radiusX, radiusY, true, true);
+      pathCreator.LineTo(-innerWidth, 0, true);
+      pathCreator.SimpleArcTo(-radiusX, -radiusY, true, true);
+      pathCreator.ClosePath();
     } else {
-      i.MoveTo(0, 0);
-      i.LineTo(e, 0, true);
-      i.LineTo(0, t, true);
-      i.LineTo(-e, 0, true);
-      i.ClosePath();
+      pathCreator.MoveTo(0, 0);
+      pathCreator.LineTo(width, 0, true);
+      pathCreator.LineTo(0, height, true);
+      pathCreator.LineTo(-width, 0, true);
+      pathCreator.ClosePath();
     }
 
-    const s = i.ToString();
-    this.SetPath(s, { x: 0, y: 0, width: e, height: t });
+    const pathString = pathCreator.ToString();
+    this.SetPath(pathString, { x: 0, y: 0, width, height });
 
-    console.log("= B.RRect SetRRectSize output:", { rx: this.rx, ry: this.ry, path: s });
+    console.log("= B.RRect SetRRectSize output:", { radiusX: this.rx, radiusY: this.ry, path: pathString });
   }
 
   SetSize(width: number, height: number): void {
@@ -91,8 +70,4 @@ class RRect extends Path {
 
 }
 
-export default RRect;
-
-
-
-// export default Basic.RRect;
+export default RRect

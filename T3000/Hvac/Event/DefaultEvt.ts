@@ -148,6 +148,7 @@ import BaseDrawingObject from '../Shape/Shape.BaseDrawingObject'
 import Instance from '../Data/Instance/Instance'
 import ConstantData from '../Data/ConstantData'
 import RightClickData from '../Model/RightClickData'
+import ConstantData2 from '../Data/ConstantData2'
 
 const DefaultEvt = {
   Evt_MouseMove: null,
@@ -311,7 +312,7 @@ DefaultEvt.Evt_RubberBandDrag = function (e) {
   console.log('222222 Evt_RubberBandDrag ============= 1', e);
   console.log(' 222222 Evt_RubberBandDrag ============= 2', GlobalData.optManager);
   Utils2.StopPropagationAndDefaults(e);
-  var t = ListManager.ModalOperations;
+  var t = ConstantData2.ModalOperations;
   try {
     switch (GlobalData.optManager.currentModalOperation) {
       case t.ADDCORNER:
@@ -333,7 +334,7 @@ DefaultEvt.Evt_RubberBandDrag = function (e) {
       */
 
   Utils2.StopPropagationAndDefaults(e);
-  var modalOperations = ListManager.ModalOperations;
+  var modalOperations = ConstantData2.ModalOperations;
 
   try {
     switch (GlobalData.optManager.currentModalOperation) {
@@ -479,7 +480,7 @@ DefaultEvt.Evt_ShapeTapFactory = function (e) {
     } else if (r) return e.RightClick(a),
       !1;
     switch (GlobalData.optManager.currentModalOperation) {
-      case ListManager.ModalOperations.NONE:
+      case ConstantData2.ModalOperations.NONE:
         return GlobalData.optManager.CheckTextHyperlinkHit(e, a) ||
           (
             GlobalData.optManager.LM_TestIconClick(a),
@@ -493,10 +494,10 @@ DefaultEvt.Evt_ShapeTapFactory = function (e) {
             )
           ),
           !1;
-      case ListManager.ModalOperations.DRAW:
-      case ListManager.ModalOperations.POLYLINEDRAW:
+      case ConstantData2.ModalOperations.DRAW:
+      case ConstantData2.ModalOperations.POLYLINEDRAW:
         return !1;
-      case ListManager.ModalOperations.STAMPTEXTONTAP:
+      case ConstantData2.ModalOperations.STAMPTEXTONTAP:
         return GlobalData.optManager.stampSticky ||
           GlobalData.optManager.CancelObjectStampTextOnTap(!0),
           e.AllowTextEdit() &&
@@ -512,10 +513,10 @@ DefaultEvt.Evt_ShapeTapFactory = function (e) {
 DefaultEvt.Evt_ShapeDragStartFactory = function (e) {
   return function (e) {
     if (
-      GlobalData.optManager.currentModalOperation == ListManager.ModalOperations.DRAW
+      GlobalData.optManager.currentModalOperation == ConstantData2.ModalOperations.DRAW
     ) return !1;
     if (
-      GlobalData.optManager.currentModalOperation == ListManager.ModalOperations.STAMP
+      GlobalData.optManager.currentModalOperation == ConstantData2.ModalOperations.STAMP
     ) return e.stopPropagation(),
       e.gesture.stopPropagation(),
       !1;
@@ -528,15 +529,15 @@ DefaultEvt.Evt_ShapeDragStartFactory = function (e) {
     // SDUI.Commands.MainController.Dropdowns.HideAllDropdowns(),
     GlobalData.optManager.currentModalOperation
     ) {
-      case ListManager.ModalOperations.NONE:
-      case ListManager.ModalOperations.FORMATPAINTER:
+      case ConstantData2.ModalOperations.NONE:
+      case ConstantData2.ModalOperations.FORMATPAINTER:
         return Utils2.StopPropagationAndDefaults(e),
           GlobalData.optManager.LM_MoveClick(e),
           !1;
-      case ListManager.ModalOperations.DRAW:
+      case ConstantData2.ModalOperations.DRAW:
         return DefaultEvt.Evt_WorkAreaHammerDrawStart(e);
-      case ListManager.ModalOperations.POLYLINEDRAW:
-      case ListManager.ModalOperations.STAMPTEXTONTAP:
+      case ConstantData2.ModalOperations.POLYLINEDRAW:
+      case ConstantData2.ModalOperations.STAMPTEXTONTAP:
         return !1
     }
   }
@@ -545,7 +546,7 @@ DefaultEvt.Evt_ShapeDragStartFactory = function (e) {
 DefaultEvt.Evt_ShapeHoldFactory = function (e) {
   return function (t) {
     switch (GlobalData.optManager.currentModalOperation) {
-      case ListManager.ModalOperations.NONE:
+      case ConstantData2.ModalOperations.NONE:
         t.gesture.stopDetect(),
           Utils2.StopPropagationAndDefaults(t),
           e.RightClick(t);
@@ -557,9 +558,9 @@ DefaultEvt.Evt_ShapeHoldFactory = function (e) {
           throw e;
         }
         return !1;
-      case ListManager.ModalOperations.DRAW:
-      case ListManager.ModalOperations.POLYLINEDRAW:
-      case ListManager.ModalOperations.STAMPTEXTONTAP:
+      case ConstantData2.ModalOperations.DRAW:
+      case ConstantData2.ModalOperations.POLYLINEDRAW:
+      case ConstantData2.ModalOperations.STAMPTEXTONTAP:
         return !1
     }
   }
@@ -575,7 +576,7 @@ DefaultEvt.Evt_ShapeDoubleTapFactory = function (e) {
     // SDUI.Commands.MainController.Dropdowns.HideAllDropdowns(),
     GlobalData.optManager.currentModalOperation
     ) {
-      case ListManager.ModalOperations.NONE:
+      case ConstantData2.ModalOperations.NONE:
         if (GlobalData.optManager.bInNoteEdit) return !1;
         var i = e.GetTable(!1),
           n = e.GetGraph(!1);
@@ -604,9 +605,9 @@ DefaultEvt.Evt_ShapeDoubleTapFactory = function (e) {
         var o = GlobalData.optManager.svgObjectLayer.GetElementByID(e.tag);
         return GlobalData.optManager.ActivateTextEdit(o.svgObj.SDGObj, t),
           !1;
-      case ListManager.ModalOperations.DRAW:
-      case ListManager.ModalOperations.POLYLINEDRAW:
-      case ListManager.ModalOperations.STAMPTEXTONTAP:
+      case ConstantData2.ModalOperations.DRAW:
+      case ConstantData2.ModalOperations.POLYLINEDRAW:
+      case ConstantData2.ModalOperations.STAMPTEXTONTAP:
         return !1
     }
   }

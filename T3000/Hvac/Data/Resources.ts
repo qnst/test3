@@ -6,6 +6,7 @@ import $ from 'jquery'
 import DefaultStyle from '../Model/DefaultStyle'
 import QuickStyle from "../Model/QuickStyle"
 import ConstantData from "../Data/ConstantData"
+import ConstantData2 from "./ConstantData2";
 
 const Resources = {
   // RulerUnits: null,
@@ -5875,106 +5876,106 @@ Resources.Controls = {
   }
 }
 
-Resources.Keys = {
-  Backspace: 8,
-  Tab: 9,
-  Enter: 13,
-  Shift: 16,
-  Ctrl: 17,
-  Alt: 18,
-  Caps_Lock: 20,
-  Escape: 27,
-  Space: 32,
-  Page_Up: 33,
-  Page_Down: 34,
-  End: 35,
-  Home: 36,
-  Left_Arrow: 37,
-  Up_Arrow: 38,
-  Right_Arrow: 39,
-  Down_Arrow: 40,
-  Insert: 45,
-  Delete: 46,
-  0: 48,
-  1: 49,
-  2: 50,
-  3: 51,
-  4: 52,
-  5: 53,
-  6: 54,
-  7: 55,
-  8: 56,
-  9: 57,
-  A: 65,
-  B: 66,
-  C: 67,
-  D: 68,
-  E: 69,
-  F: 70,
-  G: 71,
-  H: 72,
-  I: 73,
-  J: 74,
-  K: 75,
-  L: 76,
-  M: 77,
-  N: 78,
-  O: 79,
-  P: 80,
-  Q: 81,
-  R: 82,
-  S: 83,
-  T: 84,
-  U: 85,
-  V: 86,
-  W: 87,
-  X: 88,
-  Y: 89,
-  Z: 90,
-  Left_Window_Key: 91,
-  Right_Window_Key: 92,
-  Select_Key: 93,
-  Numpad_0: 96,
-  Numpad_1: 97,
-  Numpad_2: 98,
-  Numpad_3: 99,
-  Numpad_4: 100,
-  Numpad_5: 101,
-  Numpad_6: 102,
-  Numpad_7: 103,
-  Numpad_8: 104,
-  Numpad_9: 105,
-  Nultiply: 106,
-  Add: 107,
-  Subtract: 109,
-  Decimal_Point: 110,
-  Divide: 111,
-  F1: 112,
-  F2: 113,
-  F3: 114,
-  F4: 115,
-  F5: 116,
-  F6: 117,
-  F7: 118,
-  F8: 119,
-  F9: 120,
-  F10: 121,
-  F11: 122,
-  F12: 123,
-  Num_Lock: 144,
-  Scroll_Lock: 145,
-  Semi_Colon: 186,
-  Equal_Sign: 187,
-  Comma: 188,
-  Dash: 189,
-  Period: 190,
-  Forward_Slash: 191,
-  Grave_Accent: 192,
-  Open_Bracket: 219,
-  Back_Slash: 220,
-  Close_Braket: 221,
-  Single_Quote: 222
-}
+// Resources.Keys = {
+//   Backspace: 8,
+//   Tab: 9,
+//   Enter: 13,
+//   Shift: 16,
+//   Ctrl: 17,
+//   Alt: 18,
+//   Caps_Lock: 20,
+//   Escape: 27,
+//   Space: 32,
+//   Page_Up: 33,
+//   Page_Down: 34,
+//   End: 35,
+//   Home: 36,
+//   Left_Arrow: 37,
+//   Up_Arrow: 38,
+//   Right_Arrow: 39,
+//   Down_Arrow: 40,
+//   Insert: 45,
+//   Delete: 46,
+//   0: 48,
+//   1: 49,
+//   2: 50,
+//   3: 51,
+//   4: 52,
+//   5: 53,
+//   6: 54,
+//   7: 55,
+//   8: 56,
+//   9: 57,
+//   A: 65,
+//   B: 66,
+//   C: 67,
+//   D: 68,
+//   E: 69,
+//   F: 70,
+//   G: 71,
+//   H: 72,
+//   I: 73,
+//   J: 74,
+//   K: 75,
+//   L: 76,
+//   M: 77,
+//   N: 78,
+//   O: 79,
+//   P: 80,
+//   Q: 81,
+//   R: 82,
+//   S: 83,
+//   T: 84,
+//   U: 85,
+//   V: 86,
+//   W: 87,
+//   X: 88,
+//   Y: 89,
+//   Z: 90,
+//   Left_Window_Key: 91,
+//   Right_Window_Key: 92,
+//   Select_Key: 93,
+//   Numpad_0: 96,
+//   Numpad_1: 97,
+//   Numpad_2: 98,
+//   Numpad_3: 99,
+//   Numpad_4: 100,
+//   Numpad_5: 101,
+//   Numpad_6: 102,
+//   Numpad_7: 103,
+//   Numpad_8: 104,
+//   Numpad_9: 105,
+//   Nultiply: 106,
+//   Add: 107,
+//   Subtract: 109,
+//   Decimal_Point: 110,
+//   Divide: 111,
+//   F1: 112,
+//   F2: 113,
+//   F3: 114,
+//   F4: 115,
+//   F5: 116,
+//   F6: 117,
+//   F7: 118,
+//   F8: 119,
+//   F9: 120,
+//   F10: 121,
+//   F11: 122,
+//   F12: 123,
+//   Num_Lock: 144,
+//   Scroll_Lock: 145,
+//   Semi_Colon: 186,
+//   Equal_Sign: 187,
+//   Comma: 188,
+//   Dash: 189,
+//   Period: 190,
+//   Forward_Slash: 191,
+//   Grave_Accent: 192,
+//   Open_Bracket: 219,
+//   Back_Slash: 220,
+//   Close_Braket: 221,
+//   Single_Quote: 222
+// }
 
 Resources.ModifierKeys = {
   None: 0,
@@ -5986,17 +5987,17 @@ Resources.ModifierKeys = {
   Shift_Alt: 6
 }
 
-Resources.NonTextKeys = [
-  Resources.Keys.Backspace,
-  Resources.Keys.Tab,
-  Resources.Keys.Enter,
-  Resources.Keys.Left_Arrow,
-  Resources.Keys.Up_Arrow,
-  Resources.Keys.Right_Arrow,
-  Resources.Keys.Down_Arrow,
-  Resources.Keys.Delete,
-  Resources.Keys.Escape
-]
+// Resources.NonTextKeys = [
+//   Resources.Keys.Backspace,
+//   Resources.Keys.Tab,
+//   Resources.Keys.Enter,
+//   Resources.Keys.Left_Arrow,
+//   Resources.Keys.Up_Arrow,
+//   Resources.Keys.Right_Arrow,
+//   Resources.Keys.Down_Arrow,
+//   Resources.Keys.Delete,
+//   Resources.Keys.Escape
+// ]
 
 Resources.Contexts = {
   None: - 1,
@@ -6055,16 +6056,16 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
     i = a.Business,
     n = a.ConnectionPoints;
   Resources.KeyboardCommands.All = [
-    new Resources.KeyboardCommand('Copy', e.Contexts.All, t.Ctrl, e.Keys.C, r.Copy, r),
-    new Resources.KeyboardCommand('Cut', e.Contexts.All, t.Ctrl, e.Keys.X, r.Cut, r),
-    new Resources.KeyboardCommand('Paste', e.Contexts.All, t.Ctrl, e.Keys.V, r.Paste, r),
-    new Resources.KeyboardCommand('Undo', e.Contexts.All, t.Ctrl, e.Keys.Z, r.Undo, r),
-    new Resources.KeyboardCommand('Redo', e.Contexts.All, t.Ctrl, e.Keys.Y, r.Redo, r),
+    new Resources.KeyboardCommand('Copy', e.Contexts.All, t.Ctrl, ConstantData2.Keys.C, r.Copy, r),
+    new Resources.KeyboardCommand('Cut', e.Contexts.All, t.Ctrl, ConstantData2.Keys.X, r.Cut, r),
+    new Resources.KeyboardCommand('Paste', e.Contexts.All, t.Ctrl, ConstantData2.Keys.V, r.Paste, r),
+    new Resources.KeyboardCommand('Undo', e.Contexts.All, t.Ctrl, ConstantData2.Keys.Z, r.Undo, r),
+    new Resources.KeyboardCommand('Redo', e.Contexts.All, t.Ctrl, ConstantData2.Keys.Y, r.Redo, r),
     new Resources.KeyboardCommand(
       'SelectAll',
       e.Contexts.All,
       t.Ctrl,
-      e.Keys.A,
+      ConstantData2.Keys.A,
       r.SelectAllObjects,
       r
     ),
@@ -6072,7 +6073,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
       'Delete',
       e.Contexts.All,
       t.None,
-      e.Keys.Delete,
+      ConstantData2.Keys.Delete,
       r.DeleteSelectedObjects,
       r
     ),
@@ -6080,7 +6081,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
       'Delete',
       e.Contexts.All,
       t.None,
-      e.Keys.Backspace,
+      ConstantData2.Keys.Backspace,
       r.DeleteSelectedObjects,
       r
     ),
@@ -6088,7 +6089,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
       'Cancel',
       e.Contexts.All,
       t.None,
-      e.Keys.Escape,
+      ConstantData2.Keys.Escape,
       r.CancelModalOperation,
       r
     ),
@@ -6096,7 +6097,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
       'Group',
       e.Contexts.All,
       t.Ctrl,
-      e.Keys.G,
+      ConstantData2.Keys.G,
       r.GroupSelectedShapes,
       r
     ),
@@ -6104,43 +6105,43 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
       'Ungroup',
       e.Contexts.All,
       t.Ctrl_Shift,
-      e.Keys.G,
+      ConstantData2.Keys.G,
       r.UngroupSelectedShapes,
       r
     ),
-    new Resources.KeyboardCommand('Duplicate', e.Contexts.All, t.Ctrl, e.Keys.D, r.Duplicate, r),
+    new Resources.KeyboardCommand('Duplicate', e.Contexts.All, t.Ctrl, ConstantData2.Keys.D, r.Duplicate, r),
     new Resources.KeyboardCommand(
       'Find',
       e.Contexts.All,
       t.Ctrl,
-      e.Keys.F,
+      ConstantData2.Keys.F,
       a.ShowModal,
       a,
       [
         Resources.Controls.Modals.Find.Id
       ]
     ),
-    new Resources.KeyboardCommand('Replace', e.Contexts.All, t.Ctrl, e.Keys.H, r.Replace, r),
-    new Resources.KeyboardCommand('Bold', e.Contexts.Text, t.Ctrl, e.Keys.B, r.BoldText, r),
-    new Resources.KeyboardCommand('Italic', e.Contexts.Text, t.Ctrl, e.Keys.I, r.ItalicText, r),
+    new Resources.KeyboardCommand('Replace', e.Contexts.All, t.Ctrl, ConstantData2.Keys.H, r.Replace, r),
+    new Resources.KeyboardCommand('Bold', e.Contexts.Text, t.Ctrl, ConstantData2.Keys.B, r.BoldText, r),
+    new Resources.KeyboardCommand('Italic', e.Contexts.Text, t.Ctrl, ConstantData2.Keys.I, r.ItalicText, r),
     new Resources.KeyboardCommand(
       'Underline',
       e.Contexts.Text,
       t.Ctrl,
-      e.Keys.U,
+      ConstantData2.Keys.U,
       r.UnderlineText,
       r
     ),
-    new Resources.KeyboardCommand('Save', e.Contexts.All, t.Ctrl, e.Keys.S, a.Save, a),
-    new Resources.KeyboardCommand('ZoomIn', e.Contexts.All, t.Ctrl, e.Keys.Add, a.ZoomIn, a),
-    new Resources.KeyboardCommand('ZoomOut', e.Contexts.All, t.Ctrl, e.Keys.Subtract, a.ZoomOut, a),
-    new Resources.KeyboardCommand('ZoomIn', e.Contexts.All, t.Ctrl, e.Keys.Equal_Sign, a.ZoomIn, a),
-    new Resources.KeyboardCommand('ZoomOut', e.Contexts.All, t.Ctrl, e.Keys.Dash, a.ZoomOut, a),
+    new Resources.KeyboardCommand('Save', e.Contexts.All, t.Ctrl, ConstantData2.Keys.S, a.Save, a),
+    new Resources.KeyboardCommand('ZoomIn', e.Contexts.All, t.Ctrl, ConstantData2.Keys.Add, a.ZoomIn, a),
+    new Resources.KeyboardCommand('ZoomOut', e.Contexts.All, t.Ctrl, ConstantData2.Keys.Subtract, a.ZoomOut, a),
+    new Resources.KeyboardCommand('ZoomIn', e.Contexts.All, t.Ctrl, ConstantData2.Keys.Equal_Sign, a.ZoomIn, a),
+    new Resources.KeyboardCommand('ZoomOut', e.Contexts.All, t.Ctrl, ConstantData2.Keys.Dash, a.ZoomOut, a),
     new Resources.KeyboardCommand(
       'ReplaySVGEvents',
       e.Contexts.All,
       t.Ctrl,
-      e.Keys.E,
+      ConstantData2.Keys.E,
       a.ReplaySVGEvents,
       a
     ),
@@ -6148,7 +6149,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
       'RecordSVGEvents',
       e.Contexts.All,
       t.Ctrl,
-      e.Keys.R,
+      ConstantData2.Keys.R,
       a.RecordSVGEvents,
       a
     ),
@@ -6156,7 +6157,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
       'SetEditorToCollaborate',
       e.Contexts.All,
       t.Ctrl,
-      e.Keys.F1,
+      ConstantData2.Keys.F1,
       a.SetEditorToCollaborate,
       a
     ),
@@ -6164,7 +6165,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
       'SDF.BuildBlockList',
       e.Contexts.All,
       t.Ctrl,
-      e.Keys.F2,
+      ConstantData2.Keys.F2,
       a.BuildBlockList,
       a
     ),
@@ -6172,31 +6173,31 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
       'SDF.ReadBlockList',
       e.Contexts.All,
       t.Ctrl,
-      e.Keys.F3,
+      ConstantData2.Keys.F3,
       a.ReadBlockList,
       a
     ),
-    new Resources.KeyboardCommand('Hyperlink', e.Contexts.All, t.Ctrl, e.Keys.K, r.AddHyperlink, r)
+    new Resources.KeyboardCommand('Hyperlink', e.Contexts.All, t.Ctrl, ConstantData2.Keys.K, r.AddHyperlink, r)
   ],
     Resources.KeyboardCommands.ReadOnly = [
-      new Resources.KeyboardCommand('ZoomIn', e.Contexts.All, t.Ctrl, e.Keys.Add, a.ZoomIn, a),
-      new Resources.KeyboardCommand('ZoomOut', e.Contexts.All, t.Ctrl, e.Keys.Subtract, a.ZoomOut, a),
-      new Resources.KeyboardCommand('ZoomIn', e.Contexts.All, t.Ctrl, e.Keys.Equal_Sign, a.ZoomIn, a),
-      new Resources.KeyboardCommand('ZoomOut', e.Contexts.All, t.Ctrl, e.Keys.Dash, a.ZoomOut, a)
+      new Resources.KeyboardCommand('ZoomIn', e.Contexts.All, t.Ctrl, ConstantData2.Keys.Add, a.ZoomIn, a),
+      new Resources.KeyboardCommand('ZoomOut', e.Contexts.All, t.Ctrl, ConstantData2.Keys.Subtract, a.ZoomOut, a),
+      new Resources.KeyboardCommand('ZoomIn', e.Contexts.All, t.Ctrl, ConstantData2.Keys.Equal_Sign, a.ZoomIn, a),
+      new Resources.KeyboardCommand('ZoomOut', e.Contexts.All, t.Ctrl, ConstantData2.Keys.Dash, a.ZoomOut, a)
     ],
     Resources.KeyboardCommands.Text = [
-      new Resources.KeyboardCommand('Copy', e.Contexts.Text, t.Ctrl, e.Keys.C, r.Copy, r),
-      new Resources.KeyboardCommand('Cut', e.Contexts.Text, t.Ctrl, e.Keys.X, r.Cut, r),
-      new Resources.KeyboardCommand('Paste', e.Contexts.Text, t.Ctrl, e.Keys.V, r.Paste, r),
-      new Resources.KeyboardCommand('Undo', e.Contexts.Text, t.Ctrl, e.Keys.Z, r.Undo, r),
-      new Resources.KeyboardCommand('Redo', e.Contexts.Text, t.Ctrl, e.Keys.Y, r.Redo, r),
-      new Resources.KeyboardCommand('Bold', e.Contexts.Text, t.Ctrl, e.Keys.B, r.BoldText, r),
-      new Resources.KeyboardCommand('Italic', e.Contexts.Text, t.Ctrl, e.Keys.I, r.ItalicText, r),
+      new Resources.KeyboardCommand('Copy', e.Contexts.Text, t.Ctrl, ConstantData2.Keys.C, r.Copy, r),
+      new Resources.KeyboardCommand('Cut', e.Contexts.Text, t.Ctrl, ConstantData2.Keys.X, r.Cut, r),
+      new Resources.KeyboardCommand('Paste', e.Contexts.Text, t.Ctrl, ConstantData2.Keys.V, r.Paste, r),
+      new Resources.KeyboardCommand('Undo', e.Contexts.Text, t.Ctrl, ConstantData2.Keys.Z, r.Undo, r),
+      new Resources.KeyboardCommand('Redo', e.Contexts.Text, t.Ctrl, ConstantData2.Keys.Y, r.Redo, r),
+      new Resources.KeyboardCommand('Bold', e.Contexts.Text, t.Ctrl, ConstantData2.Keys.B, r.BoldText, r),
+      new Resources.KeyboardCommand('Italic', e.Contexts.Text, t.Ctrl, ConstantData2.Keys.I, r.ItalicText, r),
       new Resources.KeyboardCommand(
         'Underline',
         e.Contexts.Text,
         t.Ctrl,
-        e.Keys.U,
+        ConstantData2.Keys.U,
         r.UnderlineText,
         r
       ),
@@ -6204,7 +6205,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'SetEditorToCollaborate',
         e.Contexts.All,
         t.Ctrl,
-        e.Keys.F1,
+        ConstantData2.Keys.F1,
         a.SetEditorToCollaborate,
         a
       ),
@@ -6212,7 +6213,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'SDF.BuildBlockList',
         e.Contexts.All,
         t.Ctrl,
-        e.Keys.F2,
+        ConstantData2.Keys.F2,
         a.BuildBlockList,
         a
       ),
@@ -6220,18 +6221,18 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'SDF.ReadBlockList',
         e.Contexts.All,
         t.Ctrl,
-        e.Keys.F3,
+        ConstantData2.Keys.F3,
         a.ReadBlockList,
         a
       )
     ],
     Resources.KeyboardCommands.Table = [
-      new Resources.KeyboardCommand('TTab', e.Contexts.Table, 0, e.Keys.Tab, r.Table_NavRight, r),
+      new Resources.KeyboardCommand('TTab', e.Contexts.Table, 0, ConstantData2.Keys.Tab, r.Table_NavRight, r),
       new Resources.KeyboardCommand(
         'TShiftTab',
         e.Contexts.Table,
         t.Shift,
-        e.Keys.Tab,
+        ConstantData2.Keys.Tab,
         r.Table_NavLeft,
         r
       ),
@@ -6239,7 +6240,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'TNavRight',
         e.Contexts.Table,
         0,
-        e.Keys.Right_Arrow,
+        ConstantData2.Keys.Right_Arrow,
         r.Table_NavRight,
         r
       ),
@@ -6247,7 +6248,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'TShiftNavRight',
         e.Contexts.Table,
         t.Shift,
-        e.Keys.Right_Arrow,
+        ConstantData2.Keys.Right_Arrow,
         r.Table_ShiftNavRight,
         r
       ),
@@ -6255,7 +6256,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'TNavLeft',
         e.Contexts.Table,
         0,
-        e.Keys.Left_Arrow,
+        ConstantData2.Keys.Left_Arrow,
         r.Table_NavLeft,
         r
       ),
@@ -6263,16 +6264,16 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'TShiftNavLeft',
         e.Contexts.Table,
         t.Shift,
-        e.Keys.Left_Arrow,
+        ConstantData2.Keys.Left_Arrow,
         r.Table_ShiftNavLeft,
         r
       ),
-      new Resources.KeyboardCommand('TNavUp', e.Contexts.Table, 0, e.Keys.Up_Arrow, r.Table_NavUp, r),
+      new Resources.KeyboardCommand('TNavUp', e.Contexts.Table, 0, ConstantData2.Keys.Up_Arrow, r.Table_NavUp, r),
       new Resources.KeyboardCommand(
         'TShiftNavUp',
         e.Contexts.Table,
         t.Shift,
-        e.Keys.Up_Arrow,
+        ConstantData2.Keys.Up_Arrow,
         r.Table_ShiftNavUp,
         r
       ),
@@ -6280,7 +6281,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'TNavDown',
         e.Contexts.Table,
         0,
-        e.Keys.Down_Arrow,
+        ConstantData2.Keys.Down_Arrow,
         r.Table_NavDown,
         r
       ),
@@ -6288,18 +6289,18 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'TShiftNavDown',
         e.Contexts.Table,
         t.Shift,
-        e.Keys.Down_Arrow,
+        ConstantData2.Keys.Down_Arrow,
         r.Table_ShiftNavDown,
         r
       ),
-      new Resources.KeyboardCommand('TEnter', e.Contexts.Table, 0, e.Keys.Enter, r.Table_NavEnter, r)
+      new Resources.KeyboardCommand('TEnter', e.Contexts.Table, 0, ConstantData2.Keys.Enter, r.Table_NavEnter, r)
     ],
     Resources.KeyboardCommands.Automation = [
       new Resources.KeyboardCommand(
         'AddRightPeer',
         e.Contexts.Flowchart,
         0,
-        e.Keys.Enter,
+        ConstantData2.Keys.Enter,
         i.AddRightPeer,
         i
       ),
@@ -6307,16 +6308,16 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'AddRightPeer_Shift',
         e.Contexts.Flowchart,
         t.Shift,
-        e.Keys.Enter,
+        ConstantData2.Keys.Enter,
         i.AddRightPeer,
         i
       ),
-      new Resources.KeyboardCommand('Tab', e.Contexts.Flowchart, 0, e.Keys.Tab, i.Tab, i),
+      new Resources.KeyboardCommand('Tab', e.Contexts.Flowchart, 0, ConstantData2.Keys.Tab, i.Tab, i),
       new Resources.KeyboardCommand(
         'ShiftTab',
         e.Contexts.Flowchart,
         t.Shift,
-        e.Keys.Tab,
+        ConstantData2.Keys.Tab,
         i.ShiftTab,
         i
       ),
@@ -6324,7 +6325,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'AddLeft',
         e.Contexts.Flowchart,
         t.Ctrl,
-        e.Keys.Left_Arrow,
+        ConstantData2.Keys.Left_Arrow,
         i.AddLeft,
         i
       ),
@@ -6332,7 +6333,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'AddRight',
         e.Contexts.Flowchart,
         t.Ctrl,
-        e.Keys.Right_Arrow,
+        ConstantData2.Keys.Right_Arrow,
         i.AddRight,
         i
       ),
@@ -6340,7 +6341,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'AddUp',
         e.Contexts.Flowchart,
         t.Ctrl,
-        e.Keys.Up_Arrow,
+        ConstantData2.Keys.Up_Arrow,
         i.AddAbove,
         i
       ),
@@ -6348,7 +6349,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'AddDown',
         e.Contexts.Flowchart,
         t.Ctrl,
-        e.Keys.Down_Arrow,
+        ConstantData2.Keys.Down_Arrow,
         i.AddBelow,
         i
       ),
@@ -6356,7 +6357,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'SplitLeft',
         e.Contexts.Flowchart,
         t.Shift,
-        e.Keys.Left_Arrow,
+        ConstantData2.Keys.Left_Arrow,
         i.SplitPathLeft,
         i
       ),
@@ -6364,7 +6365,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'SplitRight',
         e.Contexts.Flowchart,
         t.Shift,
-        e.Keys.Right_Arrow,
+        ConstantData2.Keys.Right_Arrow,
         i.SplitPathRight,
         i
       ),
@@ -6372,7 +6373,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'SplitUp',
         e.Contexts.Flowchart,
         t.Shift,
-        e.Keys.Up_Arrow,
+        ConstantData2.Keys.Up_Arrow,
         i.SplitPathUp,
         i
       ),
@@ -6380,7 +6381,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'SplitDown',
         e.Contexts.Flowchart,
         t.Shift,
-        e.Keys.Down_Arrow,
+        ConstantData2.Keys.Down_Arrow,
         i.SplitPathDown,
         i
       ),
@@ -6388,7 +6389,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'NavRight',
         e.Contexts.Flowchart,
         0,
-        e.Keys.Right_Arrow,
+        ConstantData2.Keys.Right_Arrow,
         i.NavRight,
         i
       ),
@@ -6396,16 +6397,16 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'NavLeft',
         e.Contexts.Flowchart,
         0,
-        e.Keys.Left_Arrow,
+        ConstantData2.Keys.Left_Arrow,
         i.NavLeft,
         i
       ),
-      new Resources.KeyboardCommand('NavUp', e.Contexts.Flowchart, 0, e.Keys.Up_Arrow, i.NavUp, i),
+      new Resources.KeyboardCommand('NavUp', e.Contexts.Flowchart, 0, ConstantData2.Keys.Up_Arrow, i.NavUp, i),
       new Resources.KeyboardCommand(
         'NavDown',
         e.Contexts.Flowchart,
         0,
-        e.Keys.Down_Arrow,
+        ConstantData2.Keys.Down_Arrow,
         i.NavDown,
         i
       )
@@ -6415,7 +6416,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'AddRightPeer',
         e.Contexts.Flowchart,
         0,
-        e.Keys.Enter,
+        ConstantData2.Keys.Enter,
         i.AddRightPeer,
         i
       ),
@@ -6423,16 +6424,16 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'AddRightPeer_Shift',
         e.Contexts.Flowchart,
         t.Shift,
-        e.Keys.Enter,
+        ConstantData2.Keys.Enter,
         i.AddRightPeer,
         i
       ),
-      new Resources.KeyboardCommand('Tab', e.Contexts.Flowchart, 0, e.Keys.Tab, i.Tab, i),
+      new Resources.KeyboardCommand('Tab', e.Contexts.Flowchart, 0, ConstantData2.Keys.Tab, i.Tab, i),
       new Resources.KeyboardCommand(
         'ShiftTab',
         e.Contexts.Flowchart,
         t.Shift,
-        e.Keys.Tab,
+        ConstantData2.Keys.Tab,
         i.ShiftTab,
         i
       ),
@@ -6440,7 +6441,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'NavRight',
         e.Contexts.Flowchart,
         0,
-        e.Keys.Right_Arrow,
+        ConstantData2.Keys.Right_Arrow,
         i.NavRight,
         i
       ),
@@ -6448,27 +6449,27 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'NavLeft',
         e.Contexts.Flowchart,
         0,
-        e.Keys.Left_Arrow,
+        ConstantData2.Keys.Left_Arrow,
         i.NavLeft,
         i
       ),
-      new Resources.KeyboardCommand('NavUp', e.Contexts.Flowchart, 0, e.Keys.Up_Arrow, i.NavUp, i),
+      new Resources.KeyboardCommand('NavUp', e.Contexts.Flowchart, 0, ConstantData2.Keys.Up_Arrow, i.NavUp, i),
       new Resources.KeyboardCommand(
         'NavDown',
         e.Contexts.Flowchart,
         0,
-        e.Keys.Down_Arrow,
+        ConstantData2.Keys.Down_Arrow,
         i.NavDown,
         i
       )
     ],
     Resources.KeyboardCommands.Navigation = [
-      new Resources.KeyboardCommand('Tab', e.Contexts.Navigation, 0, e.Keys.Tab, i.Tab, i),
+      new Resources.KeyboardCommand('Tab', e.Contexts.Navigation, 0, ConstantData2.Keys.Tab, i.Tab, i),
       new Resources.KeyboardCommand(
         'ShiftTab',
         e.Contexts.Navigation,
         t.Shift,
-        e.Keys.Tab,
+        ConstantData2.Keys.Tab,
         i.ShiftTab,
         i
       ),
@@ -6476,7 +6477,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'GrowLeft',
         e.Contexts.Navigation,
         t.Shift,
-        e.Keys.Left_Arrow,
+        ConstantData2.Keys.Left_Arrow,
         i.GrowLeft,
         i
       ),
@@ -6484,7 +6485,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'GrowRight',
         e.Contexts.Navigation,
         t.Shift,
-        e.Keys.Right_Arrow,
+        ConstantData2.Keys.Right_Arrow,
         i.GrowRight,
         i
       ),
@@ -6492,7 +6493,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'GrowUp',
         e.Contexts.Navigation,
         t.Shift,
-        e.Keys.Up_Arrow,
+        ConstantData2.Keys.Up_Arrow,
         i.GrowUp,
         i
       ),
@@ -6500,7 +6501,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'GrowDown',
         e.Contexts.Navigation,
         t.Shift,
-        e.Keys.Down_Arrow,
+        ConstantData2.Keys.Down_Arrow,
         i.GrowDown,
         i
       ),
@@ -6508,7 +6509,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'NudgeRight',
         e.Contexts.Navigation,
         0,
-        e.Keys.Right_Arrow,
+        ConstantData2.Keys.Right_Arrow,
         i.NudgeRight,
         i
       ),
@@ -6516,7 +6517,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'NudgeLeft',
         e.Contexts.Navigation,
         0,
-        e.Keys.Left_Arrow,
+        ConstantData2.Keys.Left_Arrow,
         i.NudgeLeft,
         i
       ),
@@ -6524,7 +6525,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'NudgeUp',
         e.Contexts.Navigation,
         0,
-        e.Keys.Up_Arrow,
+        ConstantData2.Keys.Up_Arrow,
         i.NudgeUp,
         i
       ),
@@ -6532,7 +6533,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'NudgeDown',
         e.Contexts.Navigation,
         0,
-        e.Keys.Down_Arrow,
+        ConstantData2.Keys.Down_Arrow,
         i.NudgeDown,
         i
       )
@@ -6542,16 +6543,16 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'StopAddingWalls',
         e.Contexts.FloorPlan,
         0,
-        e.Keys.Escape,
+        ConstantData2.Keys.Escape,
         i.StopAddingWalls,
         i
       ),
-      new Resources.KeyboardCommand('Tab', e.Contexts.FloorPlan, 0, e.Keys.Tab, i.Tab, i),
+      new Resources.KeyboardCommand('Tab', e.Contexts.FloorPlan, 0, ConstantData2.Keys.Tab, i.Tab, i),
       new Resources.KeyboardCommand(
         'ShiftTab',
         e.Contexts.FloorPlan,
         t.Shift,
-        e.Keys.Tab,
+        ConstantData2.Keys.Tab,
         i.ShiftTab,
         i
       ),
@@ -6559,7 +6560,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'GrowLeft',
         e.Contexts.FloorPlan,
         t.Shift,
-        e.Keys.Left_Arrow,
+        ConstantData2.Keys.Left_Arrow,
         i.GrowLeft,
         i
       ),
@@ -6567,7 +6568,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'GrowRight',
         e.Contexts.FloorPlan,
         t.Shift,
-        e.Keys.Right_Arrow,
+        ConstantData2.Keys.Right_Arrow,
         i.GrowRight,
         i
       ),
@@ -6575,7 +6576,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'GrowUp',
         e.Contexts.FloorPlan,
         t.Shift,
-        e.Keys.Up_Arrow,
+        ConstantData2.Keys.Up_Arrow,
         i.GrowUp,
         i
       ),
@@ -6583,7 +6584,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'GrowDown',
         e.Contexts.FloorPlan,
         t.Shift,
-        e.Keys.Down_Arrow,
+        ConstantData2.Keys.Down_Arrow,
         i.GrowDown,
         i
       ),
@@ -6591,7 +6592,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'NudgeRight',
         e.Contexts.FloorPlan,
         0,
-        e.Keys.Right_Arrow,
+        ConstantData2.Keys.Right_Arrow,
         i.NudgeRight,
         i
       ),
@@ -6599,16 +6600,16 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'NudgeLeft',
         e.Contexts.FloorPlan,
         0,
-        e.Keys.Left_Arrow,
+        ConstantData2.Keys.Left_Arrow,
         i.NudgeLeft,
         i
       ),
-      new Resources.KeyboardCommand('NudgeUp', e.Contexts.FloorPlan, 0, e.Keys.Up_Arrow, i.NudgeUp, i),
+      new Resources.KeyboardCommand('NudgeUp', e.Contexts.FloorPlan, 0, ConstantData2.Keys.Up_Arrow, i.NudgeUp, i),
       new Resources.KeyboardCommand(
         'NudgeDown',
         e.Contexts.FloorPlan,
         0,
-        e.Keys.Down_Arrow,
+        ConstantData2.Keys.Down_Arrow,
         i.NudgeDown,
         i
       )
@@ -6618,7 +6619,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'PointRight',
         e.Contexts.All,
         0,
-        e.Keys.Right_Arrow,
+        ConstantData2.Keys.Right_Arrow,
         n.PointMoveRight,
         n
       ),
@@ -6626,25 +6627,25 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'PointLeft',
         e.Contexts.All,
         0,
-        e.Keys.Left_Arrow,
+        ConstantData2.Keys.Left_Arrow,
         n.PointMoveLeft,
         n
       ),
-      new Resources.KeyboardCommand('PointUp', e.Contexts.All, 0, e.Keys.Up_Arrow, n.PointMoveUp, n),
+      new Resources.KeyboardCommand('PointUp', e.Contexts.All, 0, ConstantData2.Keys.Up_Arrow, n.PointMoveUp, n),
       new Resources.KeyboardCommand(
         'PointDown',
         e.Contexts.All,
         0,
-        e.Keys.Down_Arrow,
+        ConstantData2.Keys.Down_Arrow,
         n.PointMoveDown,
         n
       ),
-      new Resources.KeyboardCommand('PointDelete', e.Contexts.All, 0, e.Keys.Delete, n.PointDelete, n),
+      new Resources.KeyboardCommand('PointDelete', e.Contexts.All, 0, ConstantData2.Keys.Delete, n.PointDelete, n),
       new Resources.KeyboardCommand(
         'PointSelectPrev',
         e.Contexts.All,
         t.Ctrl,
-        e.Keys.Left_Arrow,
+        ConstantData2.Keys.Left_Arrow,
         n.PointSelectPrev,
         n
       ),
@@ -6652,7 +6653,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'PointSelectNext',
         e.Contexts.All,
         t.Ctrl,
-        e.Keys.Right_Arrow,
+        ConstantData2.Keys.Right_Arrow,
         n.PointSelectNext,
         n
       ),
@@ -6660,7 +6661,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'PointSelectPrev',
         e.Contexts.All,
         t.Alt,
-        e.Keys.Left_Arrow,
+        ConstantData2.Keys.Left_Arrow,
         n.PointSelectPrev,
         n
       ),
@@ -6668,7 +6669,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'PointSelectNext',
         e.Contexts.All,
         t.Alt,
-        e.Keys.Right_Arrow,
+        ConstantData2.Keys.Right_Arrow,
         n.PointSelectNext,
         n
       ),
@@ -6676,7 +6677,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'PointSelectPrev',
         e.Contexts.All,
         t.Ctrl,
-        e.Keys.Up_Arrow,
+        ConstantData2.Keys.Up_Arrow,
         n.PointSelectPrev,
         n
       ),
@@ -6684,7 +6685,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'PointSelectNext',
         e.Contexts.All,
         t.Ctrl,
-        e.Keys.Down_Arrow,
+        ConstantData2.Keys.Down_Arrow,
         n.PointSelectNext,
         n
       ),
@@ -6692,7 +6693,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'PointSelectPrev',
         e.Contexts.All,
         t.Alt,
-        e.Keys.Up_Arrow,
+        ConstantData2.Keys.Up_Arrow,
         n.PointSelectPrev,
         n
       ),
@@ -6700,7 +6701,7 @@ Resources.KeyboardCommand.prototype.BuildCommands = function () {
         'PointSelectNext',
         e.Contexts.All,
         t.Alt,
-        e.Keys.Down_Arrow,
+        ConstantData2.Keys.Down_Arrow,
         n.PointSelectNext,
         n
       )

@@ -617,7 +617,7 @@ class Connector extends BaseDrawingObject {
 
     // Update background color and fill based on text alignment
     this.StyleRecord.Fill.Paint.Color = backgroundObj.background.Paint.Color;
-    if (textAlignment.vjust === FileParser.TextJust.TA_CENTER) {
+    if (textAlignment.vjust === ConstantData2.TextJust.TA_CENTER) {
       this.StyleRecord.Fill.Paint.FillType = ConstantData.FillTypes.SDFILL_SOLID;
       this.StyleRecord.Fill.Paint.Opacity = 1;
     } else {
@@ -4356,7 +4356,7 @@ class Connector extends BaseDrawingObject {
       outputStream.writeStruct(FileParser.SDF_ARRAY_Struct_34, structToWrite);
     }
 
-    let drawArrayCode = SDF.Write_CODE(outputStream, FileParser.SDROpCodesByName.SDF_C_DRAWARRAY);
+    let drawArrayCode = SDF.Write_CODE(outputStream, ConstantData2.SDROpCodesByName.SDF_C_DRAWARRAY);
     SDF.Write_LENGTH(outputStream, drawArrayCode);
 
     // Compute the offset for hook rectangles relative to the frame
@@ -4409,7 +4409,7 @@ class Connector extends BaseDrawingObject {
         }
       }
 
-      let drawArrayHookCode = SDF.Write_CODE(outputStream, FileParser.SDROpCodesByName.SDF_C_DRAWARRAYHOOK);
+      let drawArrayHookCode = SDF.Write_CODE(outputStream, ConstantData2.SDROpCodesByName.SDF_C_DRAWARRAYHOOK);
 
       // Write hook structure based on output context type
       if (context.WriteVisio || context.WriteWin32) {
@@ -4463,13 +4463,13 @@ class Connector extends BaseDrawingObject {
             tuniqueid: SDF.BlockIDtoUniqueID(-hookForText.textid, context)
           };
         }
-        let textCode = SDF.Write_CODE(outputStream, FileParser.SDROpCodesByName.SDF_C_DRAWARRAYTEXT);
+        let textCode = SDF.Write_CODE(outputStream, ConstantData2.SDROpCodesByName.SDF_C_DRAWARRAYTEXT);
         outputStream.writeStruct(FileParser.SDF_ArrayHookText_Struct, textStruct);
         SDF.Write_LENGTH(outputStream, textCode);
       }
     }
 
-    outputStream.writeUint16(FileParser.SDROpCodesByName.SDF_C_DRAWARRAY_END);
+    outputStream.writeUint16(ConstantData2.SDROpCodesByName.SDF_C_DRAWARRAY_END);
 
     // Adjust text flags based on text direction
     this.TextFlags = Utils2.SetFlag(this.TextFlags, ConstantData.TextFlags.SED_TF_HorizText, !this.TextDirection);
